@@ -64,8 +64,8 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
 14. **SAE reconciliation**: each SAE in the clinical database against its case in the safety
     database, with the data-management status, and important protocol deviations for 10.2. Bring
     in your own SDTM hand-off from the SDTM Mapping Trainer, the CDM Console's export for the CSR, or
-    a safety cases file (`csr-studio/safety-cases`, E2B(R3)-shaped, as the PV Intake & Triage
-    Console exports for HRP-301).
+    a safety cases file (`csr-studio/safety-cases`, E2B(R3)-shaped, as the Pharmacovigilance
+    Detective's Study SAEs tab and the PV Intake & Triage Console export for HRP-301).
 15. **Missions** CS6 (the four VERDANT-1 SAE narratives, from the profile; HRP-301 records bottles
     dispensed, so interruptions come from the AE form without days), CS7 (ten GLV-12-301 narratives within 60 minutes) and CS8 (QC a
     colleague's narratives: twelve planted contradictions); a fifth lesson on narratives.
