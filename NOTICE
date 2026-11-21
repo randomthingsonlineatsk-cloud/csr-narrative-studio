@@ -1,0 +1,25 @@
+CSR & Narrative Studio
+Copyright 2026 Khan Gulrez Shagufa Fazal Ahmed
+
+Original project: https://github.com/randomthingsonlineatsk-cloud/csr-narrative-studio
+
+This product includes software developed by Khan Gulrez Shagufa Fazal Ahmed.
+If you redistribute or build on this work, you must keep this NOTICE file
+and the LICENSE (Apache License 2.0).
+
+The studies GLV-12-301 and HRP-301 (VERDANT-1), the products GLV-12 and lumiravostat (Ostrevia),
+the sponsors, sites, participants, subject identifiers and all results are fictional. The
+adverse event and other coded terms come from a fictional study dictionary written for these
+training apps; they are not MedDRA or WHODrug terms. Guidelines and templates (ICH E3 and its
+Q&A (R1), ICH E9(R1), ICH M11, the CORE Reference, TransCelerate's CSR template, Regulation (EU)
+No 536/2014, the New Drugs and Clinical Trials Rules 2019) are named for education; the app
+summarises them in its own words and does not reproduce their text. Nothing in it is regulatory
+or legal advice.
+
+The study outputs in src/data were produced by the reference programs of the TLF Programming
+Lab and the protocols by the Protocol Builder (both by the same author and under the same
+licence): https://github.com/randomthingsonlineatsk-cloud/tlf-programming-lab and
+https://github.com/randomthingsonlineatsk-cloud/protocol-builder.
+
+The app is not a validated system and must not hold real patient data. Everything stays in the
+browser; there is no AI service: all checks and scores are by rules.
