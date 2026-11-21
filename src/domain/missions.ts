@@ -9,6 +9,7 @@ import { outputsOf } from './study'
 import type { MissionRun, Project } from './types'
 import { scoreNarrativeMission, cs8Texts, CS7_MINUTES, type PatientData } from './missions/narr'
 import { CS9_SECTIONS, CS11_SECTIONS, startPhase3, scorePhase3 } from './missions/phase3'
+import { startPhase4, scorePhase4 } from './missions/phase4'
 
 export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean; narratives?: boolean; /** Needs the patient data at the start (not a narrative mission). */ patients?: boolean }
 export const MISSIONS: MissionDef[] = [
@@ -51,11 +52,17 @@ export const MISSIONS: MissionDef[] = [
   { id: 'CS14', title: 'Make the India Table 6 version', study: 'GLV-12-301', sections: [],
     brief: 'GLV-12-301 enrolled 18 participants at site 104 in India. For CDSCO, the report follows the 16 headings of the New Drugs and Clinical Trials Rules, 2019, Third Schedule, Table 6. Map the complete report to Table 6 and add what Table 6 asks for that ICH E3 does not.',
     steps: ['Open India: see each Table 6 heading and the E3 sections under it.', 'Add the start and end of accrual, the GCP compliance statement, the ethics committee of site 104 with its constitution and approval date, and the declaration on notifications (GCP and ICMR guidelines).', 'Describe the participants at the Indian site.', 'Name the reference safety information and list every unexpected adverse event, serious or not (13.2).', 'The coordinating investigator signs the certificate (appendix l). Export the Table 6 version; submit.'] },
+  { id: 'CS12', title: 'Redact the CSR for public release', study: 'GLV-12-301', sections: [], core: true, patients: true,
+    brief: 'The GLV-12-301 report is approved and the product is authorised. Prepare the public version for the EU (CTIS), EMA Policy 0070 and Health Canada: handle every direct identifier, bring the re-identification risk to 0.09 or below on the study’s own participants, propose as commercially confidential only what each route would accept, and complete the anonymisation report.',
+    steps: ['Open Disclosure and choose the routes.', 'Set a rule for each kind of identifier (participant IDs, dates, names, site numbers, ages, race) and check what is left in the text.', 'Choose which quasi-identifiers the public version keeps until every group has at least 11 participants (risk 0.09 or below).', 'Propose CCI only where every chosen route allows it, each with a reason.', 'Describe the data utility; download the disclosure package; submit.'] },
+  { id: 'CS15', title: 'Capstone: the whole report from your own data', study: 'HRP-301', sections: [],
+    brief: 'Write the complete VERDANT-1 (HRP-301) report from your own analysis package (TLF Programming Lab) and your own SDTM (SDTM Mapping Trainer): every section written and tied to your tables, methods from the protocol, narratives that pass QC, a discussion that matches the results, through review to approved, then handed to the eCTD Dossier Builder and the Plain Language Lab.',
+    steps: ['Export: open your analysis package (.zip) from the TLF Programming Lab.', 'SAE reconciliation: open your SDTM hand-off from the SDTM Mapping Trainer.', 'Write every section; draft the methods from the protocol; write 9.8 and the discussion; write and QC the narratives.', 'Review: resolve comments; QC; sign; the approver and the coordinating investigator sign; approve.', 'Export: download the report for the eCTD (5.3.5.1) and the lay results for the Plain Language Lab; submit.'] },
 ]
 export const missionById = (id: string) => MISSIONS.find((m) => m.id === id)
 
 export function startMission(id: string, d?: PatientData): Project {
-  const p3 = startPhase3(id, d)
+  const p3 = startPhase3(id, d) ?? startPhase4(id, d)
   if (p3) { p3.mission = { id, startedUtc: new Date().toISOString(), answers: {} }; return p3 }
   const m = missionById(id)!, p = newProject(`Mission ${m.id}: ${m.title}`, m.study, 'full', 'mission')
   p.mission = { id, startedUtc: new Date().toISOString(), answers: {} }
@@ -106,7 +113,7 @@ export const REQUESTABLE: { id: string; title: string }[] = [
 
 export function scoreMission(p: Project, d?: PatientData | null): Item[] {
   if (missionById(p.mission!.id)?.narratives) return d ? scoreNarrativeMission(p, d) : []
-  const p3 = scorePhase3(p); if (p3) return p3
+  const p3 = scorePhase3(p) ?? scorePhase4(p, d); if (p3) return p3
   const id = p.mission!.id, S = (s: string) => p.sections[s]?.text ?? ''
   if (id === 'CS1') return Object.entries(CS1_KEY).map(([sec, k]) => {
     const st = p.sections[sec]; if (!st) return { label: sec, ok: false, why: 'Missing section.' }
@@ -177,6 +184,9 @@ export function scoreMission(p: Project, d?: PatientData | null): Item[] {
   }
   return []
 }
+/** Pass and expert marks, as in the other apps: 80 to pass, 100 (every check met) for expert. */
+export const PASS = 80, EXPERT = 100
+export const levelOf = (score: number) => (score >= EXPERT ? 'expert' : score >= PASS ? 'passed' : 'not yet')
 export const scoreOf = (items: Item[]) => Math.round((100 * items.filter((x) => x.ok).length) / Math.max(1, items.length))
 export function submit(p: Project, d?: PatientData | null): MissionRun { const items = scoreMission({ ...p, mission: { ...p.mission!, submittedUtc: new Date().toISOString() } }, d); return { ...p.mission!, submittedUtc: new Date().toISOString(), score: scoreOf(items), detail: items.map((i) => ({ label: i.label, got: i.ok ? 1 : 0, of: 1 })) } }
 export { CS2_PLANTED }

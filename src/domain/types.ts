@@ -17,6 +17,7 @@ export interface SectionState { text: string; na?: string; slots: string[]; /** 
 export interface Rounding { pct: number; mean: number; p: number }
 export interface Signature { name: string; role: string; meaning: string; utc: string; version: number }
 export interface MissionRun { id: string; startedUtc: string; submittedUtc?: string; score?: number; detail?: { label: string; got: number; of: number }[]; answers: Record<string, string> }
+export interface HandoffMark { version: number; stage: Stage; utc: string }
 export interface NarrativeState { text: string; queries: string[]; updatedUtc: string }
 export interface Project {
   id: string; name: string; userId: string; classId: string; kind: 'report' | 'mission'
@@ -41,6 +42,12 @@ export interface Project {
   snapshots?: import('./review').Snapshot[]
   /** The India-only items of NDCT Rules 2019 Table 6. */
   india?: Partial<import('./india').IndiaFields>
+  /** Public disclosure: routes, anonymisation rules, quasi-identifiers and CCI proposals. */
+  disclosure?: Partial<import('./disclosure').DisclosureState>
+  /** Where imported outputs came from (an analysis package carries its SDTM hand-off's source). */
+  outputsFrom?: import('./imports').Provenance
+  /** Hand-off files exported (for the capstone and the hub journey). */
+  handoffs?: { ectd?: HandoffMark; lay?: HandoffMark; journey?: HandoffMark }
   createdUtc: string; updatedUtc: string; schema: 1
 }
 export interface Progress { id: 'me'; userId: string; classId: string; name?: string; quizzes: Record<string, { score: number; of: number; utc: string }>; drills: Record<string, { score: number; utc: string }>; missions: Record<string, { score: number; utc: string }> }

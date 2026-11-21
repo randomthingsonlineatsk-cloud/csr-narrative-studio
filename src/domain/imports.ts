@@ -28,7 +28,8 @@ export function redraw(text: string, ref: Stat[], mine: Stat[]): string {
   })
 }
 
-export interface Imported { data: StudyOutputs; changed: string[]; missing: string[]; source: string }
+export interface Provenance { kind: 'package' | 'reporting-event' | 'outputs'; handoff: string | null; lock: string | null; project: string | null }
+export interface Imported { data: StudyOutputs; changed: string[]; missing: string[]; source: string; provenance?: Provenance }
 export function applyResults(study: string, tables: Record<string, Frame>, source: string): Imported {
   const base = BUNDLED[study]; if (!base) throw new Error(`The file is for ${study}, which the Studio does not have.`)
   const data = structuredClone(base), changed: string[] = [], missing: string[] = []
@@ -65,10 +66,10 @@ export function readOutputsFile(name: string, bytes: Uint8Array): Imported {
     const files = unzipSync(bytes), ars = files['ars-reporting-event.json'], man = files['analysis.json']
     if (!ars) throw new Error('This zip is not a TLF Programming Lab analysis package (no ars-reporting-event.json).')
     const m = man ? JSON.parse(strFromU8(man)) : {}
-    return fromReportingEvent(JSON.parse(strFromU8(ars)), `TLF Programming Lab analysis package${m.producer?.project ? `: ${m.producer.project}` : ''} (${name})`)
+    return { ...fromReportingEvent(JSON.parse(strFromU8(ars)), `TLF Programming Lab analysis package${m.producer?.project ? `: ${m.producer.project}` : ''} (${name})`), provenance: { kind: 'package', handoff: m.handoff?.source?.kind ?? null, lock: m.handoff?.source?.lock ?? null, project: m.producer?.project ?? null } }
   }
   let j: Record<string, unknown>
   try { j = JSON.parse(strFromU8(bytes)) } catch { throw new Error('This file is not a zip or JSON.') }
   if (j.format === 'csr-studio/study-outputs') { const d = j as unknown as StudyOutputs; if (!BUNDLED[d.study]) throw new Error(`Unknown study ${d.study}.`); return { data: d, changed: [], missing: [], source: `${d.source} (${name})` } }
-  return fromReportingEvent(j, `TLF Programming Lab reporting event (${name})`)
+  return { ...fromReportingEvent(j, `TLF Programming Lab reporting event (${name})`), provenance: { kind: 'reporting-event', handoff: null, lock: null, project: null } }
 }

@@ -10,10 +10,10 @@ export default function MissionBar() {
   const { p, act, record } = useStore()
   const nav = useNav()
   const r = p?.mission
-  const d = usePatientData(p?.mission && missionById(p.mission.id)?.narratives ? p : null)
+  const d = usePatientData(p?.mission && (missionById(p.mission.id)?.narratives || missionById(p.mission.id)?.patients) ? p : null)
   if (!p || !r) return null
   const m = missionById(r.id)!, items = scoreMission(p, d), score = scoreOf(items)
-  const go = () => { if (m.narratives && !d) return; act((x) => { x.mission = submit(x, d) }); record((g) => { if (score >= (g.missions[r.id]?.score ?? -1)) g.missions[r.id] = { score, utc: new Date().toISOString() } }) }
+  const go = () => { if ((m.narratives || m.patients) && !d) return; act((x) => { x.mission = submit(x, d) }); record((g) => { if (score >= (g.missions[r.id]?.score ?? -1)) g.missions[r.id] = { score, utc: new Date().toISOString() } }) }
   return (
     <Panel className="mb-4 border-lab-ema/60" title={`Mission ${m.id}: ${m.title}`} sub={`${m.study}${m.core ? ' · core mission' : ''}`} right={r.submittedUtc ? <Pill tone={(r.score ?? 0) >= 80 ? 'green' : 'amber'}>{`score ${r.score}`}</Pill> : <Btn onClick={go}>Submit</Btn>}>
       <p className="text-sm">{m.brief}</p>
