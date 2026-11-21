@@ -36,7 +36,7 @@ describe('methods from the protocol', () => {
     expect(analysisChanges('HRP-301').map((c) => c.id)).toEqual(expect.arrayContaining(['pp', 'end-END3', 'labs']))
     const draft = methodsDraft('HRP-301', '9.8')!
     expect(changeFindings('HRP-301', draft).filter((f) => !f.ok).length).toBeGreaterThan(0)
-    const fixed = draft + ' The planned per-protocol analysis was not done because the 48-participant cut was too small for a per-protocol set to be informative. Adverse events were coded with the Study Medical Dictionary because the sponsor uses it for all training studies. The itch responder analysis was not run because the 48-participant cut had too few participants with a baseline itch of 4 or more. Laboratory shift tables were left to the final analysis because the interim cut was for efficacy.'
+    const fixed = draft + ' The planned per-protocol analysis was not done because the 45-participant training cut was too small for a per-protocol set to be informative. Adverse events were coded with the Study Medical Dictionary because the sponsor uses it for all training studies. The itch responder analysis was not run because the 48-participant cut had too few participants with a baseline itch of 4 or more. Laboratory shift tables were left to the final analysis because the interim cut was for efficacy.'
     expect(changeFindings('HRP-301', fixed).filter((f) => !f.ok)).toEqual([])
   })
 })

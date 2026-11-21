@@ -1,6 +1,7 @@
 // Missions: scored tasks on the worked studies. Each starts a project set up for the task and
 // scores it with rules the learner can read. CS1 to CS5 are Phase 1.
 import { newProject, defaultSlots } from './project'
+import { tableNumber } from './e3'
 import { BUNDLED } from './study'
 import { CS2_PLANTED, cs2Draft, cs2Fixed } from './missions/cs2'
 import { checkText, errors, sentences, type Finding, type TokKind } from './checker'
@@ -12,7 +13,7 @@ import { CS9_SECTIONS, CS11_SECTIONS, startPhase3, scorePhase3 } from './mission
 export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean; narratives?: boolean; /** Needs the patient data at the start (not a narrative mission). */ patients?: boolean }
 export const MISSIONS: MissionDef[] = [
   { id: 'CS1', title: 'Build the report shell for VERDANT-1', study: 'HRP-301', core: true, sections: [],
-    brief: 'Programming has delivered the first outputs for HRP-301 (48-participant training cut). Build the shell: attach the outputs that feed each results section, request the outputs that are missing, and mark the sections that do not apply, with a reason.',
+    brief: 'Programming has delivered the first outputs for HRP-301 (training cut: 48 screened, 45 randomised). Build the shell: attach the outputs that feed each results section, request the outputs that are missing, and mark the sections that do not apply, with a reason.',
     steps: ['Open Shell and outputs.', 'For each section in 10 to 12, attach the outputs that feed it.', 'Where an output a section needs does not exist yet, request it by its conventional number.', 'Mark not applicable only what truly does not apply to this study, with a reason.', 'Submit.'] },
   { id: 'CS2', title: 'Text-versus-table QC: fix 25 errors', study: 'GLV-12-301', core: true, sections: ['10.1', '11.2', '11.4.1', '12.1', '12.2.1', '12.2.2'],
     brief: 'A GLV-12-301 results draft is back from a junior writer. Twenty-five numbers in six sections do not agree with their tables. Find and fix every one without introducing new errors. The checker helps; read its findings, then check the table yourself.',
@@ -37,9 +38,9 @@ export const MISSIONS: MissionDef[] = [
     steps: ['Open Narratives: the four drafts are loaded.', 'Read each against the profile, the timeline and the safety case; the QC panel helps.', 'Correct the narrative text.', 'Submit when the four pass QC.'] },
   { id: 'CS9', title: 'Methods from the protocol', study: 'GLV-12-301', sections: [...CS9_SECTIONS, '9.8'],
     brief: 'The protocol says what will happen; the report says what did. Eight methods sections of the GLV-12-301 report hold the protocol’s own words, in the future tense. Put them in the past tense, and write 9.8: protocol amendment 1 from the version history, and every difference between the planned analyses and the outputs, each with its reason.',
-    steps: ['Open each section in the Report; the protocol’s text is loaded. Use “Draft from the protocol” or edit by hand.', 'Clear every tense finding: “will”, “shall”, “is planned”.', 'In 9.8, name amendment 1 with its approval date, what changed and why, and how many were enrolled by then.', 'For each analysis change the panel lists, give the reason in the same sentence (because…).', 'Submit.'] },
+    steps: ['Open each section in Write: the protocol’s text is loaded. Rewrite it in the past tense yourself (the draft button is off in this mission).', 'Clear every tense finding: “will”, “shall”, “is planned”.', 'In 9.8, name amendment 1 with its approval date, what changed and why, and how many were enrolled by then.', 'For each analysis change the panel lists, give the reason in the same sentence (because…).', 'Submit.'] },
   { id: 'CS10', title: 'Discussion and benefit–risk', study: 'HRP-301', sections: ['11.4.7', '12.6', '13'],
-    brief: 'A colleague’s section 13 for the HRP-301 48-participant cut says lumiravostat was effective, safe and well tolerated. Neither difference from placebo was significant. Rewrite 13 from the benefit–risk table so the conclusion matches the results, the limitations are stated and nothing is claimed that the data do not support; write the short conclusions in 11.4.7 and 12.6 too.',
+    brief: 'A colleague’s section 13 for the HRP-301 training cut (45 randomised) says lumiravostat was effective, safe and well tolerated. Neither difference from placebo was significant. Rewrite 13 from the benefit–risk table so the conclusion matches the results, the limitations are stated and nothing is claimed that the data do not support; write the short conclusions in 11.4.7 and 12.6 too.',
     steps: ['Open Discussion: read the benefit–risk table built from the outputs.', 'Rewrite 13: the primary result with its CI, what it means, the main risks, the limitations, benefit against risk.', 'Clear every claim the checks flag: “effective”, “safe”, “well tolerated”, “trend”.', 'Write 11.4.7 and 12.6 in the same spirit.', 'Submit.'] },
   { id: 'CS11', title: 'Write an abbreviated report', study: 'HRP-205', sections: CS11_SECTIONS,
     brief: 'HRP-205 (VERDANT-AC), a non-inferiority study of lumiravostat against clobetasol cream, was stopped by the sponsor after 36 of 240 planned participants because recruitment was too slow. Make it an abbreviated report: keep the sections an abbreviated report needs, summarise efficacy briefly without claiming non-inferiority, and keep the safety description complete.',
@@ -58,6 +59,11 @@ export function startMission(id: string, d?: PatientData): Project {
   if (p3) { p3.mission = { id, startedUtc: new Date().toISOString(), answers: {} }; return p3 }
   const m = missionById(id)!, p = newProject(`Mission ${m.id}: ${m.title}`, m.study, 'full', 'mission')
   p.mission = { id, startedUtc: new Date().toISOString(), answers: {} }
+  if (id === 'CS1') {
+    // The first delivery from programming: disposition (14.1.1) and exposure (14.3.5) come later.
+    const b = BUNDLED[m.study], late = (o: { title: string }) => ['14.1.1', '14.3.5'].includes(tableNumber(o.title))
+    p.outputs = { ...b, outputs: b.outputs.filter((o) => !late(o)) }; p.outputsSource = `${b.source}: first delivery (disposition and exposure not yet delivered)`
+  }
   if (id !== 'CS1') {
     const slots = defaultSlots(BUNDLED[m.study])
     for (const [s, st] of Object.entries(p.sections)) st.slots = slots[s] ?? []

@@ -27,8 +27,8 @@ describe('Phase 3 missions', () => {
   test('CS10: the colleague’s draft fails; a sound discussion passes', () => {
     const p = startMission('CS10')
     expect(failing(p).length).toBeGreaterThan(3)
-    p.sections['13'].text = 'In this 48-participant analysis, the study did not show a difference from placebo in IGA-CHE treatment success: the difference was 11.3% for lumiravostat 25 mg (95% CI -19.2 to 41.7) and 1.4% for 10 mg (95% CI -28.1 to 31.0) [T14.2.1]. HECSI-75 was tested after IGA-CHE in the fixed sequence and so cannot be interpreted. The main risks were the serious adverse events and the adverse events reported more often on lumiravostat, such as acne. The main limitation is the small number of participants. The benefit cannot be weighed against the risk until the full study is analysed.'
-    p.sections['11.4.7'].text = 'The 48-participant analysis did not show a difference from placebo in IGA-CHE treatment success or in HECSI-75 response at Week 16.'
+    p.sections['13'].text = 'In this analysis of 45 randomised participants [T14.1.1], the study did not show a difference from placebo in IGA-CHE treatment success: the difference was 11.3% for lumiravostat 25 mg (95% CI -19.2 to 41.7) and 1.4% for 10 mg (95% CI -28.1 to 31.0) [T14.2.1]. HECSI-75 was tested after IGA-CHE in the fixed sequence and so cannot be interpreted. The main risks were the serious adverse events and the adverse events reported more often on lumiravostat, such as acne. The main limitation is the small number of participants. The benefit cannot be weighed against the risk until the full study is analysed.'
+    p.sections['11.4.7'].text = 'The training-cut analysis did not show a difference from placebo in IGA-CHE treatment success or in HECSI-75 response at Week 16.'
     p.sections['12.6'].text = 'Treatment-emergent adverse events were reported in all groups. The serious adverse events are described in 12.3. The analysis is too small to describe uncommon risks.'
     expect(failing(p)).toEqual([])
   })
@@ -64,7 +64,7 @@ describe('Phase 3 missions', () => {
     resolve(p, byText('11.4.1').id, 'M. Writer', 'no change', 'The SAP makes the ANCOVA primary and the MMRM supplementary; the table title is being corrected (9.8).')
     resolve(p, byText('12.2.2').id, 'M. Writer', 'no change', 'The numbers by dose are in the next clause, from Table 14.3.1.')
     for (const q of qcStatus(p)) if (!q.auto) p.qc[q.id] = true
-    p.coverage = { ...p.coverage!, clean: p.coverage!.needed } // the narratives were fixed in Narratives
+    expect(p.coverage).toMatchObject({ needed: 10, written: 10, clean: 10 })
     p.signatures.push({ name: 'M. Writer', role: 'Medical writer', meaning: AUTHOR, utc: '', version: 1 })
     expect(gate(p, 'final').problems).toEqual([])
     p.stage = 'final'; snapshot(p, 'Final')

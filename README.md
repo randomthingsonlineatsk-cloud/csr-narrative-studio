@@ -11,7 +11,7 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
 ## What it does
 
 1. **Two worked studies** with real outputs: GLV-12-301 (type 2 diabetes, HbA1c; 81 randomised)
-   and HRP-301 (VERDANT-1, chronic hand eczema; 48-participant training cut). The tables,
+   and HRP-301 (VERDANT-1, chronic hand eczema; training cut: 48 screened, 45 randomised). The tables,
    listings and figures come from the TLF Programming Lab's reference programs, and the
    objectives, endpoints and estimands from the Protocol Builder.
 2. **Report shell.** The ICH E3 structure for a full report, an abbreviated report or a synopsis.
@@ -97,7 +97,7 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     reference safety information, appendices (a) to (l) with the investigator's certificate), and
     an export in Table 6 order with numbered pages.
 21. **Missions** CS9 (methods from the protocol), CS10 (discussion and benefit–risk for the HRP-301
-    48-participant cut), CS11 (abbreviated report for HRP-205), CS13 (take the complete GLV-12-301
+    training cut), CS11 (abbreviated report for HRP-205), CS13 (take the complete GLV-12-301
     report through review to approval) and CS14 (the India Table 6 version); two more lessons.
 
 The last phase adds anonymisation and redaction for public disclosure, hand-offs to the eCTD

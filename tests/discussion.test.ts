@@ -10,7 +10,7 @@ describe('benefit–risk and section 13', () => {
     expect(glv.primaryShown).toBe(true)
     expect(glv.harms.some((h) => /Serious/.test(h.label) && /heart muscle infarction/.test(h.detail))).toBe(true)
   })
-  test('HRP-301 (48-participant cut): nothing is shown', () => {
+  test('HRP-301 (training cut, 45 randomised): nothing is shown', () => {
     expect(hrp.primaryShown).toBe(false)
     expect(hrp.effects.map((e) => e.shown)).toEqual([false, false, false, false])
     expect(hrp.effects.find((e) => e.primary && e.group === 'Lumiravostat 25 mg')).toMatchObject({ est: 11.3, lcl: -19.2, ucl: 41.7, p: '0.685' })
@@ -27,7 +27,7 @@ describe('benefit–risk and section 13', () => {
     expect(claimFindings('Non-inferiority was demonstrated.', ni).map((c) => c.kind)).toContain('non-inferiority')
   })
   test('a sound HRP-301 discussion passes every item', () => {
-    const t = 'In this 48-participant analysis, the study did not show a difference from placebo in IGA-CHE treatment success: the difference for lumiravostat 25 mg was 11.3% (95% CI -19.2, 41.7; Table 14.2.1). Serious adverse events and the events more common on treatment are the main risks. The main limitation is the small number of participants. The benefit cannot be weighed against the risk until the full study is analysed.'
+    const t = 'In this analysis of 45 randomised participants [T14.1.1], the study did not show a difference from placebo in IGA-CHE treatment success: the difference for lumiravostat 25 mg was 11.3% (95% CI -19.2, 41.7; Table 14.2.1). Serious adverse events and the events more common on treatment are the main risks. The main limitation is the small number of participants. The benefit cannot be weighed against the risk until the full study is analysed.'
     expect(discussionItems(t, hrp).filter((i) => !i.ok)).toEqual([])
   })
 })
