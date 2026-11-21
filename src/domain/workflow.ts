@@ -61,6 +61,7 @@ export const QC_ITEMS: QcItem[] = [
     const refs = sectionsOf(p).flatMap((s) => [...(p.sections[s.id].text.matchAll(/\[T?(\d+(?:\.\d+)+)\]|(?:Table|Listing|Figure)\s+(\d+(?:\.\d+)+)/g))].map((m) => m[1] ?? m[2]))
     const known = new Set(dataOf(p).outputs.map((o) => /(\d+(?:\.\d+)+)/.exec(o.title)?.[1]).filter(Boolean))
     const unknown = [...new Set(refs.filter((r) => !known.has(r)))]; return { ok: !unknown.length, why: unknown.length ? `No such output: ${unknown.join(', ')}.` : 'Every reference names an existing output.' } } },
+  { id: 'narratives', text: 'Every patient who needs a narrative has one, and each passes narrative QC (12.3.2).', auto: (p) => { const c = p.coverage; if (!c) return { ok: false, why: 'Open Narratives to measure the coverage.' }; return { ok: c.needed > 0 && c.clean === c.needed, why: `${c.clean} of ${c.needed} narratives pass QC; ${c.written} written.` } } },
   { id: 'primary', text: 'The primary analysis comes first, as specified in the SAP, with comparisons in the multiplicity order.' },
   { id: 'sets', text: 'Each result names its analysis set, and the numbers of participants agree across sections.' },
   { id: 'interpret', text: 'Results sections report; interpretation stays in the conclusions (11.4.7, 12.6, 13).' },

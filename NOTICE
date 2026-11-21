@@ -17,9 +17,11 @@ summarises them in its own words and does not reproduce their text. Nothing in i
 or legal advice.
 
 The study outputs in src/data were produced by the reference programs of the TLF Programming
-Lab and the protocols by the Protocol Builder (both by the same author and under the same
-licence): https://github.com/randomthingsonlineatsk-cloud/tlf-programming-lab and
-https://github.com/randomthingsonlineatsk-cloud/protocol-builder.
+Lab, the patient-level SDTM by the SDTM Mapping Trainer, the HRP-301 safety cases and
+reconciliation by the CDM Query & Edit-Check Console, and the protocols by the Protocol Builder
+(all by the same author and under the same licence), at
+https://github.com/randomthingsonlineatsk-cloud/ (tlf-programming-lab, sdtm-mapping-trainer,
+cdm-query-console, protocol-builder). Every participant, date of birth and event is fictional.
 
 The app is not a validated system and must not hold real patient data. Everything stays in the
 browser; there is no AI service: all checks and scores are by rules.

@@ -13,6 +13,7 @@ export interface SectionState { text: string; na?: string; slots: string[]; /** 
 export interface Rounding { pct: number; mean: number; p: number }
 export interface Signature { name: string; role: string; meaning: string; utc: string; version: number }
 export interface MissionRun { id: string; startedUtc: string; submittedUtc?: string; score?: number; detail?: { label: string; got: number; of: number }[]; answers: Record<string, string> }
+export interface NarrativeState { text: string; queries: string[]; updatedUtc: string }
 export interface Project {
   id: string; name: string; userId: string; classId: string; kind: 'report' | 'mission'
   study: string; reportType: ReportType; stage: Stage
@@ -24,6 +25,12 @@ export interface Project {
   signatures: Signature[]
   version: number
   mission?: MissionRun
+  /** Narratives by event key (USUBJID|AESEQ). */
+  narratives?: Record<string, NarrativeState>
+  /** The learner's own patient data and safety file, replacing the bundled ones. */
+  sdtm?: import('./sdtm').Sdtm; safety?: import('./sdtm').Safety
+  /** Narrative coverage as last measured (the QC checklist reads it). */
+  coverage?: { needed: number; written: number; clean: number; utc: string }
   createdUtc: string; updatedUtc: string; schema: 1
 }
 export interface Progress { id: 'me'; userId: string; classId: string; name?: string; quizzes: Record<string, { score: number; of: number; utc: string }>; drills: Record<string, { score: number; utc: string }>; missions: Record<string, { score: number; utc: string }> }

@@ -6,8 +6,9 @@ import { CS2_PLANTED, cs2Draft, cs2Fixed } from './missions/cs2'
 import { checkText, errors, sentences, type Finding, type TokKind } from './checker'
 import { outputsOf } from './study'
 import type { MissionRun, Project } from './types'
+import { scoreNarrativeMission, cs8Texts, CS7_MINUTES, type PatientData } from './missions/narr'
 
-export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean }
+export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean; narratives?: boolean }
 export const MISSIONS: MissionDef[] = [
   { id: 'CS1', title: 'Build the report shell for VERDANT-1', study: 'HRP-301', core: true, sections: [],
     brief: 'Programming has delivered the first outputs for HRP-301 (48-participant training cut). Build the shell: attach the outputs that feed each results section, request the outputs that are missing, and mark the sections that do not apply, with a reason.',
@@ -23,11 +24,20 @@ export const MISSIONS: MissionDef[] = [
     steps: ['Lead with the primary estimand: both differences from placebo, their 95% CIs and p-values.', 'State the testing order of the fixed sequence.', 'Then the sensitivity analysis, then the supplementary MMRM.', 'No claims for subgroups.', 'A short conclusions paragraph in 11.4.7; submit.'] },
   { id: 'CS5', title: 'Write the safety overview', study: 'GLV-12-301', core: true, sections: ['12.1', '12.2.1', '12.2.2', '12.3.1'],
     brief: 'Write 12.1 Extent of exposure, 12.2.1 Brief summary, 12.2.2 Display of adverse events and 12.3.1 Listing of deaths, other serious and significant events for GLV-12-301.',
-    steps: ['Exposure by group (Table 14.3.5).', 'Any TEAE by group, discontinuations due to adverse events, and the death (Tables 14.3.1 and 14.1.1).', 'The three most common events overall, and differences between groups.', 'The serious adverse event from Listing 16.2.7: term, group, study day, causality.', 'Report neutrally: no “only”, “mild and transient” or “well tolerated”.', 'Submit.'] },
+    steps: ['Exposure by group (Table 14.3.5).', 'Any TEAE by group, discontinuations due to adverse events, and the death (Tables 14.3.1 and 14.1.1).', 'The three most common events overall, and differences between groups.', 'The serious adverse events from Listing 16.2.7: each term and group, and for the fatal one the study day and causality.', 'Report neutrally: no “only”, “mild and transient” or “well tolerated”.', 'Submit.'] },
+  { id: 'CS6', title: 'Write the four VERDANT-1 SAE narratives', study: 'HRP-301', core: true, sections: [], narratives: true,
+    brief: 'HRP-301 had four serious adverse events. Write a narrative for each (ICH E3 12.3.2) from the patient profile, using the fixed template: no narrative generator in this mission. Every fact must match the data and the safety case. Where the data contradict themselves, raise a data query rather than writing around it.',
+    steps: ['Open Narratives and pick each SAE.', 'Read the profile and timeline; insert the template.', 'Fill every prompt from the data: patient, history, medications, the event, action, dechallenge and rechallenge, outcome, both causality opinions (the sponsor’s from the safety case).', 'Raise a data query for each contradiction the QC finds in the data.', 'Submit when all four pass QC.'] },
+  { id: 'CS7', title: 'Ten GLV-12-301 narratives against the clock', study: 'GLV-12-301', sections: [], narratives: true,
+    brief: `GLV-12-301 needs ten narratives: seven serious adverse events (one fatal) and three discontinuations because of an adverse event. Use the narrative generator, confirm the dechallenge and rechallenge statements, take the sponsor’s causality from each safety case, and get all ten through QC within ${CS7_MINUTES} minutes.`,
+    steps: ['Open Narratives (batch mode shows the clock).', 'For each patient: fill from the data, then check every statement against the profile.', 'Confirm the dechallenge and rechallenge statements the dates support.', 'Insert the sponsor’s causality from the safety case.', 'Submit when all ten pass QC.'] },
+  { id: 'CS8', title: 'QC a colleague’s narratives', study: 'GLV-12-301', sections: [], narratives: true,
+    brief: 'A colleague has drafted four GLV-12-301 narratives. Twelve statements contradict the listings, the patient data or the safety database. Find and correct every one, without introducing new errors.',
+    steps: ['Open Narratives: the four drafts are loaded.', 'Read each against the profile, the timeline and the safety case; the QC panel helps.', 'Correct the narrative text.', 'Submit when the four pass QC.'] },
 ]
 export const missionById = (id: string) => MISSIONS.find((m) => m.id === id)
 
-export function startMission(id: string): Project {
+export function startMission(id: string, d?: PatientData): Project {
   const m = missionById(id)!, p = newProject(`Mission ${m.id}: ${m.title}`, m.study, 'full', 'mission')
   p.mission = { id, startedUtc: new Date().toISOString(), answers: {} }
   if (id !== 'CS1') {
@@ -35,7 +45,8 @@ export function startMission(id: string): Project {
     for (const [s, st] of Object.entries(p.sections)) st.slots = slots[s] ?? []
     p.stage = 'draft'
   }
-  if (id === 'CS2') { const d = cs2Draft(); for (const [s, t] of Object.entries(d)) p.sections[s].text = t }
+  if (id === 'CS2') { const d2 = cs2Draft(); for (const [s, t] of Object.entries(d2)) p.sections[s].text = t }
+  if (id === 'CS8') { if (!d) throw new Error('The patient data are still loading.'); p.narratives = Object.fromEntries(Object.entries(cs8Texts(d)).map(([k, t]) => [k, { text: t, queries: [], updatedUtc: p.createdUtc }])) }
   return p
 }
 
@@ -69,7 +80,8 @@ export const REQUESTABLE: { id: string; title: string }[] = [
   { id: '14.3.6', title: 'Vital signs' }, { id: '14.3.7', title: 'Concomitant medications' }, { id: '16.2.1', title: 'Discontinued patients' }, { id: '16.2.2', title: 'Protocol deviations listing' },
 ]
 
-export function scoreMission(p: Project): Item[] {
+export function scoreMission(p: Project, d?: PatientData | null): Item[] {
+  if (missionById(p.mission!.id)?.narratives) return d ? scoreNarrativeMission(p, d) : []
   const id = p.mission!.id, S = (s: string) => p.sections[s]?.text ?? ''
   if (id === 'CS1') return Object.entries(CS1_KEY).map(([sec, k]) => {
     const st = p.sections[sec]; if (!st) return { label: sec, ok: false, why: 'Missing section.' }
@@ -132,7 +144,8 @@ export function scoreMission(p: Project): Item[] {
         { label: 'Third most common event', sec: '12.2.2', out: 'T2', row: 'Fatigue', groups: ['Total'], kind: 'n' },
       ]),
       { label: 'The death reported', ok: /\bdie[ds]\b|\bdeath\b/i.test(S('12.2.1') + S('12.3.1')), why: 'One participant on GLV-12 10 mg died (Table 14.1.1).' },
-      { label: 'The SAE: term, group, day, causality', ok: /heart muscle infarction/i.test(S('12.3.1')) && /10 mg/.test(S('12.3.1')) && /\bday\s*97\b/i.test(S('12.3.1')) && /not related|unrelated/i.test(S('12.3.1')) && /16\.2\.7/.test(S('12.3.1')), why: 'Heart muscle infarction, GLV-12 10 mg, Day 97, not related (Listing 16.2.7).' },
+      { label: 'Every serious adverse event named', ok: ['fainting', 'transient brain ischaemia', 'heart muscle infarction', 'kidney stone', 'cellulitis', 'pneumonia', 'wrist fracture'].every((t) => S('12.3.1').toLowerCase().includes(t)), why: 'Seven SAEs in Listing 16.2.7: fainting, transient brain ischaemia, heart muscle infarction (GLV-12 10 mg); kidney stone, cellulitis (5 mg); pneumonia, wrist fracture (placebo).' },
+      { label: 'The fatal SAE: group, day, causality', ok: /heart muscle infarction/i.test(S('12.3.1')) && /10 mg/.test(S('12.3.1')) && /\bday\s*97\b/i.test(S('12.3.1')) && /not related|unrelated/i.test(S('12.3.1')) && /16\.2\.7/.test(S('12.3.1')), why: 'Heart muscle infarction, GLV-12 10 mg, Day 97, not related (Listing 16.2.7).' },
       { label: 'Neutral wording', ok: !/\bonly\b|mild and transient|well[- ]tolerated|no safety concerns/i.test(all), why: 'Avoid “only”, “mild and transient”, “well tolerated”: report what the data show.' },
       clean(p, ['12.1', '12.2.1', '12.2.2', '12.3.1']),
     ]
@@ -140,5 +153,5 @@ export function scoreMission(p: Project): Item[] {
   return []
 }
 export const scoreOf = (items: Item[]) => Math.round((100 * items.filter((x) => x.ok).length) / Math.max(1, items.length))
-export function submit(p: Project): MissionRun { const items = scoreMission(p); return { ...p.mission!, submittedUtc: new Date().toISOString(), score: scoreOf(items), detail: items.map((i) => ({ label: i.label, got: i.ok ? 1 : 0, of: 1 })) } }
+export function submit(p: Project, d?: PatientData | null): MissionRun { const items = scoreMission({ ...p, mission: { ...p.mission!, submittedUtc: new Date().toISOString() } }, d); return { ...p.mission!, submittedUtc: new Date().toISOString(), score: scoreOf(items), detail: items.map((i) => ({ label: i.label, got: i.ok ? 1 : 0, of: 1 })) } }
 export { CS2_PLANTED }
