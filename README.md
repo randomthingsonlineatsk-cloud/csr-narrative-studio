@@ -35,8 +35,9 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
    from your results, matched by the analysis keys each cell carries.
 7. **Export** the report as Word (.docx) or HTML with E3 numbering, a table of contents, in-text
    tables and anything still to be written highlighted; or as a project file to move or share.
-8. **Learn:** five lessons with eight-question quizzes (the E3 structure, writing results from
-   tables, estimands in reporting, the safety sections, patient narratives).
+8. **Learn:** seven lessons with eight-question quizzes (the E3 structure, writing results from
+   tables, estimands in reporting, the safety sections, patient narratives, methods and the
+   discussion, review and India).
 9. **Missions** (scored by rules):
    - CS1 Build the report shell for VERDANT-1 (attach, request, not applicable);
    - CS2 Text-versus-table QC: find and fix 25 planted errors;
@@ -70,8 +71,37 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     dispensed, so interruptions come from the AE form without days), CS7 (ten GLV-12-301 narratives within 60 minutes) and CS8 (QC a
     colleague's narratives: twelve planted contradictions); a fifth lesson on narratives.
 
-Later phases add the synopsis and section 9 from the protocol, the review cycle, the EU and India
-specifics, redaction and anonymisation for public disclosure, and the classroom.
+### Methods, review and India (Phase 3)
+
+16. **Methods from the protocol**: sections 7 to 9 drafted from the Protocol Builder's protocol
+    in the past tense, with the protocol's own words beside them and a tense check (future and
+    present tense of a procedure). Section 9.8 lists every amendment from the version history,
+    and every difference between the planned analyses and the outputs (a dictionary changed, an
+    analysis not run, a mislabelled table), each needing its reason in the same sentence.
+17. **Discussion and benefit–risk** (E3 13): a benefit–risk table built from the outputs (each
+    comparison shown or not, against superiority or a non-inferiority margin; serious adverse
+    events and events more common on treatment), and checks on 11.4.7, 12.6 and 13 for claims the
+    results do not support: "safe", "well tolerated", efficacy after a failed primary comparison,
+    a "trend", superiority or "comparable" efficacy from a non-inferiority study.
+18. **Review cycle**: comments by section with quotes, replies and a resolution (changed, no
+    change with a reason, withdrawn); open comments stop the report going final. A version is kept
+    at every stage change, with word-level tracked changes between any version and now. The
+    coordinating investigator signs (E3 16.1.5) before approval.
+19. **Kinds of report**: full, abbreviated (efficacy shortened, safety complete) and synopsis.
+    HRP-205 (VERDANT-AC), a fictional non-inferiority study stopped early (36 of 240), is the
+    abbreviated-report case.
+20. **India (NDCT Rules 2019, Third Schedule, Table 6)**: the 16 headings mapped to E3, the
+    India-only items (GCP compliance statement, ethics committee of each Indian site with its
+    constitution and approval date, the GCP/ICMR declaration, start and end of accrual, the
+    participants at Indian sites, 13.1 all SAEs, 13.2 unexpected adverse events against the
+    reference safety information, appendices (a) to (l) with the investigator's certificate), and
+    an export in Table 6 order with numbered pages.
+21. **Missions** CS9 (methods from the protocol), CS10 (discussion and benefit–risk for the HRP-301
+    48-participant cut), CS11 (abbreviated report for HRP-205), CS13 (take the complete GLV-12-301
+    report through review to approval) and CS14 (the India Table 6 version); two more lessons.
+
+The last phase adds anonymisation and redaction for public disclosure, hand-offs to the eCTD
+Dossier Builder and the Plain Language Lab, the capstone, the certificate and the classroom.
 
 ## Run it
 

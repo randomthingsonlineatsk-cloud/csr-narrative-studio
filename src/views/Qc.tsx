@@ -4,6 +4,7 @@ import { useStore } from '../state'
 import { qcStatus, findingsOf, AUTHOR, APPROVER } from '../domain/workflow'
 import { issues, LABEL } from '../domain/checker'
 import { download } from '../domain/store'
+import { CI } from '../domain/review'
 import StagePanel, { isLocked } from './Stage'
 import { Btn, Panel, Pill, SignForm, Table, fmtUtc } from './ui'
 
@@ -23,9 +24,10 @@ export default function Qc() {
             {i.auto ? <span aria-hidden className={i.done ? 'text-lab-cdsco' : 'text-lab-amber'}>{i.done ? '✓' : '✗'}</span> : <input type="checkbox" aria-label={i.text} disabled={lock || p!.stage === 'shell'} checked={!!p!.qc[i.id]} onChange={(e) => act((x) => { x.qc[i.id] = e.target.checked })} />}
             <span className="flex-1">{i.text}{i.auto && <><Pill className="ml-1">measured</Pill><span className="block text-xs text-lab-text-muted">{i.why}</span></>}</span></li>)}</ul>
         </Panel>
-        <Panel title="Signatures" sub="The author signs when the report passes QC; an approver (someone else) signs the final version. Practice signatures: this app is not a validated system and records no legal signature.">
+        <Panel title="Signatures" sub="The author signs when the report passes QC; an approver (someone else) signs the final version; the coordinating investigator signs that the report describes the study accurately (E3 16.1.5; NDCT Table 6, appendix l). Practice signatures: this app is not a validated system and records no legal signature.">
           {p!.stage === 'review' && !sig(AUTHOR).length && <SignForm meaning={AUTHOR} label="Sign as author" who={{ name: '', role: 'Medical writer' }} onSign={(s) => act((x) => { x.signatures.push({ ...s, utc: new Date().toISOString(), version: x.version }) })} />}
           {p!.stage === 'final' && !sig(APPROVER).length && <SignForm meaning={APPROVER} label="Sign as approver" who={{ name: '', role: 'Clinical lead' }} onSign={(s) => act((x) => { x.signatures.push({ ...s, utc: new Date().toISOString(), version: x.version }) })} />}
+          {['review', 'final'].includes(p!.stage) && !sig(CI).length && <SignForm meaning={CI} label="Sign as coordinating investigator" who={{ name: '', role: 'Coordinating investigator' }} onSign={(s) => act((x) => { x.signatures.push({ ...s, utc: new Date().toISOString(), version: x.version }) })} />}
           {!['review', 'final'].includes(p!.stage) && <p className="text-xs text-lab-text-muted">The author signs in review; the approver signs a final report.</p>}
           <Table head={['Version', 'Name', 'Role', 'Meaning', 'Signed (UTC)']} empty="No signatures yet." rows={p!.signatures.map((s) => [s.version, s.name, s.role, s.meaning.split(':')[0], fmtUtc(s.utc)])} />
         </Panel>

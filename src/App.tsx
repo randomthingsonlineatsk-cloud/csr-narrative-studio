@@ -13,12 +13,15 @@ import Qc from './views/Qc'
 import Export from './views/Export'
 import Narratives from './views/Narratives'
 import Recon from './views/Recon'
+import Discussion from './views/Discussion'
+import Review from './views/Review'
+import India from './views/India'
 import MissionBar from './views/MissionBar'
 
 type Page = 'home' | 'learn'
 const PAGES: { id: Page; label: string; key: string }[] = [{ id: 'home', label: 'Reports and missions', key: 'h' }, { id: 'learn', label: 'Learn', key: 'l' }]
-const VIEWS: { id: View; label: string; key: string }[] = [{ id: 'overview', label: 'Overview', key: 'o' }, { id: 'shell', label: 'Shell and outputs', key: 's' }, { id: 'write', label: 'Write', key: 'w' }, { id: 'outputs', label: 'Tables and listings', key: 't' }, { id: 'narratives', label: 'Narratives', key: 'n' }, { id: 'recon', label: 'SAE reconciliation', key: 'r' }, { id: 'qc', label: 'QC and sign-off', key: 'q' }, { id: 'export', label: 'Export', key: 'x' }]
-const SHORTCUTS: [string, string][] = [['?', 'Show these shortcuts'], ['g then h / l', 'Reports and missions, Learn'], ['g then o / s / w / t / n / r / q / x', 'In a report: Overview, Shell and outputs, Write, Tables and listings, Narratives, SAE reconciliation, QC and sign-off, Export'], ['Ctrl or ⌘ + S', 'Work is saved as you type; this confirms it'], ['Esc', 'Close a dialog']]
+const VIEWS: { id: View; label: string; key: string }[] = [{ id: 'overview', label: 'Overview', key: 'o' }, { id: 'shell', label: 'Shell and outputs', key: 's' }, { id: 'write', label: 'Write', key: 'w' }, { id: 'outputs', label: 'Tables and listings', key: 't' }, { id: 'narratives', label: 'Narratives', key: 'n' }, { id: 'recon', label: 'SAE reconciliation', key: 'r' }, { id: 'discussion', label: 'Discussion', key: 'd' }, { id: 'review', label: 'Review', key: 'v' }, { id: 'qc', label: 'QC and sign-off', key: 'q' }, { id: 'india', label: 'India (Table 6)', key: 'i' }, { id: 'export', label: 'Export', key: 'x' }]
+const SHORTCUTS: [string, string][] = [['?', 'Show these shortcuts'], ['g then h / l', 'Reports and missions, Learn'], ['g then o / s / w / t / n / r / d / v / q / i / x', 'In a report: Overview, Shell and outputs, Write, Tables and listings, Narratives, SAE reconciliation, Discussion, Review, QC and sign-off, India (Table 6), Export'], ['Ctrl or ⌘ + S', 'Work is saved as you type; this confirms it'], ['Esc', 'Close a dialog']]
 const typing = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
 
 function Shell_() {
@@ -61,7 +64,7 @@ function Shell_() {
         </header>
         {error && <div role="alert" className="max-w-7xl mx-auto w-full px-4 pt-3"><div className="rounded border border-lab-red/60 bg-lab-red-soft px-3 py-2 text-sm text-lab-red flex justify-between gap-2"><span>{error}</span><button onClick={() => setError('')} aria-label="Dismiss">✕</button></div></div>}
         <main className="max-w-7xl mx-auto w-full px-4 py-4 flex-1">
-          {p ? <><MissionBar />{nav.view === 'overview' ? <Overview /> : nav.view === 'shell' ? <Shell /> : nav.view === 'write' ? <Write key={`${p.id}-${nav.arg ?? ''}`} /> : nav.view === 'outputs' ? <Outputs /> : nav.view === 'narratives' ? <Narratives key={p.id} /> : nav.view === 'recon' ? <Recon /> : nav.view === 'qc' ? <Qc /> : <Export />}</>
+          {p ? <><MissionBar />{nav.view === 'overview' ? <Overview /> : nav.view === 'shell' ? <Shell /> : nav.view === 'write' ? <Write key={`${p.id}-${nav.arg ?? ''}`} /> : nav.view === 'outputs' ? <Outputs /> : nav.view === 'narratives' ? <Narratives key={p.id} /> : nav.view === 'recon' ? <Recon /> : nav.view === 'discussion' ? <Discussion /> : nav.view === 'review' ? <Review /> : nav.view === 'india' ? <India /> : nav.view === 'qc' ? <Qc /> : <Export />}</>
             : page === 'learn' ? <Learn /> : <Home onOpen={() => go('overview')} />}
         </main>
         {toast && <div role="status" className="fixed bottom-4 right-4 z-50 rounded border border-lab-line bg-lab-panel px-3 py-2 text-sm shadow">{toast}</div>}

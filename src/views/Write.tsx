@@ -6,6 +6,9 @@ import { useNav } from '../nav'
 import { dataOf, PLACEHOLDER } from '../domain/project'
 import { sectionsOf, needsText, reportsResults } from '../domain/workflow'
 import { sectionById } from '../domain/e3'
+import { changeFindings, DRAFTABLE, methodsDraft, PROTOCOL_KEYS, protocolText, tenseFindings } from '../domain/methods'
+import { benefitRisk, claimFindings } from '../domain/discussion'
+import { missionById } from '../domain/missions'
 import { checkText, issues, errors, LABEL, SEVERITY, type Finding } from '../domain/checker'
 import { outputsOf } from '../domain/study'
 import { rowsOf, skeleton } from '../domain/helper'
@@ -29,7 +32,7 @@ export default function Write() {
   const status = (sid: string) => {
     const x = p!.sections[sid]; if (x.na) return { label: 'n/a', tone: 'grey' as const }
     if (!x.text.trim() || PLACEHOLDER.test(x.text)) return { label: 'to write', tone: 'amber' as const }
-    if (!reportsResults(sectionById(sid)!)) return { label: 'written', tone: 'green' as const }
+    if (!reportsResults(sectionById(sid)!)) return tenseFindings(x.text).length && (DRAFTABLE.includes(sid) || PROTOCOL_KEYS[sid]) ? { label: 'tense', tone: 'amber' as const } : { label: 'written', tone: 'green' as const }
     const e = errors(checkText(sid, blankOut(x.text), outs, x.slots, d.groups, p!.rounding)); return e.length ? { label: `${e.length} err`, tone: 'red' as const } : { label: 'ok', tone: 'green' as const }
   }
   const insert = (text: string) => act((x) => {
@@ -63,7 +66,8 @@ export default function Write() {
             <p className="text-[11px] text-lab-text-muted">Name the table after each sentence: [T14.1.1] or “(Table 14.1.1)”. A line holding only {'{{T4}}'} places that table in the exported report. The skeleton gives every value as the table shows it; rewrite it as prose and the checker still ties each number to its cell.</p>
           </>}
         </Panel>
-        {!st.na && st.text.trim() && <Panel title="Your text, as checked" sub="Each number is coloured by what the checker found. Hover for the detail.">
+        {!st.na && <Guides sid={s.id} text={st.text} lock={lock} onDraft={(t, replace) => replace ? act((x) => { x.sections[s.id].text = t }) : insert(t)} />}
+        {!st.na && st.text.trim() && reportsResults(s) && <Panel title="Your text, as checked" sub="Each number is coloured by what the checker found. Hover for the detail.">
           <Marked text={st.text} f={f} />
         </Panel>}
       </div>
@@ -72,7 +76,29 @@ export default function Write() {
     </div>
   )
 }
-const missionSections = (p: NonNullable<ReturnType<typeof useStore>['p']>) => ({ CS2: ['10.1', '11.2', '11.4.1', '12.1', '12.2.1', '12.2.2'], CS3: ['10.1', '11.2'], CS4: ['11.4.1', '11.4.7'], CS5: ['12.1', '12.2.1', '12.2.2', '12.3.1'] } as Record<string, string[]>)[p.mission?.id ?? ''] ?? []
+const missionSections = (p: NonNullable<ReturnType<typeof useStore>['p']>) => ({ CS2: ['10.1', '11.2', '11.4.1', '12.1', '12.2.1', '12.2.2'], CS3: ['10.1', '11.2'], CS4: ['11.4.1', '11.4.7'], CS5: ['12.1', '12.2.1', '12.2.2', '12.3.1'] } as Record<string, string[]>)[p.mission?.id ?? ''] ?? (p.mission && missionById(p.mission.id)?.sections) ?? []
+
+/** Methods sections: the protocol's words beside the text, a past-tense draft, tense findings; for
+ *  9.8 the amendments and analysis changes; for the conclusions, claims the results do not support. */
+function Guides({ sid, text, lock, onDraft }: { sid: string; text: string; lock: boolean; onDraft: (t: string, replace: boolean) => void }) {
+  const { p } = useStore()
+  const src = protocolText(p!.study, sid), drafted = methodsDraft(p!.study, sid), tense = DRAFTABLE.includes(sid) || PROTOCOL_KEYS[sid] ? tenseFindings(text) : []
+  const empty = !text.trim() || PLACEHOLDER.test(text)
+  const changes = sid === '9.8' ? changeFindings(p!.study, text) : []
+  const claims = ['11.4.7', '12.6', '13'].includes(sid) ? claimFindings(text, benefitRisk(dataOf(p!))) : []
+  if (!src && !drafted && !changes.length && !claims.length && !tense.length) return null
+  return (
+    <Panel title={sid === '9.8' ? 'Changes in conduct and planned analyses' : claims.length || ['11.4.7', '12.6', '13'].includes(sid) ? 'Claims against the results' : 'From the protocol'} sub={sid === '9.8' ? 'Every amendment from the protocol’s version history, and every difference between what the protocol and SAP planned and what the outputs show. Each needs its reason in the same sentence.' : ['11.4.7', '12.6', '13'].includes(sid) ? 'Conclusions say what the results show, no more. See Discussion for the benefit–risk table.' : 'The protocol says what will happen; the report says what did. Report the methods in the past tense, and say where the conduct differed (9.8).'}>
+      {src && <details className="text-xs"><summary className="cursor-pointer text-lab-text-muted">The protocol’s own words</summary><p className="mt-1 whitespace-pre-wrap">{src}</p></details>}
+      {drafted && !lock && <div className="flex flex-wrap gap-2">{empty ? <Btn tone="grey" onClick={() => onDraft(drafted, true)}>Draft from the protocol</Btn> : <Btn tone="grey" onClick={() => onDraft(drafted, false)}>Insert the protocol draft at the cursor</Btn>}<span className="text-[11px] text-lab-text-muted self-center">A first draft in the past tense: read it against what actually happened.</span></div>}
+      {tense.length > 0 && <ul className="text-xs space-y-1">{tense.map((t, i) => <li key={i} className="border-l-2 pl-2 border-lab-amber"><b className="text-lab-amber">{t.words.join(', ')}</b> · “{t.sentence.slice(0, 140)}”</li>)}</ul>}
+      {(DRAFTABLE.includes(sid) || PROTOCOL_KEYS[sid]) && !tense.length && text.trim() && !empty && <p className="text-xs text-lab-cdsco">✓ Past tense throughout.</p>}
+      {changes.length > 0 && <ul className="text-xs space-y-1">{changes.map((c, i) => <li key={i} className={`border-l-2 pl-2 ${c.ok ? 'border-lab-cdsco' : 'border-lab-red'}`}><b className={c.ok ? 'text-lab-cdsco' : 'text-lab-red'}>{c.ok ? '✓' : '✗'} {c.label}</b> · {c.why}</li>)}</ul>}
+      {claims.map((c, i) => <p key={i} className={`text-xs border-l-2 pl-2 ${c.severity === 'error' ? 'border-lab-red' : 'border-lab-amber'}`}><b className={c.severity === 'error' ? 'text-lab-red' : 'text-lab-amber'}>{c.kind}</b> · “{c.sentence.slice(0, 120)}”: {c.why}</p>)}
+      {['11.4.7', '12.6', '13'].includes(sid) && !claims.length && text.trim() && !empty && <p className="text-xs text-lab-cdsco">✓ No unsupported claims found.</p>}
+    </Panel>
+  )
+}
 
 function Marked({ text, f }: { text: string; f: Finding[] }) {
   const parts: React.ReactNode[] = []; let at = 0

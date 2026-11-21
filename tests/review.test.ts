@@ -28,3 +28,18 @@ describe('review cycle', () => {
     expect(ch.map((c) => [c.section, c.added, c.removed])).toEqual([['11.4.1', 3, 0]])
   })
 })
+
+import { indiaBlocks, reportDocx } from '../src/domain/docx'
+import { completeProject } from '../src/domain/project'
+describe('India Table 6 export', () => {
+  test('16 headings in order, India-only items as gaps until written, and a Word file', async () => {
+    const p = completeProject()
+    const b = indiaBlocks(p), h1 = b.filter((x) => x.kind === 'heading' && x.level === 1).map((x) => (x as { text: string }).text)
+    expect(h1).toHaveLength(16)
+    expect(h1[2]).toBe('3. Statement of compliance with the Good Clinical Practices Guidelines')
+    expect(b.some((x) => x.kind === 'para' && /\[To be written: the statement of compliance/.test(x.text))).toBe(true)
+    expect(b.some((x) => x.kind === 'heading' && x.text.startsWith('E3 9.8'))).toBe(true)
+    const blob = await reportDocx(p, b)
+    expect(blob.size).toBeGreaterThan(10000)
+  })
+})

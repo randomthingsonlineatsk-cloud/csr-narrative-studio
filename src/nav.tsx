@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-export type View = 'overview' | 'shell' | 'write' | 'outputs' | 'narratives' | 'recon' | 'qc' | 'export'
+export type View = 'overview' | 'shell' | 'write' | 'outputs' | 'narratives' | 'recon' | 'discussion' | 'review' | 'india' | 'qc' | 'export'
 export interface Nav { view: View; arg?: string; go: (v: View, arg?: string) => void }
 export const NavCtx = createContext<Nav>({ view: 'overview', go: () => {} })
 export const useNav = () => useContext(NavCtx)
