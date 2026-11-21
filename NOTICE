@@ -24,5 +24,12 @@ scripts/make-hrp-205.mjs; the reference safety information and Indian ethics com
 https://github.com/randomthingsonlineatsk-cloud/ (tlf-programming-lab, sdtm-mapping-trainer,
 cdm-query-console, protocol-builder). Every participant, date of birth and event is fictional.
 
+EMA Policy 0070, Health Canada's Public Release of Clinical Information and the EU CTIS transparency
+rules are named for education; the anonymisation report follows the headings of the template EMA
+and Health Canada share, in the app's own words. The re-identification risk method (1 ÷ the
+smallest group of participants sharing the published characteristics) is a simplified teaching
+model, not a validated anonymisation tool. The classroom mode uses the shared classroom server in
+the eCTD Dossier Builder repository.
+
 The app is not a validated system and must not hold real patient data. Everything stays in the
 browser; there is no AI service: all checks and scores are by rules.

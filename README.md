@@ -35,9 +35,9 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
    from your results, matched by the analysis keys each cell carries.
 7. **Export** the report as Word (.docx) or HTML with E3 numbering, a table of contents, in-text
    tables and anything still to be written highlighted; or as a project file to move or share.
-8. **Learn:** seven lessons with eight-question quizzes (the E3 structure, writing results from
+8. **Learn:** nine lessons with eight-question quizzes (the E3 structure, writing results from
    tables, estimands in reporting, the safety sections, patient narratives, methods and the
-   discussion, review and India).
+   discussion, review and India, disclosure and anonymisation, the CSR in the CTD).
 9. **Missions** (scored by rules):
    - CS1 Build the report shell for VERDANT-1 (attach, request, not applicable);
    - CS2 Text-versus-table QC: find and fix 25 planted errors;
@@ -100,8 +100,31 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     training cut), CS11 (abbreviated report for HRP-205), CS13 (take the complete GLV-12-301
     report through review to approval) and CS14 (the India Table 6 version); two more lessons.
 
-The last phase adds anonymisation and redaction for public disclosure, hand-offs to the eCTD
-Dossier Builder and the Plain Language Lab, the capstone, the certificate and the classroom.
+### Disclosure, hand-offs, certificate and classroom (Phase 4)
+
+22. **Disclosure** for the EU CTR (CTIS; revised transparency rules since 18 June 2024), EMA Policy
+    0070 (external guidance version 1.5, May 2025) and Health Canada's Public Release of Clinical
+    Information: rules for each identifier (participant IDs replaced, dates shifted by one secret
+    offset, names and site numbers removed, ages banded or removed, race removed), the
+    quasi-identifiers the public version keeps, and the re-identification risk measured on the
+    study's own participants (1 ÷ the smallest group, against 0.09: groups of at least 11). The
+    narratives are rewritten to publish no more than the risk assessment allowed. Commercially
+    confidential information is proposed passage by passage and checked against each route (Health
+    Canada's two categories; results, design and safety never). Outputs: the redacted report, a
+    redaction log (CSV) and an anonymisation report, as one `csr-studio/disclosure` zip.
+23. **Hand-offs**: the report for Module 5.3.5.1 of the eCTD Dossier Builder (`csr-studio/ectd-5-3-5`:
+    body, synopsis, protocol, SAP, with study tags), lay results for the Plain Language Lab
+    (`csr-studio/lay-results`: the report's own results in the ARS shape the Lab reads), and a hand-off
+    for the Ostrevia journey on the pharmolecule hub (`csr-studio-handoff`).
+24. **Missions** CS12 (redact the approved GLV-12-301 report for public release, core) and CS15 (the
+    capstone: the whole VERDANT-1 report from your own analysis package and SDTM, approved and handed
+    on). Pass at 80, expert at 100.
+25. **Certificate** (verification code CS-, checked in the Regulatory Skills Passport): the six core
+    missions (CS1, CS2, CS4, CS5, CS6, CS12) and all nine Learn quizzes passed; with distinction for
+    every mission passed and three at expert level.
+26. **Classroom** on the shared classroom server (routes `/cs/v1`, `cs_` tables): classes, assignments,
+    submissions re-scored in the instructor's browser, comments and a leaderboard. Two more lessons:
+    disclosure and anonymisation; the CSR in the CTD (Module 5, ISS and ISE).
 
 ## Run it
 

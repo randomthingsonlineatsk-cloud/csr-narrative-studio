@@ -60,9 +60,9 @@ function CommentCard({ c, lock, run }: { c: Comment; lock: boolean; run: (f: () 
 }
 
 function Versions() {
-  const { p } = useStore()
+  const { p, tick } = useStore()
   const snaps = p!.snapshots ?? [], [from, setFrom] = useState(String(Math.max(0, snaps.length - 1)))
-  const s = snaps[Number(from)], ch = useMemo(() => (s ? changesSince(s, currentTexts(p!)) : []), [s, p])
+  const s = snaps[Number(from)], ch = useMemo(() => (s ? changesSince(s, currentTexts(p!)) : []), [s, p, tick])
   return (
     <Panel title="Versions and tracked changes" sub="A version is kept each time the report moves between stages. Compare any of them with the text now: additions underlined in green, deletions struck through in red." className="xl:sticky xl:top-28 xl:max-h-[80vh] xl:overflow-y-auto">
       {!snaps.length ? <p className="text-xs text-lab-text-muted">No versions kept yet: one is kept when the report moves to the next stage.</p> : <>

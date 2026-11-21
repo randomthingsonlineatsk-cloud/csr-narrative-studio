@@ -2,7 +2,8 @@
 import { useRef, useState } from 'react'
 import { useStore } from '../state'
 import { newProject, exampleProject, readProjectFile, projectFile, STAGE_LABEL } from '../domain/project'
-import { MISSIONS, startMission } from '../domain/missions'
+import { MISSIONS, startMission, levelOf } from '../domain/missions'
+import Certificate from './Certificate'
 import { loadPatientData } from '../domain/sdtm'
 import { STUDY_IDS, protocolOf } from '../domain/study'
 import { download } from '../domain/store'
@@ -40,15 +41,16 @@ export default function Home({ onOpen }: { onOpen: () => void }) {
           </div>
         </div>
       </Panel>
-      <Panel title="Missions" sub="Scored tasks on the worked studies. Your best score is kept in this browser.">
+      <Panel title="Missions" sub="Scored tasks on the worked studies: 80 passes, 100 (every check met) is expert. Your best score is kept in this browser.">
         <div className="grid grid-cols-[minmax(0,1fr)] md:grid-cols-2 xl:grid-cols-3 gap-3">{MISSIONS.map((m) => { const best = progress.missions[m.id]; return (
           <div key={m.id} className="rounded border border-lab-line p-3 space-y-1 flex flex-col">
-            <div className="flex flex-wrap items-center gap-2"><Pill tone="purple">{m.id}</Pill>{m.core && <Pill tone="blue">core</Pill>}<Pill>{m.study}</Pill>{best && <Pill tone={best.score >= 80 ? 'green' : 'amber'}>{`best ${best.score}`}</Pill>}</div>
+            <div className="flex flex-wrap items-center gap-2"><Pill tone="purple">{m.id}</Pill>{m.core && <Pill tone="blue">core</Pill>}<Pill>{m.study}</Pill>{best && <Pill tone={levelOf(best.score) === 'not yet' ? 'amber' : 'green'}>{`best ${best.score} · ${levelOf(best.score)}`}</Pill>}</div>
             <h3 className="text-sm font-semibold">{m.title}</h3>
             <p className="text-xs text-lab-text-muted flex-1">{m.brief}</p>
             <div><Btn onClick={async () => { try { go(startMission(m.id, m.narratives || m.patients ? await loadPatientData(m.study) : undefined)) } catch (x) { setError((x as Error).message) } }}>Start</Btn></div>
           </div>) })}</div>
       </Panel>
+      <Certificate />
       <Panel title="Your reports" sub="Saved in this browser. Export a file to keep a copy or move it to another device.">
         <Table head={['Report', 'Study', 'Stage', 'Version', 'Updated', '']} empty="No reports yet." rows={projects.map((p) => [
           <button className="text-left underline" onClick={() => go(p)}>{p.name}</button>, p.study, <Pill tone={p.stage === 'approved' ? 'green' : p.stage === 'final' ? 'blue' : 'grey'}>{p.mission ? `mission ${p.mission.id}` : STAGE_LABEL[p.stage]}</Pill>, p.version, fmtUtc(p.updatedUtc),
