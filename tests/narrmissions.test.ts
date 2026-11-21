@@ -13,15 +13,15 @@ const HRP = { sdtm: hrpS as unknown as Sdtm, safety: { source: '', cases: (cdm a
 const fail = (items: { ok: boolean; label: string; why: string }[]) => items.filter((i) => !i.ok).map((i) => `${i.label}: ${i.why}`)
 
 describe('narrative missions', () => {
-  test('CS6: templates score 0; the model narratives with the two data queries score 100', () => {
+  test('CS6: templates score 0; the model narratives score 100', () => {
     const p = startMission('CS6', HRP)
     const cs = missionCandidates('CS6', HRP)
     expect(cs).toHaveLength(4)
     p.narratives = Object.fromEntries(cs.map((c) => [c.key, { text: template(primaryKind(c)), queries: [], updatedUtc: '' }]))
     expect(scoreOf(scoreMission(p, HRP))).toBe(0)
     for (const { c, text } of modelNarratives('CS6', HRP)) {
-      const q = narrativeQc(HRP.sdtm, c, text, HRP.safety, ARMS['HRP-301']).filter((x) => x.kind === 'contradiction').map(findingKey)
-      p.narratives![c.key] = { text, queries: q, updatedUtc: '' }
+      expect(narrativeQc(HRP.sdtm, c, text, HRP.safety, ARMS['HRP-301']).filter((x) => x.kind === 'contradiction').map(findingKey)).toEqual([])
+      p.narratives![c.key] = { text, queries: [], updatedUtc: '' }
     }
     expect(fail(scoreMission(p, HRP))).toEqual([])
   })
@@ -55,4 +55,10 @@ test('the CDM Console export and a safety cases file are both read; other files 
   expect(readCdmExport(JSON.stringify(glvC), 'GLV-12-301').cases).toHaveLength(7)
   expect(() => readCdmExport(JSON.stringify(cdm), 'GLV-12-301')).toThrow(/for HRP-301/)
   expect(() => readCdmExport('{"a":1}', 'HRP-301')).toThrow(/neither/)
+})
+
+import pv from './fixtures/pv-hrp-301-cases.json'
+test('the PV Intake & Triage Console’s HRP-301 case export reads as the safety database and matches the CDM cases', () => {
+  const s = readCdmExport(JSON.stringify(pv), 'HRP-301')
+  expect(s.cases.map((c) => [c.usubjid, c.onset, c.outcome, c.causality, c.sponsorCausality])).toEqual((cdm as any).sae.cases.map((c: any) => [c.usubjid, c.onset, c.outcome, c.causality, c.sponsorCausality]))
 })

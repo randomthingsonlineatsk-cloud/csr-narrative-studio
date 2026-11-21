@@ -28,6 +28,12 @@ describe('who needs a narrative', () => {
 })
 
 describe('dechallenge and rechallenge from the dates', () => {
+  test('HRP-301 records bottles dispensed: an interruption comes from the AE form, without days', () => {
+    const p = profile(hrp, 'HRP-301-301-007'), ch = challenge(p, p.ae.find((x) => x.AEDECOD === 'Pneumonia')!)
+    expect(p.dispensing).toBe(true)
+    expect(ch.dechallenge.result).toBe('positive'); expect(ch.dechallenge.text).toMatch(/bottles dispensed/)
+    expect(ch.rechallenge.result).toBe('negative')
+  })
   test('an interruption with resolution and a restart: positive dechallenge, negative rechallenge', () => {
     const p = profile(glv, 'GLV-12-301-102-001'), ae = p.ae.find((x) => x.AEDECOD === 'Pneumonia')!
     const ch = challenge(p, ae)
@@ -46,8 +52,7 @@ describe('drafts pass narrative QC', () => {
     const t = draft(s, c, safety.cases.find((x) => x.usubjid === c.usubjid))
     const f = narrativeQc(s, c, t, safety, ARMS[s.study as keyof typeof ARMS])
     const contra = f.filter((x) => x.kind === 'contradiction')
-    // HRP-301: two SAEs say the drug was interrupted, but the dosing record shows no break.
-    expect(contra.length).toBe(['HRP-301-301-007', 'HRP-301-302-002'].includes(c.usubjid) ? 1 : 0)
+    expect(contra).toEqual([])
     expect(qcErrors(narrativeQc(s, c, t, safety, ARMS[s.study as keyof typeof ARMS], contra.map(findingKey))).map((x) => `${x.text}: ${x.message}`)).toEqual([])
   })
 })

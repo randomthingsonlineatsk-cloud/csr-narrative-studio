@@ -27,6 +27,7 @@ export default function Timeline({ p, selected }: { p: Profile; selected?: Row }
         {ticks.map((t) => <g key={t}><path d={`M${x(t)} 4V${H - 18}`} className="stroke-lab-line" /><text x={x(t)} y={H - 6} textAnchor="middle" className="fill-lab-text-muted">{`Day ${t}`}</text></g>)}
         {rows.map((r, i) => <g key={i}><text x={4} y={i * ROW + 16} className="fill-lab-text">{r.label.length > 26 ? `${r.label.slice(0, 25)}…` : r.label}</text>{r.draw(i * ROW + 4)}</g>)}
       </svg>
+      {p.dispensing && <p className="text-[11px] text-lab-amber">This study’s dosing record (EX) holds the bottles dispensed at each visit, not the days dosed: an interruption is on the AE form (action taken), not shown as a break here.</p>}
       <p className="text-[11px] text-lab-text-muted">Blue: study drug taken (grey for placebo); gaps are interruptions. Red: serious adverse events; amber: other adverse events; purple: medications. Hover for details.</p>
     </div>
   )

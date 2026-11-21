@@ -34,12 +34,15 @@ export function candidates(s: Sdtm): Candidate[] {
 export const primaryKind = (c: Candidate): Kind => c.kinds.includes('death') ? 'death' : c.kinds.includes('sae') ? 'sae' : c.kinds.includes('discontinuation') ? 'discontinuation' : 'aesi'
 
 // ---------- profile and timeline ----------
-export interface Profile { usubjid: string; dm: Row; ae: Row[]; cm: Row[]; ex: Row[]; lb: Row[]; mh: Row[]; ds: Row[]; vs: Row[]; firstDose: string; arm: string; dose: number | null; doseUnit: string; drug: string }
+/** Studies whose EX holds the bottles dispensed at each visit, not the days dosed: an
+ *  interruption is recorded on the AE form (action taken), never as a break in EX. */
+export const DISPENSING_EX = ['HRP-301']
+export interface Profile { usubjid: string; dm: Row; ae: Row[]; cm: Row[]; ex: Row[]; lb: Row[]; mh: Row[]; ds: Row[]; vs: Row[]; firstDose: string; arm: string; dose: number | null; doseUnit: string; drug: string; dispensing: boolean }
 export function profile(s: Sdtm, usubjid: string): Profile {
   const dm = rows(s, 'DM', usubjid)[0] ?? { USUBJID: usubjid }, ex = rows(s, 'EX', usubjid).sort((a, b) => (num(a.EXSTDY) ?? 0) - (num(b.EXSTDY) ?? 0))
   const active = ex.find((e) => (num(e.EXDOSE) ?? 0) > 0) ?? ex[0]
   return { usubjid, dm, ae: rows(s, 'AE', usubjid).sort((a, b) => (num(a.AESTDY) ?? 0) - (num(b.AESTDY) ?? 0)), cm: rows(s, 'CM', usubjid), ex, lb: rows(s, 'LB', usubjid), mh: rows(s, 'MH', usubjid), ds: rows(s, 'DS', usubjid), vs: rows(s, 'VS', usubjid),
-    firstDose: str(dm.RFXSTDTC).slice(0, 10), arm: str(dm.ACTARM || dm.ARM), dose: active ? num(active.EXDOSE) : null, doseUnit: str(active?.EXDOSU), drug: str(active?.EXTRT) }
+    firstDose: str(dm.RFXSTDTC).slice(0, 10), arm: str(dm.ACTARM || dm.ARM), dose: active ? num(active.EXDOSE) : null, doseUnit: str(active?.EXDOSU), drug: str(active?.EXTRT), dispensing: DISPENSING_EX.includes(s.study) }
 }
 /** Study day of a date, counted from the first dose (Day 1; the day before is Day -1). */
 export function studyDay(date: string, first: string) {
@@ -70,6 +73,12 @@ export function challenge(p: Profile, ae: Row): Challenge {
   }
   if (acn === 'DRUG INTERRUPTED') {
     const g = d.gaps.find((x) => x.to >= start - 1 && x.from <= (end ?? start) + 1) ?? d.gaps.find((x) => x.from >= start - 1)
+    if (!g && p.dispensing) {
+      const after = d.intervals.some((x) => x.from > (end ?? start)), again = p.ae.some((x) => x !== ae && x.AEDECOD === ae.AEDECOD && (num(x.AESTDY) ?? 0) > (end ?? start))
+      const note = '(The dosing record holds the bottles dispensed at each visit, so the days of the interruption are not recorded.)'
+      return { dechallenge: recovered && end !== null ? { result: 'positive', text: `Dechallenge: positive. Study drug was interrupted because of the event, and the event resolved on Day ${end}. ${note}` } : { result: 'negative', text: `Dechallenge: negative. Study drug was interrupted because of the event, and the event had not resolved. ${note}` },
+        rechallenge: !after ? { result: 'not done', text: 'Rechallenge: not done; no study drug was dispensed after the event.' } : again ? { result: 'positive', text: 'Rechallenge: positive. Study drug was resumed (bottles were dispensed after the event), and the event came back.' } : { result: 'negative', text: 'Rechallenge: negative. Study drug was resumed (bottles were dispensed after the event), and the event did not come back.' } }
+    }
     if (!g) return { dechallenge: { result: 'not applicable', text: 'Dechallenge: the dosing record shows no interruption; check the action taken.' }, rechallenge: { result: 'not applicable', text: 'Rechallenge: not applicable.' } }
     const restart = g.to + 1, restarted = d.intervals.some((x) => x.from === restart)
     const de = recovered && end !== null && end <= g.to ? { result: 'positive' as const, text: `Dechallenge: positive. Study drug was interrupted from Day ${g.from} to Day ${g.to}, and the event resolved on Day ${end}, during the interruption.` } : { result: 'negative' as const, text: `Dechallenge: negative. Study drug was interrupted from Day ${g.from} to Day ${g.to}, and the event had not resolved by the restart.` }
@@ -234,7 +243,7 @@ export function narrativeQc(s: Sdtm, c: Candidate, text: string, safety?: Safety
   if (/^RECOVERED/.test(str(ae.AEOUT)) && !str(ae.AEENDTC)) add('contradiction', 'error', 'outcome', 'The data say the event resolved but give no end date: query the data before the narrative is final.')
   if (/^NOT RECOVERED|^RECOVERING/.test(str(ae.AEOUT)) && str(ae.AEENDTC)) add('contradiction', 'error', 'outcome', 'The data give an end date for an event that had not resolved: query the data.')
   if (ae.AEACN === 'DRUG WITHDRAWN' && num(ae.AEENDY) !== null && num(ae.AEENDY)! < dd.last) add('contradiction', 'error', 'action taken', `The event ended on Day ${num(ae.AEENDY)}, but the dosing record shows study drug until Day ${dd.last}: query the action taken before the narrative is final.`)
-  if (ae.AEACN === 'DRUG INTERRUPTED' && !dd.gaps.some((g) => g.to >= (num(ae.AESTDY) ?? 0) - 1 && g.from <= (num(ae.AEENDY) ?? num(ae.AESTDY) ?? 0) + 7)) add('contradiction', 'error', 'action taken', 'The action taken says study drug was interrupted, but the dosing record shows no break around the event: query the dosing dates before the narrative is final.')
+  if (ae.AEACN === 'DRUG INTERRUPTED' && !p.dispensing && !dd.gaps.some((g) => g.to >= (num(ae.AESTDY) ?? 0) - 1 && g.from <= (num(ae.AEENDY) ?? num(ae.AESTDY) ?? 0) + 7)) add('contradiction', 'error', 'action taken', 'The action taken says study drug was interrupted, but the dosing record shows no break around the event: query the dosing dates before the narrative is final.')
   if (kind === 'discontinuation' && p.ds.length && !/left the study|withdr[ae]w|discontinued from the study|stopped the study/i.test(body)) add('missing', 'warn', 'discontinuation', 'Say when and why the participant left the study.')
   // Causality: the investigator's and the sponsor's.
   const inv = S.filter((x) => /investigator/i.test(x)).map(causalityIn).find(Boolean)

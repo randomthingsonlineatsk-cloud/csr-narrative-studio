@@ -62,10 +62,6 @@ export function scoreNarrativeMission(p: Project, d: PatientData): Item[] {
       { label: 'No QC errors left', ok: !left.length, why: left.length ? `${left.length} QC error${left.length === 1 ? '' : 's'} remain: ${left.slice(0, 3).map((x) => x.message).join(' ')}` : 'The four narratives pass QC.' }]
   }
   const items: Item[] = cs.map((c) => { const f = qc(c); return { label: `${c.usubjid.slice(-7)} ${c.pt} (${primaryKind(c)})`, ok: f !== null && !f.length, why: f === null ? 'Not written yet.' : f.length ? `${f.length} QC error${f.length === 1 ? '' : 's'}: ${f.slice(0, 2).map((x) => `${x.text}: ${x.message}`).join(' ')}` : 'Passes QC.' } })
-  if (id === 'CS6') {
-    const need = cs.filter((c) => ['HRP-301-301-007', 'HRP-301-302-002'].includes(c.usubjid))
-    items.push({ label: 'Dosing contradictions raised as data queries', ok: need.every((c) => (p.narratives?.[c.key]?.queries ?? []).some((q) => q.startsWith('contradiction:'))), why: 'Two SAEs say study drug was interrupted, but the dosing record shows no break: raise a data query for each.' })
-  }
   if (id === 'CS7') {
     const end = p.mission!.submittedUtc ?? new Date().toISOString(), mins = (Date.parse(end) - Date.parse(p.mission!.startedUtc)) / 60000
     items.push({ label: `Within ${CS7_MINUTES} minutes`, ok: mins <= CS7_MINUTES, why: `${Math.round(mins)} minutes from the start.` })
