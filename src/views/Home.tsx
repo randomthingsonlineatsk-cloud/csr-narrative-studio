@@ -46,7 +46,7 @@ export default function Home({ onOpen }: { onOpen: () => void }) {
             <div className="flex flex-wrap items-center gap-2"><Pill tone="purple">{m.id}</Pill>{m.core && <Pill tone="blue">core</Pill>}<Pill>{m.study}</Pill>{best && <Pill tone={best.score >= 80 ? 'green' : 'amber'}>{`best ${best.score}`}</Pill>}</div>
             <h3 className="text-sm font-semibold">{m.title}</h3>
             <p className="text-xs text-lab-text-muted flex-1">{m.brief}</p>
-            <div><Btn onClick={async () => { try { go(startMission(m.id, m.narratives ? await loadPatientData(m.study) : undefined)) } catch (x) { setError((x as Error).message) } }}>Start</Btn></div>
+            <div><Btn onClick={async () => { try { go(startMission(m.id, m.narratives || m.patients ? await loadPatientData(m.study) : undefined)) } catch (x) { setError((x as Error).message) } }}>Start</Btn></div>
           </div>) })}</div>
       </Panel>
       <Panel title="Your reports" sub="Saved in this browser. Export a file to keep a copy or move it to another device.">

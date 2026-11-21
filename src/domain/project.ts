@@ -3,7 +3,8 @@
 // through draft, review and final to approved. Export and import as one JSON file.
 import { sectionsFor, isGroup, sectionById, tableNumber, type ReportType } from './e3'
 import { BUNDLED } from './study'
-import { GLV_REFERENCE } from './reference'
+import { GLV_REFERENCE, GLV_COMPLETE } from './reference'
+import { DRAFTABLE, methodsDraft } from './methods'
 import type { Project, SectionState, Stage, StudyOutputs } from './types'
 
 export const APP_URL = 'https://randomthingsonlineatsk-cloud.github.io/csr-narrative-studio/'
@@ -37,6 +38,21 @@ export function newProject(name: string, study: string, reportType: ReportType =
   return { id: `CS-${rid()}`, name, kind, userId: l.userId, classId: l.classId, study, reportType, stage: 'shell',
     sections: Object.fromEntries(sectionsFor(reportType).map((s) => [s.id, blank(s.id, s.written)])),
     rounding: { pct: 1, mean: 2, p: 3 }, qc: {}, signatures: [], version: 1, createdUtc: t, updatedUtc: t, schema: 1 }
+}
+
+/** Change the kind of report. Sections a shorter report leaves out keep their text, hidden. */
+export function setReportType(p: Project, t: ReportType) { p.reportType = t; for (const s of sectionsFor(t)) p.sections[s.id] ??= blank(s.id, s.written) }
+
+/** A complete GLV-12-301 report: the worked example, the methods drafted from the protocol, and
+ *  every other section written. The review and India missions start from it. */
+export function completeProject(name = 'GLV-12-301 clinical study report (complete)'): Project {
+  const p = exampleProject(); p.name = name
+  for (const id of DRAFTABLE) { const t = methodsDraft('GLV-12-301', id); if (t && p.sections[id]) p.sections[id].text = t }
+  for (const [id, t] of Object.entries(GLV_COMPLETE)) if (p.sections[id]) p.sections[id].text = t
+  p.sections['9.5.2'].na = 'The measurements are standard and validated for trials in type 2 diabetes.'
+  p.sections['9.5.4'].na = 'Drug concentrations were not measured in this study.'
+  p.sections['11.4.3'].na = 'By-patient efficacy data are in listing 16.2.6.'
+  return p
 }
 
 /** The worked example: GLV-12-301 with the results sections written and the outputs attached. */

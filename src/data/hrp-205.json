@@ -1,0 +1,2490 @@
+{
+ "format": "csr-studio/study-outputs",
+ "schema": 1,
+ "study": "HRP-205",
+ "title": "VERDANT-AC: a randomised, double-blind, double-dummy, active-controlled phase 3 study of lumiravostat 25 mg once daily against clobetasol propionate 0.05% cream for 16 weeks in adults with chronic hand eczema (stopped early)",
+ "short": "Lumiravostat vs clobetasol, non-inferiority, stopped early",
+ "sap": "SAP v1.0",
+ "groups": [
+  "Clobetasol cream",
+  "Lumiravostat 25 mg"
+ ],
+ "source": "Made by hand for the abbreviated-report mission (fictional)",
+ "design": "non-inferiority",
+ "margin": 15,
+ "stopped": {
+  "date": "2026-06-30",
+  "reason": "The sponsor stopped the study because recruitment was too slow to finish on time; there was no safety or efficacy concern.",
+  "enrolled": 36,
+  "planned": 240
+ },
+ "outputs": [
+  {
+   "id": "T1",
+   "title": "Table 14.1.2: demographics (safety population)",
+   "kind": "ard",
+   "area": "Safety",
+   "ref": "ICH E3 section 11.2",
+   "shell": "Age; sex. Columns by group and Total.",
+   "frame": {
+    "columns": [
+     "ANALYSIS",
+     "GROUP",
+     "CATEGORY",
+     "STAT",
+     "VALUE"
+    ],
+    "rows": [
+     [
+      "AGE",
+      "Clobetasol cream",
+      null,
+      "n",
+      "18"
+     ],
+     [
+      "AGE",
+      "Lumiravostat 25 mg",
+      null,
+      "n",
+      "18"
+     ],
+     [
+      "AGE",
+      "Total",
+      null,
+      "n",
+      "36"
+     ],
+     [
+      "AGE",
+      "Clobetasol cream",
+      null,
+      "mean",
+      "44.1"
+     ],
+     [
+      "AGE",
+      "Clobetasol cream",
+      null,
+      "sd",
+      "12.62"
+     ],
+     [
+      "AGE",
+      "Lumiravostat 25 mg",
+      null,
+      "mean",
+      "46.3"
+     ],
+     [
+      "AGE",
+      "Lumiravostat 25 mg",
+      null,
+      "sd",
+      "11.08"
+     ],
+     [
+      "AGE",
+      "Total",
+      null,
+      "mean",
+      "45.2"
+     ],
+     [
+      "AGE",
+      "Total",
+      null,
+      "sd",
+      "11.80"
+     ],
+     [
+      "SEX",
+      "Clobetasol cream",
+      "F",
+      "n",
+      "10"
+     ],
+     [
+      "SEX",
+      "Clobetasol cream",
+      "F",
+      "pct",
+      "55.55555555555556"
+     ],
+     [
+      "SEX",
+      "Lumiravostat 25 mg",
+      "F",
+      "n",
+      "11"
+     ],
+     [
+      "SEX",
+      "Lumiravostat 25 mg",
+      "F",
+      "pct",
+      "61.111111111111114"
+     ],
+     [
+      "SEX",
+      "Total",
+      "F",
+      "n",
+      "21"
+     ],
+     [
+      "SEX",
+      "Total",
+      "F",
+      "pct",
+      "58.333333333333336"
+     ],
+     [
+      "SEX",
+      "Clobetasol cream",
+      "M",
+      "n",
+      "8"
+     ],
+     [
+      "SEX",
+      "Clobetasol cream",
+      "M",
+      "pct",
+      "44.44444444444444"
+     ],
+     [
+      "SEX",
+      "Lumiravostat 25 mg",
+      "M",
+      "n",
+      "7"
+     ],
+     [
+      "SEX",
+      "Lumiravostat 25 mg",
+      "M",
+      "pct",
+      "38.888888888888886"
+     ],
+     [
+      "SEX",
+      "Total",
+      "M",
+      "n",
+      "15"
+     ],
+     [
+      "SEX",
+      "Total",
+      "M",
+      "pct",
+      "41.666666666666664"
+     ]
+    ]
+   },
+   "display": {
+    "title": "Table 14.1.2 Demographic characteristics",
+    "population": "Safety population",
+    "head": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg",
+     "Total"
+    ],
+    "groups": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg",
+     "Total"
+    ],
+    "rows": [
+     {
+      "label": "Age (years)",
+      "cells": [
+       {
+        "text": ""
+       },
+       {
+        "text": ""
+       },
+       {
+        "text": ""
+       }
+      ]
+     },
+     {
+      "label": "n",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "18",
+        "keys": [
+         {
+          "an": "AGE",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "18",
+        "keys": [
+         {
+          "an": "AGE",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "36",
+        "keys": [
+         {
+          "an": "AGE",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Mean (SD)",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "44.1 (12.62)",
+        "keys": [
+         {
+          "an": "AGE",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "46.3 (11.08)",
+        "keys": [
+         {
+          "an": "AGE",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "45.2 (11.80)",
+        "keys": [
+         {
+          "an": "AGE",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Sex, n (%)",
+      "cells": [
+       {
+        "text": ""
+       },
+       {
+        "text": ""
+       },
+       {
+        "text": ""
+       }
+      ]
+     },
+     {
+      "label": "F",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "10 (55.6)",
+        "keys": [
+         {
+          "an": "SEX",
+          "g": "Clobetasol cream",
+          "cat": "F"
+         }
+        ]
+       },
+       {
+        "text": "11 (61.1)",
+        "keys": [
+         {
+          "an": "SEX",
+          "g": "Lumiravostat 25 mg",
+          "cat": "F"
+         }
+        ]
+       },
+       {
+        "text": "21 (58.3)",
+        "keys": [
+         {
+          "an": "SEX",
+          "g": "Total",
+          "cat": "F"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "M",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "8 (44.4)",
+        "keys": [
+         {
+          "an": "SEX",
+          "g": "Clobetasol cream",
+          "cat": "M"
+         }
+        ]
+       },
+       {
+        "text": "7 (38.9)",
+        "keys": [
+         {
+          "an": "SEX",
+          "g": "Lumiravostat 25 mg",
+          "cat": "M"
+         }
+        ]
+       },
+       {
+        "text": "15 (41.7)",
+        "keys": [
+         {
+          "an": "SEX",
+          "g": "Total",
+          "cat": "M"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "footnotes": []
+   }
+  },
+  {
+   "id": "T4",
+   "title": "Table 14.1.1: disposition (randomised participants)",
+   "kind": "ard",
+   "area": "Safety",
+   "ref": "ICH E3 section 10.1",
+   "shell": "Randomised; Treated; Completed; Discontinued, with the primary reason. Columns by group and Total.",
+   "frame": {
+    "columns": [
+     "ANALYSIS",
+     "GROUP",
+     "CATEGORY",
+     "STAT",
+     "VALUE"
+    ],
+    "rows": [
+     [
+      "SCREENED",
+      "Total",
+      null,
+      "n",
+      "47"
+     ],
+     [
+      "SCRFAIL",
+      "Total",
+      null,
+      "n",
+      "11"
+     ],
+     [
+      "POP",
+      "Clobetasol cream",
+      null,
+      "N",
+      "18"
+     ],
+     [
+      "POP",
+      "Lumiravostat 25 mg",
+      null,
+      "N",
+      "18"
+     ],
+     [
+      "POP",
+      "Total",
+      null,
+      "N",
+      "36"
+     ],
+     [
+      "TREATED",
+      "Clobetasol cream",
+      null,
+      "n",
+      "18"
+     ],
+     [
+      "TREATED",
+      "Clobetasol cream",
+      null,
+      "pct",
+      "100"
+     ],
+     [
+      "TREATED",
+      "Lumiravostat 25 mg",
+      null,
+      "n",
+      "18"
+     ],
+     [
+      "TREATED",
+      "Lumiravostat 25 mg",
+      null,
+      "pct",
+      "100"
+     ],
+     [
+      "TREATED",
+      "Total",
+      null,
+      "n",
+      "36"
+     ],
+     [
+      "TREATED",
+      "Total",
+      null,
+      "pct",
+      "100"
+     ],
+     [
+      "COMPLETED",
+      "Clobetasol cream",
+      null,
+      "n",
+      "11"
+     ],
+     [
+      "COMPLETED",
+      "Clobetasol cream",
+      null,
+      "pct",
+      "61.111111111111114"
+     ],
+     [
+      "COMPLETED",
+      "Lumiravostat 25 mg",
+      null,
+      "n",
+      "10"
+     ],
+     [
+      "COMPLETED",
+      "Lumiravostat 25 mg",
+      null,
+      "pct",
+      "55.55555555555556"
+     ],
+     [
+      "COMPLETED",
+      "Total",
+      null,
+      "n",
+      "21"
+     ],
+     [
+      "COMPLETED",
+      "Total",
+      null,
+      "pct",
+      "58.333333333333336"
+     ],
+     [
+      "DISC",
+      "Clobetasol cream",
+      null,
+      "n",
+      "7"
+     ],
+     [
+      "DISC",
+      "Clobetasol cream",
+      null,
+      "pct",
+      "38.888888888888886"
+     ],
+     [
+      "DISC",
+      "Lumiravostat 25 mg",
+      null,
+      "n",
+      "8"
+     ],
+     [
+      "DISC",
+      "Lumiravostat 25 mg",
+      null,
+      "pct",
+      "44.44444444444444"
+     ],
+     [
+      "DISC",
+      "Total",
+      null,
+      "n",
+      "15"
+     ],
+     [
+      "DISC",
+      "Total",
+      null,
+      "pct",
+      "41.666666666666664"
+     ],
+     [
+      "DCSREAS",
+      "Clobetasol cream",
+      "ADVERSE EVENT",
+      "n",
+      "1"
+     ],
+     [
+      "DCSREAS",
+      "Clobetasol cream",
+      "ADVERSE EVENT",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "DCSREAS",
+      "Lumiravostat 25 mg",
+      "ADVERSE EVENT",
+      "n",
+      "2"
+     ],
+     [
+      "DCSREAS",
+      "Lumiravostat 25 mg",
+      "ADVERSE EVENT",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "DCSREAS",
+      "Total",
+      "ADVERSE EVENT",
+      "n",
+      "3"
+     ],
+     [
+      "DCSREAS",
+      "Total",
+      "ADVERSE EVENT",
+      "pct",
+      "8.333333333333334"
+     ],
+     [
+      "DCSREAS",
+      "Clobetasol cream",
+      "WITHDRAWAL BY SUBJECT",
+      "n",
+      "1"
+     ],
+     [
+      "DCSREAS",
+      "Clobetasol cream",
+      "WITHDRAWAL BY SUBJECT",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "DCSREAS",
+      "Lumiravostat 25 mg",
+      "WITHDRAWAL BY SUBJECT",
+      "n",
+      "1"
+     ],
+     [
+      "DCSREAS",
+      "Lumiravostat 25 mg",
+      "WITHDRAWAL BY SUBJECT",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "DCSREAS",
+      "Total",
+      "WITHDRAWAL BY SUBJECT",
+      "n",
+      "2"
+     ],
+     [
+      "DCSREAS",
+      "Total",
+      "WITHDRAWAL BY SUBJECT",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "DCSREAS",
+      "Clobetasol cream",
+      "STUDY TERMINATED BY SPONSOR",
+      "n",
+      "5"
+     ],
+     [
+      "DCSREAS",
+      "Clobetasol cream",
+      "STUDY TERMINATED BY SPONSOR",
+      "pct",
+      "27.77777777777778"
+     ],
+     [
+      "DCSREAS",
+      "Lumiravostat 25 mg",
+      "STUDY TERMINATED BY SPONSOR",
+      "n",
+      "5"
+     ],
+     [
+      "DCSREAS",
+      "Lumiravostat 25 mg",
+      "STUDY TERMINATED BY SPONSOR",
+      "pct",
+      "27.77777777777778"
+     ],
+     [
+      "DCSREAS",
+      "Total",
+      "STUDY TERMINATED BY SPONSOR",
+      "n",
+      "10"
+     ],
+     [
+      "DCSREAS",
+      "Total",
+      "STUDY TERMINATED BY SPONSOR",
+      "pct",
+      "27.77777777777778"
+     ]
+    ]
+   },
+   "display": {
+    "title": "Table 14.1.1 Disposition of participants",
+    "population": "All randomised participants; percentages of randomised participants",
+    "head": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg",
+     "Total"
+    ],
+    "groups": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg",
+     "Total"
+    ],
+    "rows": [
+     {
+      "label": "Screened",
+      "cells": [
+       {
+        "text": "",
+        "keys": [
+         {
+          "an": "SCREENED",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "",
+        "keys": [
+         {
+          "an": "SCREENED",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "47",
+        "keys": [
+         {
+          "an": "SCREENED",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Screen failures",
+      "cells": [
+       {
+        "text": "",
+        "keys": [
+         {
+          "an": "SCRFAIL",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "",
+        "keys": [
+         {
+          "an": "SCRFAIL",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "11",
+        "keys": [
+         {
+          "an": "SCRFAIL",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Randomised",
+      "cells": [
+       {
+        "text": "18",
+        "keys": [
+         {
+          "an": "POP",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "18",
+        "keys": [
+         {
+          "an": "POP",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "36",
+        "keys": [
+         {
+          "an": "POP",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Treated",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "18 (100.0)",
+        "keys": [
+         {
+          "an": "TREATED",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "18 (100.0)",
+        "keys": [
+         {
+          "an": "TREATED",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "36 (100.0)",
+        "keys": [
+         {
+          "an": "TREATED",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Completed the study",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "11 (61.1)",
+        "keys": [
+         {
+          "an": "COMPLETED",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "10 (55.6)",
+        "keys": [
+         {
+          "an": "COMPLETED",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "21 (58.3)",
+        "keys": [
+         {
+          "an": "COMPLETED",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Discontinued from the study",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "7 (38.9)",
+        "keys": [
+         {
+          "an": "DISC",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "8 (44.4)",
+        "keys": [
+         {
+          "an": "DISC",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "15 (41.7)",
+        "keys": [
+         {
+          "an": "DISC",
+          "g": "Total",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Primary reason",
+      "cells": [
+       {
+        "text": ""
+       },
+       {
+        "text": ""
+       },
+       {
+        "text": ""
+       }
+      ]
+     },
+     {
+      "label": "Adverse event",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Clobetasol cream",
+          "cat": "ADVERSE EVENT"
+         }
+        ]
+       },
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Lumiravostat 25 mg",
+          "cat": "ADVERSE EVENT"
+         }
+        ]
+       },
+       {
+        "text": "3 (8.3)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Total",
+          "cat": "ADVERSE EVENT"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Withdrawal by participant",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Clobetasol cream",
+          "cat": "WITHDRAWAL BY SUBJECT"
+         }
+        ]
+       },
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Lumiravostat 25 mg",
+          "cat": "WITHDRAWAL BY SUBJECT"
+         }
+        ]
+       },
+       {
+        "text": "2 (5.6)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Total",
+          "cat": "WITHDRAWAL BY SUBJECT"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Study terminated by sponsor",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "5 (27.8)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Clobetasol cream",
+          "cat": "STUDY TERMINATED BY SPONSOR"
+         }
+        ]
+       },
+       {
+        "text": "5 (27.8)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Lumiravostat 25 mg",
+          "cat": "STUDY TERMINATED BY SPONSOR"
+         }
+        ]
+       },
+       {
+        "text": "10 (27.8)",
+        "keys": [
+         {
+          "an": "DCSREAS",
+          "g": "Total",
+          "cat": "STUDY TERMINATED BY SPONSOR"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "footnotes": [
+     "The sponsor stopped the study on 2026-06-30 because recruitment was too slow (36 of 240 planned participants). Participants still on treatment stopped at their next visit and were followed up for 4 weeks."
+    ]
+   }
+  },
+  {
+   "id": "T3",
+   "title": "Table 14.2.1: IGA-CHE treatment success at Week 16 (primary endpoint)",
+   "kind": "ard",
+   "area": "Efficacy",
+   "ref": "SAP 9.4; ICH E3 section 11.4.1",
+   "shell": "N; success n (%); missing; difference from clobetasol with 95% CI; non-inferiority margin.",
+   "frame": {
+    "columns": [
+     "ANALYSIS",
+     "GROUP",
+     "CATEGORY",
+     "STAT",
+     "VALUE"
+    ],
+    "rows": [
+     [
+      "N",
+      "Clobetasol cream",
+      null,
+      "N",
+      "18"
+     ],
+     [
+      "N",
+      "Lumiravostat 25 mg",
+      null,
+      "N",
+      "18"
+     ],
+     [
+      "RESP",
+      "Clobetasol cream",
+      null,
+      "n",
+      "5"
+     ],
+     [
+      "RESP",
+      "Clobetasol cream",
+      null,
+      "pct",
+      "27.77777777777778"
+     ],
+     [
+      "RESP",
+      "Lumiravostat 25 mg",
+      null,
+      "n",
+      "6"
+     ],
+     [
+      "RESP",
+      "Lumiravostat 25 mg",
+      null,
+      "pct",
+      "33.333333333333336"
+     ],
+     [
+      "MISS",
+      "Clobetasol cream",
+      null,
+      "n",
+      "6"
+     ],
+     [
+      "MISS",
+      "Lumiravostat 25 mg",
+      null,
+      "n",
+      "7"
+     ],
+     [
+      "DIFF",
+      "Lumiravostat 25 mg",
+      null,
+      "est",
+      "5.555555555555553"
+     ],
+     [
+      "DIFF",
+      "Lumiravostat 25 mg",
+      null,
+      "lcl",
+      "-24.4844231427509"
+     ],
+     [
+      "DIFF",
+      "Lumiravostat 25 mg",
+      null,
+      "ucl",
+      "35.595534253862006"
+     ]
+    ]
+   },
+   "display": {
+    "title": "Table 14.2.1 IGA-CHE treatment success at Week 16",
+    "population": "Intent-to-treat population; missing responses imputed as non-response",
+    "head": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg"
+    ],
+    "groups": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg"
+    ],
+    "rows": [
+     {
+      "label": "N",
+      "cells": [
+       {
+        "text": "18",
+        "keys": [
+         {
+          "an": "N",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "18",
+        "keys": [
+         {
+          "an": "N",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "IGA-CHE treatment success, n (%)",
+      "cells": [
+       {
+        "text": "5 (27.8)",
+        "keys": [
+         {
+          "an": "RESP",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "6 (33.3)",
+        "keys": [
+         {
+          "an": "RESP",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Missing, imputed as non-response, n",
+      "cells": [
+       {
+        "text": "6",
+        "keys": [
+         {
+          "an": "MISS",
+          "g": "Clobetasol cream",
+          "cat": null
+         }
+        ]
+       },
+       {
+        "text": "7",
+        "keys": [
+         {
+          "an": "MISS",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Difference from clobetasol, % (95% CI)",
+      "cells": [
+       {
+        "text": ""
+       },
+       {
+        "text": "5.6 (-24.5, 35.6)",
+        "keys": [
+         {
+          "an": "DIFF",
+          "g": "Lumiravostat 25 mg",
+          "cat": null
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "footnotes": [
+     "Non-inferiority margin: −15 percentage points; non-inferiority is shown if the lower limit of the 95% CI is above −15.",
+     "CI: Wald interval for the difference in proportions. Most missing values are participants stopped by the sponsor before Week 16."
+    ]
+   }
+  },
+  {
+   "id": "T2",
+   "title": "Table 14.3.1: treatment-emergent adverse events by system class and preferred term",
+   "kind": "ard",
+   "area": "Safety",
+   "ref": "ICH E3 section 12.2.2",
+   "shell": "Overall rows, then system class and preferred term, n (%). Columns by group and Total.",
+   "frame": {
+    "columns": [
+     "ANALYSIS",
+     "GROUP",
+     "CATEGORY",
+     "STAT",
+     "VALUE"
+    ],
+    "rows": [
+     [
+      "OVERALL",
+      "Clobetasol cream",
+      "PARTICIPANTS WITH AT LEAST ONE TEAE",
+      "n",
+      "7"
+     ],
+     [
+      "OVERALL",
+      "Clobetasol cream",
+      "PARTICIPANTS WITH AT LEAST ONE TEAE",
+      "pct",
+      "38.888888888888886"
+     ],
+     [
+      "OVERALL",
+      "Lumiravostat 25 mg",
+      "PARTICIPANTS WITH AT LEAST ONE TEAE",
+      "n",
+      "9"
+     ],
+     [
+      "OVERALL",
+      "Lumiravostat 25 mg",
+      "PARTICIPANTS WITH AT LEAST ONE TEAE",
+      "pct",
+      "50"
+     ],
+     [
+      "OVERALL",
+      "Total",
+      "PARTICIPANTS WITH AT LEAST ONE TEAE",
+      "n",
+      "16"
+     ],
+     [
+      "OVERALL",
+      "Total",
+      "PARTICIPANTS WITH AT LEAST ONE TEAE",
+      "pct",
+      "44.44444444444444"
+     ],
+     [
+      "OVERALL",
+      "Clobetasol cream",
+      "PARTICIPANTS WITH A SERIOUS TEAE",
+      "n",
+      "0"
+     ],
+     [
+      "OVERALL",
+      "Clobetasol cream",
+      "PARTICIPANTS WITH A SERIOUS TEAE",
+      "pct",
+      "0"
+     ],
+     [
+      "OVERALL",
+      "Lumiravostat 25 mg",
+      "PARTICIPANTS WITH A SERIOUS TEAE",
+      "n",
+      "1"
+     ],
+     [
+      "OVERALL",
+      "Lumiravostat 25 mg",
+      "PARTICIPANTS WITH A SERIOUS TEAE",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "OVERALL",
+      "Total",
+      "PARTICIPANTS WITH A SERIOUS TEAE",
+      "n",
+      "1"
+     ],
+     [
+      "OVERALL",
+      "Total",
+      "PARTICIPANTS WITH A SERIOUS TEAE",
+      "pct",
+      "2.7777777777777777"
+     ],
+     [
+      "OVERALL",
+      "Clobetasol cream",
+      "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION",
+      "n",
+      "1"
+     ],
+     [
+      "OVERALL",
+      "Clobetasol cream",
+      "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "OVERALL",
+      "Lumiravostat 25 mg",
+      "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION",
+      "n",
+      "2"
+     ],
+     [
+      "OVERALL",
+      "Lumiravostat 25 mg",
+      "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "OVERALL",
+      "Total",
+      "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION",
+      "n",
+      "3"
+     ],
+     [
+      "OVERALL",
+      "Total",
+      "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION",
+      "pct",
+      "8.333333333333334"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "INFECTIONS",
+      "n",
+      "2"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "INFECTIONS",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "INFECTIONS",
+      "n",
+      "4"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "INFECTIONS",
+      "pct",
+      "22.22222222222222"
+     ],
+     [
+      "SOC",
+      "Total",
+      "INFECTIONS",
+      "n",
+      "6"
+     ],
+     [
+      "SOC",
+      "Total",
+      "INFECTIONS",
+      "pct",
+      "16.666666666666668"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "UPPER RESPIRATORY TRACT INFECTION",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "UPPER RESPIRATORY TRACT INFECTION",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "UPPER RESPIRATORY TRACT INFECTION",
+      "n",
+      "3"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "UPPER RESPIRATORY TRACT INFECTION",
+      "pct",
+      "16.666666666666668"
+     ],
+     [
+      "PT",
+      "Total",
+      "UPPER RESPIRATORY TRACT INFECTION",
+      "n",
+      "5"
+     ],
+     [
+      "PT",
+      "Total",
+      "UPPER RESPIRATORY TRACT INFECTION",
+      "pct",
+      "13.88888888888889"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "APPENDICITIS",
+      "n",
+      "0"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "APPENDICITIS",
+      "pct",
+      "0"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "APPENDICITIS",
+      "n",
+      "1"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "APPENDICITIS",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "PT",
+      "Total",
+      "APPENDICITIS",
+      "n",
+      "1"
+     ],
+     [
+      "PT",
+      "Total",
+      "APPENDICITIS",
+      "pct",
+      "2.7777777777777777"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "BRAIN AND NERVES",
+      "n",
+      "2"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "BRAIN AND NERVES",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "BRAIN AND NERVES",
+      "n",
+      "2"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "BRAIN AND NERVES",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "SOC",
+      "Total",
+      "BRAIN AND NERVES",
+      "n",
+      "4"
+     ],
+     [
+      "SOC",
+      "Total",
+      "BRAIN AND NERVES",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "HEAD PAIN",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "HEAD PAIN",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "HEAD PAIN",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "HEAD PAIN",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "PT",
+      "Total",
+      "HEAD PAIN",
+      "n",
+      "4"
+     ],
+     [
+      "PT",
+      "Total",
+      "HEAD PAIN",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "DIGESTIVE SYSTEM",
+      "n",
+      "0"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "DIGESTIVE SYSTEM",
+      "pct",
+      "0"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "DIGESTIVE SYSTEM",
+      "n",
+      "3"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "DIGESTIVE SYSTEM",
+      "pct",
+      "16.666666666666668"
+     ],
+     [
+      "SOC",
+      "Total",
+      "DIGESTIVE SYSTEM",
+      "n",
+      "3"
+     ],
+     [
+      "SOC",
+      "Total",
+      "DIGESTIVE SYSTEM",
+      "pct",
+      "8.333333333333334"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "NAUSEA",
+      "n",
+      "0"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "NAUSEA",
+      "pct",
+      "0"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "NAUSEA",
+      "n",
+      "3"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "NAUSEA",
+      "pct",
+      "16.666666666666668"
+     ],
+     [
+      "PT",
+      "Total",
+      "NAUSEA",
+      "n",
+      "3"
+     ],
+     [
+      "PT",
+      "Total",
+      "NAUSEA",
+      "pct",
+      "8.333333333333334"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "SKIN",
+      "n",
+      "3"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "SKIN",
+      "pct",
+      "16.666666666666668"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "SKIN",
+      "n",
+      "0"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "SKIN",
+      "pct",
+      "0"
+     ],
+     [
+      "SOC",
+      "Total",
+      "SKIN",
+      "n",
+      "3"
+     ],
+     [
+      "SOC",
+      "Total",
+      "SKIN",
+      "pct",
+      "8.333333333333334"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "SKIN THINNING",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "SKIN THINNING",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "SKIN THINNING",
+      "n",
+      "0"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "SKIN THINNING",
+      "pct",
+      "0"
+     ],
+     [
+      "PT",
+      "Total",
+      "SKIN THINNING",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Total",
+      "SKIN THINNING",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "APPLICATION SITE BURNING",
+      "n",
+      "1"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "APPLICATION SITE BURNING",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "APPLICATION SITE BURNING",
+      "n",
+      "0"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "APPLICATION SITE BURNING",
+      "pct",
+      "0"
+     ],
+     [
+      "PT",
+      "Total",
+      "APPLICATION SITE BURNING",
+      "n",
+      "1"
+     ],
+     [
+      "PT",
+      "Total",
+      "APPLICATION SITE BURNING",
+      "pct",
+      "2.7777777777777777"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "TEST RESULTS",
+      "n",
+      "0"
+     ],
+     [
+      "SOC",
+      "Clobetasol cream",
+      "TEST RESULTS",
+      "pct",
+      "0"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "TEST RESULTS",
+      "n",
+      "2"
+     ],
+     [
+      "SOC",
+      "Lumiravostat 25 mg",
+      "TEST RESULTS",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "SOC",
+      "Total",
+      "TEST RESULTS",
+      "n",
+      "2"
+     ],
+     [
+      "SOC",
+      "Total",
+      "TEST RESULTS",
+      "pct",
+      "5.555555555555555"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "ALT INCREASED",
+      "n",
+      "0"
+     ],
+     [
+      "PT",
+      "Clobetasol cream",
+      "ALT INCREASED",
+      "pct",
+      "0"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "ALT INCREASED",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Lumiravostat 25 mg",
+      "ALT INCREASED",
+      "pct",
+      "11.11111111111111"
+     ],
+     [
+      "PT",
+      "Total",
+      "ALT INCREASED",
+      "n",
+      "2"
+     ],
+     [
+      "PT",
+      "Total",
+      "ALT INCREASED",
+      "pct",
+      "5.555555555555555"
+     ]
+    ]
+   },
+   "display": {
+    "title": "Table 14.3.1 Treatment-emergent adverse events by system class and preferred term",
+    "population": "Safety population",
+    "head": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg",
+     "Total"
+    ],
+    "groups": [
+     "Clobetasol cream",
+     "Lumiravostat 25 mg",
+     "Total"
+    ],
+    "rows": [
+     {
+      "label": "Participants with at least one TEAE",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "7 (38.9)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Clobetasol cream",
+          "cat": "PARTICIPANTS WITH AT LEAST ONE TEAE"
+         }
+        ]
+       },
+       {
+        "text": "9 (50.0)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Lumiravostat 25 mg",
+          "cat": "PARTICIPANTS WITH AT LEAST ONE TEAE"
+         }
+        ]
+       },
+       {
+        "text": "16 (44.4)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Total",
+          "cat": "PARTICIPANTS WITH AT LEAST ONE TEAE"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Participants with a serious TEAE",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Clobetasol cream",
+          "cat": "PARTICIPANTS WITH A SERIOUS TEAE"
+         }
+        ]
+       },
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Lumiravostat 25 mg",
+          "cat": "PARTICIPANTS WITH A SERIOUS TEAE"
+         }
+        ]
+       },
+       {
+        "text": "1 (2.8)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Total",
+          "cat": "PARTICIPANTS WITH A SERIOUS TEAE"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Participants with a TEAE leading to discontinuation",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Clobetasol cream",
+          "cat": "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION"
+         }
+        ]
+       },
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Lumiravostat 25 mg",
+          "cat": "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION"
+         }
+        ]
+       },
+       {
+        "text": "3 (8.3)",
+        "keys": [
+         {
+          "an": "OVERALL",
+          "g": "Total",
+          "cat": "PARTICIPANTS WITH A TEAE LEADING TO DISCONTINUATION"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Infections",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Clobetasol cream",
+          "cat": "INFECTIONS"
+         }
+        ]
+       },
+       {
+        "text": "4 (22.2)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Lumiravostat 25 mg",
+          "cat": "INFECTIONS"
+         }
+        ]
+       },
+       {
+        "text": "6 (16.7)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Total",
+          "cat": "INFECTIONS"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Upper respiratory tract infection",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "UPPER RESPIRATORY TRACT INFECTION"
+         }
+        ]
+       },
+       {
+        "text": "3 (16.7)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "UPPER RESPIRATORY TRACT INFECTION"
+         }
+        ]
+       },
+       {
+        "text": "5 (13.9)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "UPPER RESPIRATORY TRACT INFECTION"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Appendicitis",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "APPENDICITIS"
+         }
+        ]
+       },
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "APPENDICITIS"
+         }
+        ]
+       },
+       {
+        "text": "1 (2.8)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "APPENDICITIS"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Brain and nerves",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Clobetasol cream",
+          "cat": "BRAIN AND NERVES"
+         }
+        ]
+       },
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Lumiravostat 25 mg",
+          "cat": "BRAIN AND NERVES"
+         }
+        ]
+       },
+       {
+        "text": "4 (11.1)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Total",
+          "cat": "BRAIN AND NERVES"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Head pain",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "HEAD PAIN"
+         }
+        ]
+       },
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "HEAD PAIN"
+         }
+        ]
+       },
+       {
+        "text": "4 (11.1)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "HEAD PAIN"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Digestive system",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Clobetasol cream",
+          "cat": "DIGESTIVE SYSTEM"
+         }
+        ]
+       },
+       {
+        "text": "3 (16.7)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Lumiravostat 25 mg",
+          "cat": "DIGESTIVE SYSTEM"
+         }
+        ]
+       },
+       {
+        "text": "3 (8.3)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Total",
+          "cat": "DIGESTIVE SYSTEM"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Nausea",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "NAUSEA"
+         }
+        ]
+       },
+       {
+        "text": "3 (16.7)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "NAUSEA"
+         }
+        ]
+       },
+       {
+        "text": "3 (8.3)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "NAUSEA"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Skin",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "3 (16.7)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Clobetasol cream",
+          "cat": "SKIN"
+         }
+        ]
+       },
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Lumiravostat 25 mg",
+          "cat": "SKIN"
+         }
+        ]
+       },
+       {
+        "text": "3 (8.3)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Total",
+          "cat": "SKIN"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Skin thinning",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "SKIN THINNING"
+         }
+        ]
+       },
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "SKIN THINNING"
+         }
+        ]
+       },
+       {
+        "text": "2 (5.6)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "SKIN THINNING"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Application site burning",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "1 (5.6)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "APPLICATION SITE BURNING"
+         }
+        ]
+       },
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "APPLICATION SITE BURNING"
+         }
+        ]
+       },
+       {
+        "text": "1 (2.8)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "APPLICATION SITE BURNING"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "Test results",
+      "indent": 0,
+      "cells": [
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Clobetasol cream",
+          "cat": "TEST RESULTS"
+         }
+        ]
+       },
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Lumiravostat 25 mg",
+          "cat": "TEST RESULTS"
+         }
+        ]
+       },
+       {
+        "text": "2 (5.6)",
+        "keys": [
+         {
+          "an": "SOC",
+          "g": "Total",
+          "cat": "TEST RESULTS"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "label": "ALT increased",
+      "indent": 1,
+      "cells": [
+       {
+        "text": "0",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Clobetasol cream",
+          "cat": "ALT INCREASED"
+         }
+        ]
+       },
+       {
+        "text": "2 (11.1)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Lumiravostat 25 mg",
+          "cat": "ALT INCREASED"
+         }
+        ]
+       },
+       {
+        "text": "2 (5.6)",
+        "keys": [
+         {
+          "an": "PT",
+          "g": "Total",
+          "cat": "ALT INCREASED"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "footnotes": [
+     "Terms from the Study Medical Dictionary (fictional). Treatment-emergent: started on or after the first dose of either study treatment."
+    ]
+   }
+  },
+  {
+   "id": "L1",
+   "title": "Listing 16.2.7: serious adverse events",
+   "kind": "listing",
+   "area": "Listings",
+   "ref": "ICH E3 section 16.2.7",
+   "shell": "",
+   "frame": {
+    "columns": [
+     "USUBJID",
+     "TRT01A",
+     "AEDECOD",
+     "AEBODSYS",
+     "ASTDT",
+     "AENDT",
+     "ASTDY",
+     "AESEV",
+     "AEREL",
+     "TRTEMFL"
+    ],
+    "rows": [
+     [
+      "HRP-205-2104-006",
+      "Lumiravostat 25 mg",
+      "Appendicitis",
+      "Infections",
+      "2026-05-19",
+      "2026-05-24",
+      "41",
+      "SEVERE",
+      "NOT RELATED",
+      "Y"
+     ]
+    ]
+   },
+   "display": null
+  }
+ ]
+}

@@ -6,14 +6,18 @@ import { checkText, errors, issues, sentences, type Finding } from './checker'
 import { dataOf, PLACEHOLDER } from './project'
 import { outputsOf } from './study'
 import type { Project, Stage } from './types'
+import { CI, openComments } from './review'
 
 export const sectionsOf = (p: Project) => sectionsFor(p.reportType).filter((s) => p.sections[s.id])
 export const needsText = (s: E3Section) => s.written && !isGroup(s)
+/** Sections that report results, so their numbers are checked against the outputs. Methods sections
+ *  (protocol, SAP, administration) give planned values such as the sample size or a lab limit. */
+export const reportsResults = (s: E3Section) => s.id === '2' || s.feeds.some((f) => f === 'tlf' || f === 'listing' || f === 'derived' || f === 'narrative')
 export const feedsOutputs = (s: E3Section) => s.feeds.includes('tlf') && !isGroup(s) && s.written
 
 export function findingsOf(p: Project): Finding[] {
   const d = dataOf(p), outs = outputsOf(d)
-  return sectionsOf(p).flatMap((s) => { const st = p.sections[s.id]; return st.na || !needsText(s) ? [] : checkText(s.id, st.text.replace(new RegExp(PLACEHOLDER.source, 'g'), (m) => ' '.repeat(m.length)), outs, st.slots, d.groups, p.rounding) })
+  return sectionsOf(p).flatMap((s) => { const st = p.sections[s.id]; return st.na || !needsText(s) || !reportsResults(s) ? [] : checkText(s.id, st.text.replace(new RegExp(PLACEHOLDER.source, 'g'), (m) => ' '.repeat(m.length)), outs, st.slots, d.groups, p.rounding) })
 }
 
 export interface Gate { ok: boolean; problems: string[] }
@@ -29,12 +33,14 @@ export function gate(p: Project, to: Stage): Gate {
   }
   if (to === 'final') {
     const q = qcStatus(p); for (const i of q.filter((x) => !x.done)) problems.push(`QC: ${i.text}`)
+    const open = openComments(p); if (open.length) problems.push(`${open.length} review comment${open.length === 1 ? ' is' : 's are'} still open: resolve each, with what changed or why not.`)
     if (!p.signatures.some((s) => s.version === p.version && s.meaning === AUTHOR)) problems.push('The author signs the QC-checked report.')
   }
   if (to === 'approved') {
     const a = p.signatures.find((s) => s.version === p.version && s.meaning === AUTHOR), b = p.signatures.find((s) => s.version === p.version && s.meaning === APPROVER)
     if (!b) problems.push('An approver signs the final report.')
     else if (a && a.name.toLowerCase() === b.name.toLowerCase()) problems.push('The approver must be someone other than the author.')
+    if (!p.signatures.some((s) => s.version === p.version && s.meaning === CI)) problems.push('The coordinating investigator signs that the report describes the study accurately (E3 16.1.5).')
   }
   return { ok: !problems.length, problems }
 }
@@ -52,8 +58,8 @@ export const QC_ITEMS: QcItem[] = [
     const missing = [...numbersIn(syn)].filter((n) => !numbersIn(body).has(n)); return { ok: !missing.length, why: missing.length ? `Not in the body: ${missing.slice(0, 6).join(', ')}.` : 'The synopsis numbers are all in the body.' } } },
   { id: 'abbrev', text: 'Abbreviations are spelled out at first use and listed in section 4.', auto: (p) => {
     const seen = new Set<string>(), bad: string[] = []
-    for (const s of sectionsOf(p)) for (const m of (p.sections[s.id].text ?? '').matchAll(/\b([A-Z][A-Z0-9]{1,6})\b(?!\))/g)) {
-      const a = m[1]; if (seen.has(a) || /^(?:GLV|HRP|SD|SE|CI|ICH|II|III|IV)$/.test(a)) continue
+    for (const s of sectionsOf(p)) for (const m of (p.sections[s.id].text ?? '').matchAll(/(?<!\[)\b([A-Z][A-Z0-9]{1,6})\b(?![).]\d|\)|-\d)/g)) {
+      const a = m[1]; if (seen.has(a) || /^(?:GLV|HRP|SD|SE|CI|ICH|II|III|IV|E\d{1,2}|T\d+|IN\d{2}|EX\d{2})$/.test(a)) continue
       seen.add(a); if (!new RegExp(`\\(${a}s?\\)`).test(p.sections[s.id].text.slice(0, m.index! + a.length + 3)) && !(p.sections['4']?.text ?? '').includes(a)) bad.push(a)
     }
     return { ok: !bad.length, why: bad.length ? `Not spelled out at first use: ${bad.slice(0, 6).join(', ')}.` : 'No undefined abbreviations found.' } } },

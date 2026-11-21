@@ -25,6 +25,7 @@ const LOADERS: Record<string, () => Promise<{ sdtm: Sdtm; safety: Safety }>> = {
     return { sdtm: (await import('../data/sdtm-hrp-301.json')).default as unknown as Sdtm, safety: { source: 'CDM Query & Edit-Check Console: export for the CSR from the locked HRP-301 database', cases: cdm.sae.cases, reconciliation: cdm.sae.reconciliation, deviations: cdm.deviations, lock: cdm.lock } }
   },
 }
+LOADERS['HRP-205'] = async () => ({ sdtm: { format: 'csr-studio/sdtm', schema: 1, study: 'HRP-205', source: 'Not bundled: HRP-205 has summary outputs only', domains: {} }, safety: { source: 'Not bundled', cases: [], reconciliation: [] } })
 const cache: Record<string, { sdtm: Sdtm; safety: Safety }> = {}
 export async function loadPatientData(study: string) { return (cache[study] ??= await LOADERS[study]()) }
 

@@ -49,6 +49,8 @@ export function tokens(outputs: Output[]): Tok[] {
         ms.forEach((m, i) => out.push({ out: o.id, table, row: r.label, context: parent, group, col, value: num(m), raw: m.replace(/[<>]/g, ''), dec: dec(m), kind: ks[i] ?? 'value', lt: m.startsWith('<') }))
       })
     }
+    // Numbers in the footnotes are part of the output too: a margin, a planned sample size, a date.
+    for (const f of d.footnotes ?? []) for (const m of f.replace(/\d{4}-\d{2}-\d{2}/g, '').match(NUM) ?? []) out.push({ out: o.id, table, row: 'Footnote', context: '', group: '', col: '', value: num(m), raw: m.replace(/[<>]/g, ''), dec: dec(m), kind: 'value', lt: false })
   }
   return out
 }
@@ -74,7 +76,7 @@ export const LABEL: Record<Status, string> = { ok: 'matches', rounding: 'roundin
 export interface Finding { section: string; sentence: number; at: number; text: string; status: Status; message: string; tie?: Tok; suggestion?: string }
 
 const EXEMPT_BEFORE = /(?<![A-Za-z])(?:week|weeks|day|days|visit|table|figure|listing|section|sections|appendix|version|v|ich|e|module|step|phase|cycle|study|protocol|sap|amendment|grade|gr|n=|n =|stage|level|class|type|aged|age|ages|over|under|least|first|last)\s*$/i
-const EXEMPT_AFTER = /^\s*(?:mg|mcg|µg|ml|mL|g\b|sites?|countries|centres|centers|times|-week|-day|-point|-month|% ci|% confidence|st\b|nd\b|rd\b|th\b|:\d)/i
+const EXEMPT_AFTER = /^\s*(?:mg|mcg|µg|ml|mL|g\b|sites?|countries|centres|centers|times|-week|-day|-point|-month|-participant|-patient|-year|% ci|% confidence|st\b|nd\b|rd\b|th\b|:\d)/i
 const UNIT_AFTER = /^\s*(?:weeks?|days?|months?|years?|hours?|kg)\b/i // exempt for whole numbers only ("for 26 weeks")
 /** What may stand between a number and the group it belongs to: "27 to placebo", "25 (92.6%) in the placebo group", "-0.60 (95% CI -0.72 to -0.47) for 5 mg". */
 const GAP = /^(?:[\s\d.,;%()\-−–]|CI|to|SD|SE|days?|weeks?|years?|mg|kg|participants?|patients?|people)*?(?:to|in|on|with|for|of|receiving|given|and|at)?\s*(?:the\s*)?\(?\s*$/i

@@ -2,6 +2,8 @@
 // their protocols (from the Protocol Builder), bundled so the app works with no other app open.
 import glv from '../data/glv-12-301.json'
 import hrp from '../data/hrp-301.json'
+import h205 from '../data/hrp-205.json'
+import pH205 from '../data/protocol-hrp-205.json'
 import pGlv from '../data/protocol-glv-12-301.json'
 import pHrp from '../data/protocol-hrp-301.json'
 import type { Output, StudyOutputs } from './types'
@@ -14,9 +16,9 @@ export interface Protocol {
   multiplicity: string
   analysisSets: { id: string; name: string; text: string }[]
 }
-export const STUDY_IDS = ['HRP-301', 'GLV-12-301'] as const
-export const BUNDLED: Record<string, StudyOutputs> = { 'GLV-12-301': glv as unknown as StudyOutputs, 'HRP-301': hrp as unknown as StudyOutputs }
-const PROTO: Record<string, unknown> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp }
+export const STUDY_IDS = ['HRP-301', 'GLV-12-301', 'HRP-205'] as const
+export const BUNDLED: Record<string, StudyOutputs> = { 'GLV-12-301': glv as unknown as StudyOutputs, 'HRP-301': hrp as unknown as StudyOutputs, 'HRP-205': h205 as unknown as StudyOutputs }
+const PROTO: Record<string, unknown> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp, 'HRP-205': pH205 }
 
 /** The protocol model of the latest version, with the title facts in one place. */
 export function protocolOf(study: string): Protocol {

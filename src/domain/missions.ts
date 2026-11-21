@@ -7,8 +7,9 @@ import { checkText, errors, sentences, type Finding, type TokKind } from './chec
 import { outputsOf } from './study'
 import type { MissionRun, Project } from './types'
 import { scoreNarrativeMission, cs8Texts, CS7_MINUTES, type PatientData } from './missions/narr'
+import { CS9_SECTIONS, CS11_SECTIONS, startPhase3, scorePhase3 } from './missions/phase3'
 
-export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean; narratives?: boolean }
+export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean; narratives?: boolean; /** Needs the patient data at the start (not a narrative mission). */ patients?: boolean }
 export const MISSIONS: MissionDef[] = [
   { id: 'CS1', title: 'Build the report shell for VERDANT-1', study: 'HRP-301', core: true, sections: [],
     brief: 'Programming has delivered the first outputs for HRP-301 (48-participant training cut). Build the shell: attach the outputs that feed each results section, request the outputs that are missing, and mark the sections that do not apply, with a reason.',
@@ -34,10 +35,27 @@ export const MISSIONS: MissionDef[] = [
   { id: 'CS8', title: 'QC a colleague’s narratives', study: 'GLV-12-301', sections: [], narratives: true,
     brief: 'A colleague has drafted four GLV-12-301 narratives. Twelve statements contradict the listings, the patient data or the safety database. Find and correct every one, without introducing new errors.',
     steps: ['Open Narratives: the four drafts are loaded.', 'Read each against the profile, the timeline and the safety case; the QC panel helps.', 'Correct the narrative text.', 'Submit when the four pass QC.'] },
+  { id: 'CS9', title: 'Methods from the protocol', study: 'GLV-12-301', sections: [...CS9_SECTIONS, '9.8'],
+    brief: 'The protocol says what will happen; the report says what did. Eight methods sections of the GLV-12-301 report hold the protocol’s own words, in the future tense. Put them in the past tense, and write 9.8: protocol amendment 1 from the version history, and every difference between the planned analyses and the outputs, each with its reason.',
+    steps: ['Open each section in the Report; the protocol’s text is loaded. Use “Draft from the protocol” or edit by hand.', 'Clear every tense finding: “will”, “shall”, “is planned”.', 'In 9.8, name amendment 1 with its approval date, what changed and why, and how many were enrolled by then.', 'For each analysis change the panel lists, give the reason in the same sentence (because…).', 'Submit.'] },
+  { id: 'CS10', title: 'Discussion and benefit–risk', study: 'HRP-301', sections: ['11.4.7', '12.6', '13'],
+    brief: 'A colleague’s section 13 for the HRP-301 48-participant cut says lumiravostat was effective, safe and well tolerated. Neither difference from placebo was significant. Rewrite 13 from the benefit–risk table so the conclusion matches the results, the limitations are stated and nothing is claimed that the data do not support; write the short conclusions in 11.4.7 and 12.6 too.',
+    steps: ['Open Discussion: read the benefit–risk table built from the outputs.', 'Rewrite 13: the primary result with its CI, what it means, the main risks, the limitations, benefit against risk.', 'Clear every claim the checks flag: “effective”, “safe”, “well tolerated”, “trend”.', 'Write 11.4.7 and 12.6 in the same spirit.', 'Submit.'] },
+  { id: 'CS11', title: 'Write an abbreviated report', study: 'HRP-205', sections: CS11_SECTIONS,
+    brief: 'HRP-205 (VERDANT-AC), a non-inferiority study of lumiravostat against clobetasol cream, was stopped by the sponsor after 36 of 240 planned participants because recruitment was too slow. Make it an abbreviated report: keep the sections an abbreviated report needs, summarise efficacy briefly without claiming non-inferiority, and keep the safety description complete.',
+    steps: ['In the Overview, change the report type to abbreviated, and see which sections go.', 'In 9.8 or 10.1, say when and why the study stopped and how far it got.', 'Report disposition by group, including those stopped by the sponsor (Table 14.1.1).', 'Summarise efficacy in a few sentences: the difference, its CI and the margin.', 'Report safety in full: 12.2.1, 12.2.2, 12.3.1 (the SAE), 12.6; then 13.', 'Submit.'] },
+  { id: 'CS13', title: 'Take the report through review', study: 'GLV-12-301', sections: [], patients: true,
+    brief: 'The complete GLV-12-301 report is in review. Five reviewers’ comments wait in Review: some are right, one is wrong, one is answered by the text already. Resolve each (change the text, or say why not), get the QC checklist passed, collect the author’s, the approver’s and the coordinating investigator’s signatures with their meanings, and take the report to approved.',
+    steps: ['Open Review: read each comment in its section.', 'Change the text where the reviewer is right, then resolve as changed; where not, resolve with no change and a reason.', 'Open Narratives to measure the coverage; QC: tick the manual items you have checked.', 'Sign as author, move to final; the approver (another person) and the coordinating investigator sign; move to approved.', 'Compare versions in Review to see what changed; submit.'] },
+  { id: 'CS14', title: 'Make the India Table 6 version', study: 'GLV-12-301', sections: [],
+    brief: 'GLV-12-301 enrolled 18 participants at site 104 in India. For CDSCO, the report follows the 16 headings of the New Drugs and Clinical Trials Rules, 2019, Third Schedule, Table 6. Map the complete report to Table 6 and add what Table 6 asks for that ICH E3 does not.',
+    steps: ['Open India: see each Table 6 heading and the E3 sections under it.', 'Add the start and end of accrual, the GCP compliance statement, the ethics committee of site 104 with its constitution and approval date, and the declaration on notifications (GCP and ICMR guidelines).', 'Describe the participants at the Indian site.', 'Name the reference safety information and list every unexpected adverse event, serious or not (13.2).', 'The coordinating investigator signs the certificate (appendix l). Export the Table 6 version; submit.'] },
 ]
 export const missionById = (id: string) => MISSIONS.find((m) => m.id === id)
 
 export function startMission(id: string, d?: PatientData): Project {
+  const p3 = startPhase3(id, d)
+  if (p3) { p3.mission = { id, startedUtc: new Date().toISOString(), answers: {} }; return p3 }
   const m = missionById(id)!, p = newProject(`Mission ${m.id}: ${m.title}`, m.study, 'full', 'mission')
   p.mission = { id, startedUtc: new Date().toISOString(), answers: {} }
   if (id !== 'CS1') {
@@ -82,6 +100,7 @@ export const REQUESTABLE: { id: string; title: string }[] = [
 
 export function scoreMission(p: Project, d?: PatientData | null): Item[] {
   if (missionById(p.mission!.id)?.narratives) return d ? scoreNarrativeMission(p, d) : []
+  const p3 = scorePhase3(p); if (p3) return p3
   const id = p.mission!.id, S = (s: string) => p.sections[s]?.text ?? ''
   if (id === 'CS1') return Object.entries(CS1_KEY).map(([sec, k]) => {
     const st = p.sections[sec]; if (!st) return { label: sec, ok: false, why: 'Missing section.' }

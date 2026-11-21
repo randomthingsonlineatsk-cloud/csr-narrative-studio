@@ -4,7 +4,8 @@ import { useMemo, useRef, useState } from 'react'
 import { useStore } from '../state'
 import { useNav } from '../nav'
 import { dataOf, PLACEHOLDER } from '../domain/project'
-import { sectionsOf, needsText } from '../domain/workflow'
+import { sectionsOf, needsText, reportsResults } from '../domain/workflow'
+import { sectionById } from '../domain/e3'
 import { checkText, issues, errors, LABEL, SEVERITY, type Finding } from '../domain/checker'
 import { outputsOf } from '../domain/study'
 import { rowsOf, skeleton } from '../domain/helper'
@@ -24,10 +25,11 @@ export default function Write() {
   const [show, setShow] = useState(''), [helpOut, setHelpOut] = useState(''), [helpRow, setHelpRow] = useState(0)
   const ta = useRef<HTMLTextAreaElement>(null)
   const s = secs.find((x) => x.id === id) ?? secs[0], st = p!.sections[s.id], lock = isLocked(p!.stage)
-  const f = useMemo(() => st.na ? [] : checkText(s.id, blankOut(st.text), outs, st.slots, d.groups, p!.rounding), [st.text, st.slots, st.na, s.id, outs, d.groups, p!.rounding])
+  const f = useMemo(() => st.na || !reportsResults(s) ? [] : checkText(s.id, blankOut(st.text), outs, st.slots, d.groups, p!.rounding), [st.text, st.slots, st.na, s.id, outs, d.groups, p!.rounding])
   const status = (sid: string) => {
     const x = p!.sections[sid]; if (x.na) return { label: 'n/a', tone: 'grey' as const }
     if (!x.text.trim() || PLACEHOLDER.test(x.text)) return { label: 'to write', tone: 'amber' as const }
+    if (!reportsResults(sectionById(sid)!)) return { label: 'written', tone: 'green' as const }
     const e = errors(checkText(sid, blankOut(x.text), outs, x.slots, d.groups, p!.rounding)); return e.length ? { label: `${e.length} err`, tone: 'red' as const } : { label: 'ok', tone: 'green' as const }
   }
   const insert = (text: string) => act((x) => {

@@ -5,13 +5,14 @@
 // was run (each needs a reason).
 import pHrp from '../data/protocol-hrp-301.json'
 import pGlv from '../data/protocol-glv-12-301.json'
+import pH205 from '../data/protocol-hrp-205.json'
 import { BUNDLED, outputsOf } from './study'
 import { tableNumber } from './e3'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type D = any
 export interface Amendment { number: string; date: string; identifier: string; reason: string; summary: string; safetyRights: string; dataImpact: string; enrolledPct: number; changes: { sections: string[]; description: string; rationale: string }[] }
-const PROTO: Record<string, D> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp }
+const PROTO: Record<string, D> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp, 'HRP-205': pH205 }
 const REASON: Record<string, string> = { C207600: 'change in standard of care', C207601: 'change in strategy', C207602: 'IMP addition', C207603: 'inconsistency or error in the protocol', C207604: 'investigator or site feedback', C207605: 'IRB or IEC feedback', C207606: 'manufacturing change', C207607: 'new data available (other than safety data)', C207608: 'new regulatory guidance', C207609: 'new safety information', C207610: 'protocol design error', C207611: 'recruitment difficulty', C207612: 'regulatory agency request', C17649: 'other' }
 
 export const hasProtocol = (study: string) => !!PROTO[study]
@@ -28,6 +29,8 @@ export function pastTense(t: string): string {
     .replace(/\b(\w+)(\)?) will be\b/g, (_, w: string, b: string) => `${w}${b} ${/[^su]s$|^(they|we|both|all)$/i.test(w) ? 'were' : 'was'}`).replace(/\bwill be\b/g, 'was').replace(/\bwill\s+(\w+)/g, (_, v: string) => past(v))
     .replace(/\b(is|are) (\w+ed|\w+en|given|taken|seen|done|made|kept|set|run|read|told|shown|held|sent|paid|met)\b/g, (_, aux: string, v: string) => `${aux === 'is' ? 'was' : 'were'} ${v}`)
     .replace(/\b(has|have) to\b/g, 'had to')
+    .replace(/\bcan\b/g, 'could').replace(/\bmay\b/g, 'could')
+    .replace(/\b(participants|Participants|who|and) (stop|stay|attend|receive|take|use|continue|complete)\b/g, (_, a: string, v: string) => `${a} ${past(v)}`)
     .replace(/\bare\b/g, 'were').replace(/\bis\b/g, 'was')
     .replace(/\b(gives|takes|keeps|uses|tests|stops|starts|receives|records|follows|has|have|includes|covers|controls|allows|counts|stays)\b/g, (v: string) => PAST3[v] ?? v)
 }
@@ -39,8 +42,10 @@ export interface TenseFinding { sentence: string; words: string[] }
 /** Sentences of a methods section still in the future or present tense of a protocol. */
 export function tenseFindings(text: string): TenseFinding[] {
   const out: TenseFinding[] = []
-  for (const s of text.split(/(?<=[.;!?])\s+|\n+/).filter((x) => x.trim() && !/^\[/.test(x.trim()))) {
-    const w = [...s.matchAll(/\b(will|shall|is planned|are planned|is to be|are to be|is expected to|are expected to)\b/gi)].map((m) => m[0])
+  for (const s of text.split(/(?<=[.;!?])\s+|\n+/).filter((x) => x.trim() && !/^\[/.test(x.trim()) && !/^(?:IN|EX)\d{2}:/.test(x.trim()))) {
+    // Future (protocol) tense, and the present tense of a procedure ("participants are randomised",
+    // "gives 80% power"). Present tense about the report itself stays ("listed in appendix 16.1.3").
+    const w = [...s.matchAll(/\b(will|shall|is planned|are planned|is to be|are to be|is expected to|are expected to)\b|\b(?:is|are)\s+(?!titled\b|labell?ed\b|located\b)(?:\w+ed|\w+en|used|kept|done|made|run|set|held|seen|known|shown|chosen|told|met)\b(?!\s+(?:in|at|on) (?:appendix|appendices|section|table|listing|figure))|\b(?:gives|receives|takes|attends|can|may)\b/gi)].map((m) => m[0])
     if (w.length) out.push({ sentence: s, words: [...new Set(w.map((x) => x.toLowerCase()))] })
   }
   return out
@@ -90,16 +95,23 @@ export function methodsDraft(study: string, id: string): string | null {
       d.multiplicity ? `Multiplicity: ${lc(pastTense(d.multiplicity))}` : '',
       N(d, '10.7'),
     ].filter(Boolean).join('\n')
-    case '9.7.2': return N(d, '10.11') || null
+    case '9.7.2': return N(d, '10.11') || pastTense(d.statements?.['10.11'] ?? '') || null
     case '9.8': {
       const am = amendmentsOf(study), ch = analysisChanges(study)
       return [
         am.length ? am.map((a) => `Amendment ${a.identifier} (protocol version ${a.number}, approved ${a.date}; primary reason: ${a.reason}): ${a.summary}${a.enrolledPct ? ` About ${a.enrolledPct}% of participants had been enrolled when it was approved.` : ''}`).join('\n') : 'The protocol was not amended.',
-        ...ch.map((c) => `${c.planned} ${c.done} [Reason: ${c.kind === 'labelling' ? 'say how the output will be corrected' : 'to be written'}.]`),
+        ...ch.map((c) => `${c.planned} ${c.done} [To be written: ${c.kind === 'labelling' ? 'how the output will be corrected' : 'the reason'}.]`),
       ].join('\n')
     }
     default: return d0 ? null : null
   }
+}
+/** The protocol sections each CSR methods section is drafted from, for the side-by-side view. */
+export const PROTOCOL_KEYS: Record<string, string[]> = { '7': ['2.1', '2.2.1'], '9.2': ['4.2.2', '4.2.3', '4.2.4'], '9.3.3': ['7.1', '7.2'], '9.4.3': ['6.7'], '9.4.4': ['6.2'], '9.4.5': ['6.3'], '9.4.6': ['6.4'], '9.4.7': ['6.9', '6.10'], '9.4.8': ['6.8'], '9.6': ['11.6', '11.7', '11.9'], '9.7.1': ['10.7'], '9.7.2': ['10.11'] }
+/** The protocol's own words for a section, as written (future tense): what a writer starts from. */
+export function protocolText(study: string, id: string): string | null {
+  const d = latestData(study); if (!d) return null
+  return (PROTOCOL_KEYS[id] ?? []).map((k) => String(d.narrative?.[k] ?? d.statements?.[k] ?? '').trim()).filter(Boolean).join('\n\n') || null
 }
 export const DRAFTABLE = ['7', '8', '9.1', '9.2', '9.3', '9.3.1', '9.3.2', '9.3.3', '9.4.1', '9.4.2', '9.4.3', '9.4.4', '9.4.5', '9.4.6', '9.4.7', '9.4.8', '9.5.1', '9.5.3', '9.6', '9.7.1', '9.7.2', '9.8']
 

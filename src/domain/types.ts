@@ -5,7 +5,11 @@ export interface Frame { columns: string[]; rows: (string | null)[][] }
 export interface Cell { text: string; keys?: { an: string; g: string; cat: string | null }[] }
 export interface Display { title: string; population: string; head: string[]; groups: string[]; rows: { label: string; indent?: number; cells: Cell[] }[]; footnotes: string[] }
 export interface Output { id: string; title: string; kind: 'dataset' | 'ard' | 'listing' | 'figure'; area: string; ref: string; shell: string; frame: Frame; display: Display | null }
-export interface StudyOutputs { format: 'csr-studio/study-outputs'; schema: 1; study: string; title: string; short: string; sap: string; groups: string[]; source: string; outputs: Output[]; reportingEvent?: unknown }
+export interface StudyOutputs { format: 'csr-studio/study-outputs'; schema: 1; study: string; title: string; short: string; sap: string; groups: string[]; source: string; outputs: Output[]; reportingEvent?: unknown
+  /** The comparison the design tests (default superiority) and, for non-inferiority, the margin. */
+  design?: 'superiority' | 'non-inferiority'; margin?: number
+  /** A study stopped early: the date, the reason and how far it got. */
+  stopped?: { date: string; reason: string; enrolled: number; planned: number } }
 
 export type Stage = 'shell' | 'draft' | 'review' | 'final' | 'approved'
 export const STAGES: Stage[] = ['shell', 'draft', 'review', 'final', 'approved']
@@ -31,6 +35,12 @@ export interface Project {
   sdtm?: import('./sdtm').Sdtm; safety?: import('./sdtm').Safety
   /** Narrative coverage as last measured (the QC checklist reads it). */
   coverage?: { needed: number; written: number; clean: number; utc: string }
+  /** Review comments by section, with replies and resolutions. */
+  comments?: import('./review').Comment[]
+  /** The text as it stood at each stage change (tracked changes compare against these). */
+  snapshots?: import('./review').Snapshot[]
+  /** The India-only items of NDCT Rules 2019 Table 6. */
+  india?: Partial<import('./india').IndiaFields>
   createdUtc: string; updatedUtc: string; schema: 1
 }
 export interface Progress { id: 'me'; userId: string; classId: string; name?: string; quizzes: Record<string, { score: number; of: number; utc: string }>; drills: Record<string, { score: number; utc: string }>; missions: Record<string, { score: number; utc: string }> }

@@ -57,6 +57,6 @@ describe('report workflow', () => {
     for (const q of qcStatus(p)) if (!q.auto) p.qc[q.id] = true
     p.signatures.push({ name: 'A Writer', role: 'Medical writer', meaning: 'Author: the report is complete, QC findings are resolved, and the text agrees with the tables.', utc: '', version: 1 })
     p.signatures.push({ name: 'a writer', role: 'Medical writer', meaning: 'Approval: I approve this clinical study report version for submission.', utc: '', version: 1 })
-    expect(gate(p, 'approved').problems).toEqual(['The approver must be someone other than the author.'])
+    expect(gate(p, 'approved').problems).toEqual(['The approver must be someone other than the author.', 'The coordinating investigator signs that the report describes the study accurately (E3 16.1.5).'])
   })
 })
