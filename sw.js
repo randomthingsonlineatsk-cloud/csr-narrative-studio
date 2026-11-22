@@ -1,6 +1,6 @@
 // Generated at build time by tools/sw-plugin.ts. Precaches the app for offline use.
-const CACHE = "cs-mws6sret";
-const FILES = ["./","./index.html","./favicon.svg","./assets/index-BrJtdgbC.js","./assets/cases-glv-12-301-DeEJj7Sj.js","./assets/cdm-hrp-301-B9DrpH9W.js","./assets/docx-BeU3TQbd.js","./assets/handoff-DOx3CRnh.js","./assets/sdtm-glv-12-301-DJ0jDBBq.js","./assets/sdtm-hrp-301-CHU6hVpt.js","./assets/sdtm-onk-44-302-DwADjpSe.js","./assets/index-FjqtEY7t.css"];
+const CACHE = "cs-mws97nv0";
+const FILES = ["./","./index.html","./favicon.svg","./assets/index-Dhz4ZAgP.js","./assets/cases-glv-12-301-DeEJj7Sj.js","./assets/cdm-hrp-301-B9DrpH9W.js","./assets/docx-B9YUmWIX.js","./assets/handoff-DWLPwG5G.js","./assets/sdtm-glv-12-301-D_CW5l7_.js","./assets/sdtm-hrp-301-xMgKLvQZ.js","./assets/sdtm-onk-44-302-DwADjpSe.js","./assets/index-FjqtEY7t.css"];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k.startsWith("cs-") && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', (e) => {
