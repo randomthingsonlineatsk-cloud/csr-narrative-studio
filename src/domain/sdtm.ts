@@ -26,6 +26,7 @@ const LOADERS: Record<string, () => Promise<{ sdtm: Sdtm; safety: Safety }>> = {
   },
 }
 LOADERS['HRP-205'] = async () => ({ sdtm: { format: 'csr-studio/sdtm', schema: 1, study: 'HRP-205', source: 'Not bundled: HRP-205 has summary outputs only', domains: {} }, safety: { source: 'Not bundled', cases: [], reconciliation: [] } })
+LOADERS['ONK-44-302'] = async () => ({ sdtm: (await import('../data/sdtm-onk-44-302.json')).default as unknown as Sdtm, safety: { source: 'No safety cases: the ONK-44-302 training data hold efficacy and deaths only', cases: [], reconciliation: [] } })
 const cache: Record<string, { sdtm: Sdtm; safety: Safety }> = {}
 export async function loadPatientData(study: string) { return (cache[study] ??= await LOADERS[study]()) }
 

@@ -159,7 +159,25 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
 35. **Missions CS16 to CS18**: review an AI-drafted results text (simulated, no AI runs: eight
     planted errors of the kinds drafting tools make, and every sentence ticked as checked against
     its source); post the VERDANT-1 results; plan the VERDANT-1 report around lock.
-36. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
+36. **Trace a number**: in Write, click any checked number to follow it back: the table cell, the
+    analysis result (CDISC ARS: analysis set, grouping, method, the raw value and its rounding),
+    ADSL (the participants recounted here), SDTM (adverse events recounted from AE) and the eCRF
+    form it was entered on.
+37. **Addenda**: an approved report is corrected by an erratum (each change quoted from the
+    approved text, was and now) or extended by an addendum with additional data, with the impact
+    on the conclusions and on other documents, signed, and downloadable for eCTD 5.3.5.1. Mission
+    CS19: correct the approved GLV-12-301 report by addendum.
+38. **An oncology study, ONK-44-302 (MERIDIAN-2)**: ONK-44 against docetaxel in previously treated
+    advanced non-small cell lung cancer, from the SDTM Mapping Trainer's RECIST 1.1 data (TU, TR,
+    RS, DD). `scripts/make-onk-44-302.mjs` derives ADSL and the outputs: disposition at the data
+    cut-off, demographics, progression-free survival by independent review (primary) and by the
+    investigator (Kaplan-Meier medians with Brookmeyer-Crowley CIs, Cox hazard ratio, log-rank
+    test; cross-checked against an independent survival library), best overall response with
+    Clopper-Pearson CIs, immature overall survival and exposure. The training data hold no adverse
+    events, so safety sections other than exposure have no outputs. Mission CS20: report the
+    oncology efficacy results (primary first, medians in months, the testing order, overall
+    survival as immature).
+39. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
     (clobetasol), both lumiravostat 25 mg. Choose the pools, keep the comparators apart, harmonise a
     liver term coded differently in each study, and work out the pooled counts (from each study's
     14.3.1); then the pooled table, downloadable as CSV.

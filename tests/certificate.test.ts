@@ -11,7 +11,7 @@ const prog = (missions: Record<string, number>, quiz = 8): Progress => ({ id: 'm
 test('levels and the core missions', () => {
   expect([levelOf(79), levelOf(80), levelOf(100)]).toEqual(['not yet', 'passed', 'expert'])
   expect(REQUIRED).toEqual(['CS1', 'CS2', 'CS4', 'CS5', 'CS6', 'CS12'])
-  expect(MISSIONS).toHaveLength(18)
+  expect(MISSIONS).toHaveLength(20)
 })
 test('certificate, distinction and the passport record (fixtures for the hub)', () => {
   const partial = certificate(prog({ CS1: 100, CS2: 90 }), who)

@@ -18,6 +18,8 @@ import OutputView from './OutputView'
 import { ConsortPanel, LiverPanel, StaleNotice, SynopsisLength } from './SectionAids'
 import { noteBasis, staleSections } from '../domain/stale'
 import { approvedText } from '../domain/reuse'
+import { trace } from '../domain/trace'
+import { usePatientData } from './usePatient'
 import { sentenceKey, sentencesOf } from '../domain/missions/aidraft'
 import { Btn, Modal, Panel, Pill, Select, TextArea } from './ui'
 
@@ -29,6 +31,7 @@ export default function Write() {
   const nav = useNav()
   const ms = missionSections(p!), secs = sectionsOf(p!).filter((x) => needsText(x) && (!ms.length || ms.includes(x.id))), d = dataOf(p!), outs = outputsOf(d)
   const [id, setId] = useState(nav.arg && p!.sections[nav.arg] ? nav.arg : secs.find((s) => s.id.startsWith('10'))?.id ?? secs[0].id)
+  const [traced, setTraced] = useState<Finding | null>(null)
   const [show, setShow] = useState(''), [helpOut, setHelpOut] = useState(''), [helpRow, setHelpRow] = useState(0)
   const ta = useRef<HTMLTextAreaElement>(null)
   const s = secs.find((x) => x.id === id) ?? secs[0], st = p!.sections[s.id], lock = isLocked(p!.stage)
@@ -80,11 +83,12 @@ export default function Write() {
         {!st.na && s.id === '10.1' && <ConsortPanel />}
         {!st.na && s.id === '12.4' && <LiverPanel text={st.text} />}
         {!st.na && <Guides sid={s.id} text={st.text} lock={lock} onDraft={(t, replace) => replace ? act((x) => { x.sections[s.id].text = t; noteBasis(x, s.id) }) : insert(t)} />}
-        {!st.na && st.text.trim() && reportsResults(s) && <Panel title="Your text, as checked" sub="Each number is coloured by what the checker found. Hover for the detail.">
-          <Marked text={st.text} f={f} />
+        {!st.na && st.text.trim() && reportsResults(s) && <Panel title="Your text, as checked" sub="Each number is coloured by what the checker found. Click a number to trace it back to the table, the analysis, the data and the form.">
+          <Marked text={st.text} f={f} onPick={setTraced} />
         </Panel>}
       </div>
       <Checker f={f} onFix={lock || p!.mission ? undefined : fix} />
+      {traced && <TraceModal f={traced} onClose={() => setTraced(null)} />}
       {show && (() => { const o = d.outputs.find((x) => x.id === show)!; return <Modal wide title={o.title} onClose={() => setShow('')}><OutputView o={o} /></Modal> })()}
     </div>
   )
@@ -114,12 +118,12 @@ function Guides({ sid, text, lock, onDraft }: { sid: string; text: string; lock:
   )
 }
 
-function Marked({ text, f }: { text: string; f: Finding[] }) {
+function Marked({ text, f, onPick }: { text: string; f: Finding[]; onPick?: (x: Finding) => void }) {
   const parts: React.ReactNode[] = []; let at = 0
   for (const x of [...f].sort((a, b) => a.at - b.at)) {
     if (x.at < at) continue
     parts.push(text.slice(at, x.at))
-    parts.push(<mark key={x.at} title={`${LABEL[x.status]}: ${x.message}`} className={`bg-transparent font-semibold underline decoration-2 ${TONE[SEVERITY[x.status]]}`}>{text.slice(x.at, x.at + x.text.length)}</mark>)
+    parts.push(onPick ? <button key={x.at} type="button" title={`${LABEL[x.status]}: ${x.message}. Click to trace.`} onClick={() => onPick(x)} className={`font-semibold underline decoration-2 ${TONE[SEVERITY[x.status]]}`}>{text.slice(x.at, x.at + x.text.length)}</button> : <mark key={x.at} title={`${LABEL[x.status]}: ${x.message}`} className={`bg-transparent font-semibold underline decoration-2 ${TONE[SEVERITY[x.status]]}`}>{text.slice(x.at, x.at + x.text.length)}</mark>)
     at = x.at + x.text.length
   }
   parts.push(text.slice(at))
@@ -148,5 +152,22 @@ function Verify({ sid, lock }: { sid: string; lock: boolean }) {
     <Panel title="Verify each sentence" sub="Tick a sentence only after checking every number, group, analysis name and citation in it against its source. Changing a sentence clears its tick." right={<Pill tone={done === list.length ? 'green' : 'amber'}>{`${done}/${list.length}`}</Pill>}>
       <ol className="space-y-1 text-sm list-decimal pl-5">{list.map((x) => { const k = sentenceKey(sid, x); return <li key={k}><label className="flex gap-2 items-start"><input type="checkbox" disabled={lock} checked={!!v[k]} onChange={(e) => act((y) => { const m = { ...(y.verified ?? {}) }; if (e.target.checked) m[k] = new Date().toISOString(); else delete m[k]; y.verified = m })} /><span>{x}</span></label></li> })}</ol>
     </Panel>
+  )
+}
+
+function TraceModal({ f, onClose }: { f: Finding; onClose: () => void }) {
+  const { p } = useStore()
+  const d = usePatientData(p)
+  const steps = trace(p!, f, d?.sdtm ?? null)
+  return (
+    <Modal wide title={`Trace “${f.text}” (${f.section})`} onClose={onClose}>
+      <ol className="space-y-2">{steps.map((st, i) => <li key={i} className={`rounded border p-2 text-sm ${st.ok === false ? 'border-lab-red/60' : st.ok ? 'border-lab-cdsco/60' : 'border-lab-line'}`}>
+        <p className="text-xs font-mono text-lab-text-muted">{i + 1}. {st.level}{st.ok !== undefined && <span className={st.ok ? 'text-lab-cdsco' : 'text-lab-red'}> · {st.ok ? 'agrees' : 'does not agree'}</span>}</p>
+        <p className="font-semibold">{st.title}</p>
+        {st.lines.map((l, k) => <p key={k} className="text-xs">{l}</p>)}
+        {st.subjects && st.subjects.length > 0 && <details className="text-xs"><summary className="cursor-pointer text-lab-text-muted">{st.subjects.length} participant{st.subjects.length === 1 ? '' : 's'}</summary><p className="font-mono mt-1">{st.subjects.join(', ')}</p></details>}
+      </li>)}</ol>
+      <p className="text-[11px] text-lab-text-muted">The chain the apps share: CDM Console eCRF → SDTM Mapping Trainer → TLF Programming Lab (ADaM, ARS) → this report.</p>
+    </Modal>
   )
 }

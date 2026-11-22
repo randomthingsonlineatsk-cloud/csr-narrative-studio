@@ -6,13 +6,14 @@
 import pHrp from '../data/protocol-hrp-301.json'
 import pGlv from '../data/protocol-glv-12-301.json'
 import pH205 from '../data/protocol-hrp-205.json'
+import pOnk from '../data/protocol-onk-44-302.json'
 import { BUNDLED, outputsOf } from './study'
 import { tableNumber } from './e3'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type D = any
 export interface Amendment { number: string; date: string; identifier: string; reason: string; summary: string; safetyRights: string; dataImpact: string; enrolledPct: number; changes: { sections: string[]; description: string; rationale: string }[] }
-const PROTO: Record<string, D> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp, 'HRP-205': pH205 }
+const PROTO: Record<string, D> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp, 'HRP-205': pH205, 'ONK-44-302': pOnk }
 const REASON: Record<string, string> = { C207600: 'change in standard of care', C207601: 'change in strategy', C207602: 'IMP addition', C207603: 'inconsistency or error in the protocol', C207604: 'investigator or site feedback', C207605: 'IRB or IEC feedback', C207606: 'manufacturing change', C207607: 'new data available (other than safety data)', C207608: 'new regulatory guidance', C207609: 'new safety information', C207610: 'protocol design error', C207611: 'recruitment difficulty', C207612: 'regulatory agency request', C17649: 'other' }
 
 export const hasProtocol = (study: string) => !!PROTO[study]

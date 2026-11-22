@@ -1,7 +1,7 @@
 import { useStore } from '../state'
 import { useNav } from '../nav'
 import { missionById, scoreMission, scoreOf, submit, CS2_PLANTED } from '../domain/missions'
-import { GLV_REFERENCE } from '../domain/reference'
+import { GLV_REFERENCE, ONK_REFERENCE } from '../domain/reference'
 import { modelNarratives } from '../domain/missions/narr'
 import { CS16_PLANTED } from '../domain/missions/aidraft'
 import { usePatientData } from './usePatient'
@@ -19,12 +19,12 @@ export default function MissionBar() {
     <Panel className="mb-4 border-lab-ema/60" title={`Mission ${m.id}: ${m.title}`} sub={`${m.study}${m.core ? ' · core mission' : ''}`} right={r.submittedUtc ? <Pill tone={(r.score ?? 0) >= 80 ? 'green' : 'amber'}>{`score ${r.score}`}</Pill> : <Btn onClick={go}>Submit</Btn>}>
       <p className="text-sm">{m.brief}</p>
       <ol className="list-decimal pl-5 text-sm space-y-0.5">{m.steps.map((s) => <li key={s}>{s}</li>)}</ol>
-      <div className="flex flex-wrap gap-2">{m.narratives ? <Btn tone="grey" onClick={() => nav.go('narratives')}>Open the narratives</Btn> : m.id === 'CS17' ? <><Btn tone="grey" onClick={() => nav.go('posting')}>Open Results posting</Btn><Btn tone="grey" onClick={() => nav.go('library')}>Open the content library</Btn></> : m.id === 'CS18' ? <Btn tone="grey" onClick={() => nav.go('timeline')}>Open Timeline</Btn> : m.id === 'CS1' ? <Btn tone="grey" onClick={() => nav.go('shell')}>Open the shell</Btn> : m.sections.map((s) => <Btn key={s} tone="grey" onClick={() => nav.go('write', s)}>{`Write ${s}`}</Btn>)}</div>
+      <div className="flex flex-wrap gap-2">{m.narratives ? <Btn tone="grey" onClick={() => nav.go('narratives')}>Open the narratives</Btn> : m.id === 'CS17' ? <><Btn tone="grey" onClick={() => nav.go('posting')}>Open Results posting</Btn><Btn tone="grey" onClick={() => nav.go('library')}>Open the content library</Btn></> : m.id === 'CS18' ? <Btn tone="grey" onClick={() => nav.go('timeline')}>Open Timeline</Btn> : m.id === 'CS19' ? <><Btn tone="grey" onClick={() => nav.go('write', '12.3.1')}>Read 12.3.1</Btn><Btn tone="grey" onClick={() => nav.go('addenda')}>Open Addenda</Btn></> : m.id === 'CS1' ? <Btn tone="grey" onClick={() => nav.go('shell')}>Open the shell</Btn> : m.sections.map((s) => <Btn key={s} tone="grey" onClick={() => nav.go('write', s)}>{`Write ${s}`}</Btn>)}</div>
       {r.submittedUtc ? <ul className="text-xs space-y-0.5">{items.map((d) => <li key={d.label} className={d.ok ? '' : 'text-lab-amber'}>{d.ok ? '✓' : '✗'} {d.label}{d.ok ? '' : `: ${d.why}`}</li>)}</ul>
         : <p className="text-xs text-lab-text-muted">{items.filter((d) => d.ok).length} of {items.length} checks met so far. Submit to see each one.</p>}
       {r.submittedUtc && m.id === 'CS16' && <details className="text-xs"><summary className="cursor-pointer">The eight planted errors</summary><ol className="list-decimal pl-5 space-y-0.5 mt-1">{CS16_PLANTED.map((x) => <li key={x.n}>{x.section}, {x.kind}: “{x.mark}”. {x.why}</li>)}</ol></details>}
       {r.submittedUtc && m.id === 'CS2' && <details className="text-xs"><summary className="cursor-pointer">The 25 planted errors</summary><ol className="list-decimal pl-5 space-y-0.5 mt-1">{CS2_PLANTED.map((x) => <li key={x.n}>{x.section}: “{x.to}” should be “{x.from}”. {x.why}</li>)}</ol></details>}
-      {r.submittedUtc && ['CS3', 'CS4', 'CS5'].includes(m.id) && <details className="text-xs"><summary className="cursor-pointer">A model answer</summary>{m.sections.map((s) => <p key={s} className="mt-1"><b>{s}.</b> {GLV_REFERENCE[s]}</p>)}</details>}
+      {r.submittedUtc && ['CS3', 'CS4', 'CS5', 'CS20'].includes(m.id) && <details className="text-xs"><summary className="cursor-pointer">A model answer</summary>{m.sections.map((s) => <p key={s} className="mt-1"><b>{s}.</b> {(m.id === 'CS20' ? ONK_REFERENCE : GLV_REFERENCE)[s]}</p>)}</details>}
       {r.submittedUtc && m.narratives && d && <details className="text-xs"><summary className="cursor-pointer">Model narratives</summary>{modelNarratives(m.id, d).map(({ c, text }) => <p key={c.key} className="mt-2 whitespace-pre-wrap">{text}</p>)}</details>}
       {r.submittedUtc && <Btn tone="grey" onClick={() => act((y) => { y.mission!.submittedUtc = undefined })}>Keep working and submit again</Btn>}
     </Panel>

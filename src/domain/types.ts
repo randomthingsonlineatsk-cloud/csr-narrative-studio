@@ -54,6 +54,8 @@ export interface Project {
   posting?: Partial<import('./posting').PostingState>
   /** The CSR timeline: milestone id → date. */
   timeline?: Record<string, string>
+  /** Addenda after approval: errata and additional data. */
+  addenda?: import('./addendum').Addendum[]
   /** Sentences checked against their source (section|sentence → UTC), for drafts to verify. */
   verified?: Record<string, string>
   createdUtc: string; updatedUtc: string; schema: 1

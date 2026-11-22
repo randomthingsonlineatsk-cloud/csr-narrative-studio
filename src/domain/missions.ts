@@ -69,6 +69,12 @@ export const MISSIONS: MissionDef[] = [
   { id: 'CS18', title: 'Plan the VERDANT-1 report around database lock', study: 'HRP-301', sections: [], patients: true,
     brief: `The HRP-301 database locks on ${'2027-03-10'}. Plan the report: from the SAP and table shells, through the dry run, lock, unblinding and topline, to the approved report, and on to the registry deadlines that the data set.`,
     steps: ['Open Timeline: database lock is given.', 'Date every milestone in a workable order.', 'Keep each within its usual window (shown beside it).', 'Check the registry deadlines against the primary completion date and the end of the trial.', 'Submit.'] },
+  { id: 'CS19', title: 'Correct the approved report by addendum', study: 'GLV-12-301', sections: [],
+    brief: 'The GLV-12-301 report was approved and submitted. A reviewer at the agency notices that the report names the wrong group for the participant who died. An approved report is not edited in place: write an erratum addendum that quotes every wrong statement exactly and gives the correction, assess the impact on the conclusions and on other documents, and have it signed.',
+    steps: ['Read 12.3.1 and Listing 16.2.7: which group was the participant on?', 'Search the approved report for every statement of the death.', 'Open Addenda: start addendum 1, an erratum, with the reason.', 'For each wrong statement: the section, the approved words exactly, and the corrected words.', 'State the impact on the conclusions and on other documents; sign as author; an approver signs; submit.'] },
+  { id: 'CS20', title: 'Report the oncology efficacy results', study: 'ONK-44-302', sections: ['11.4.1', '11.4.7'],
+    brief: 'ONK-44-302 (MERIDIAN-2) compared ONK-44 with docetaxel in previously treated advanced non-small cell lung cancer. Write 11.4.1 and 11.4.7 from the outputs: progression-free survival by blinded independent central review first (events, medians in months with their CIs, the hazard ratio and the log-rank p-value), the investigator’s reading as the sensitivity analysis, objective response in the fixed sequence, and overall survival as what it is at this cut-off: immature.',
+    steps: ['Read Tables 14.2.1 to 14.2.4 and the protocol’s estimand and testing order (Overview).', 'Lead with the primary endpoint: events, medians (months, 95% CI) and the hazard ratio with its CI and p-value.', 'Report the investigator’s PFS as the sensitivity analysis.', 'Then objective response, with the difference and its CI, in the fixed sequence.', 'Report overall survival as immature, with no claim of a survival benefit; write NE as “not estimable”.', 'Write the conclusions in 11.4.7; submit.'] },
 ]
 export const missionById = (id: string) => MISSIONS.find((m) => m.id === id)
 
@@ -191,6 +197,26 @@ export function scoreMission(p: Project, d?: PatientData | null): Item[] {
       { label: 'The fatal SAE: group, day, causality', ok: /heart muscle infarction/i.test(S('12.3.1')) && /10 mg/.test(S('12.3.1')) && /\bday\s*97\b/i.test(S('12.3.1')) && /not related|unrelated/i.test(S('12.3.1')) && /16\.2\.7/.test(S('12.3.1')), why: 'Heart muscle infarction, GLV-12 10 mg, Day 97, not related (Listing 16.2.7).' },
       { label: 'Neutral wording', ok: !/\bonly\b|mild and transient|well[- ]tolerated|no safety concerns/i.test(all), why: 'Avoid “only”, “mild and transient”, “well tolerated”: report what the data show.' },
       clean(p, ['12.1', '12.2.1', '12.2.2', '12.3.1']),
+    ]
+  }
+  if (id === 'CS20') {
+    const fs = findingsIn(p, '11.4.1'), first = fs.find((f) => f.tie && /^14\.2/.test(f.tie.table)), sens = sentences(S('11.4.1')), A = 'ONK-44 400 mg', B = 'Docetaxel'
+    const os = sens.filter((x) => /14\.2\.4|overall survival/i.test(x.s)), all = `${S('11.4.1')} ${S('11.4.7')}`
+    return [
+      { label: 'Primary endpoint first', ok: first?.tie?.out === 'T3', why: first?.tie ? `The first number ties to ${first.tie.table ? `Table ${first.tie.table}` : first.tie.out}; the primary analysis is Table 14.2.1.` : 'No number tied to a table yet.' },
+      ...needs(p, [
+        { label: 'PFS events, both arms', sec: '11.4.1', out: 'T3', row: 'With an event, n (%)', groups: [A, B], kind: 'n' },
+        { label: 'Hazard ratio with its 95% CI', sec: '11.4.1', out: 'T3', row: 'Hazard ratio, ONK-44 vs docetaxel (95% CI)', groups: [A], kind: 'est' },
+        { label: 'Hazard ratio, upper limit', sec: '11.4.1', out: 'T3', row: 'Hazard ratio, ONK-44 vs docetaxel (95% CI)', groups: [A], kind: 'ucl' },
+        { label: 'Log-rank p-value', sec: '11.4.1', out: 'T3', row: 'Log-rank test, p-value', groups: [A], kind: 'p' },
+      ]),
+      { label: 'Objective response by independent review, both arms', ok: [A, B].every((g) => tied(fs, 'T5', 'Objective response (CR or PR), n (%)', g, 'n') || tied(fs, 'T5', 'Partial response', g, 'n')), why: 'The response rate in each arm (Table 14.2.3, independent review): with no complete responses, the partial responses are the objective responses.' },
+      { label: 'Medians in months, with their CIs', ok: [A, B].every((g) => fs.filter((f) => (f.status === 'ok' || f.status === 'rounding') && f.tie?.out === 'T3' && f.tie.row === 'Median, months (95% CI)' && f.tie.group === g).length >= 2) && sens.some((x) => /median/i.test(x.s) && /months?/i.test(x.s)), why: 'Both medians from Table 14.2.1, in months, each with its 95% CI.' },
+      { label: 'NE written out', ok: !/\bNE\b/.test(all), why: 'Write “not estimable” (or “not reached”), not “NE”.' },
+      { label: 'Investigator PFS as the sensitivity analysis', ok: sens.some((x) => /14\.2\.2/.test(x.s) && /sensitivity|investigator/i.test(x.s)), why: 'Cite Table 14.2.2 as the sensitivity analysis by the investigator.' },
+      { label: 'The testing order', ok: /fixed[- ]sequence|hierarch|tested (next|last|in order)/i.test(S('11.4.1')), why: 'Say that response, then overall survival, were tested in the fixed sequence after PFS.' },
+      { label: 'Overall survival reported as immature, no benefit claimed', ok: os.length > 0 && os.some((x) => /immature|interim|not final|too few|early/i.test(x.s)) && !/(improv|prolong|longer|benefit)\w*[^.]{0,40}overall survival|overall survival[^.]{0,40}(improv|prolong|longer|benefit)/i.test(all.replace(/does not show a difference in overall survival/gi, '')), why: 'Few deaths at the cut-off: overall survival is immature; the hazard ratio’s CI is wide and includes 1.' },
+      clean(p, ['11.4.1', '11.4.7']),
     ]
   }
   return []

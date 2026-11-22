@@ -63,9 +63,13 @@ export function groupOfColumn(d: Display, ci: number): { group: string; col: str
 /** Names a writer uses for a treatment group: the full name, the dose alone, "placebo", "total". */
 export function aliases(groups: string[]): { group: string; re: RegExp }[] {
   const all = [...groups, 'Total']
+  // A product named without its dose ("ONK-44" for "ONK-44 400 mg") stands for its group when no
+  // other group shares the name. "Overall" means the total, except in "overall survival/response".
+  const bare = (g: string) => g.replace(/\s*\d+(?:\.\d+)?\s*mg(?:\/m2)?.*$/i, '').trim()
   return all.map((g) => {
-    const dose = /(\d+(?:\.\d+)?\s*mg)$/i.exec(g)?.[1]
-    const alts = [g, ...(dose ? [dose] : []), ...(g === 'Total' ? ['overall', 'in total', 'all participants'] : [])].map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s*'))
+    const dose = /(\d+(?:\.\d+)?\s*mg)$/i.exec(g)?.[1], b = bare(g)
+    const own = dose && b && b !== g && all.filter((x) => bare(x) === b).length === 1 ? [b] : []
+    const alts = [g, ...(dose ? [dose] : []), ...own, ...(g === 'Total' ? ['overall(?!\\s+(?:survival|response))', 'in total', 'all participants'] : [])].map((x) => x.startsWith('overall(') ? x : x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s*'))
     return { group: g, re: new RegExp(`(?<![\\w-])(?:${alts.join('|')})(?![\\w])`, 'gi') }
   })
 }

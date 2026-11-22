@@ -48,3 +48,9 @@ test('out-of-date marking and the synopsis length', () => {
   noteBasis(p, '10.1'); expect(staleSections(p)).toEqual([])
   p.sections['2'].text = 'word '.repeat(1600); expect(synopsisLength(p)).toMatchObject({ words: 1600, ok: false })
 })
+test('an event-driven (oncology) disposition table draws and checks', () => {
+  const f = flowOf(BUNDLED['ONK-44-302'])!
+  expect(f.eventDriven).toBe(true)
+  expect(flowChecks(f).every((c) => c.ok)).toBe(true)
+  expect(flowSvg(f)).toContain('At the data cut-off')
+})

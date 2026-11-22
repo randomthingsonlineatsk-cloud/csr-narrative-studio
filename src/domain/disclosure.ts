@@ -138,6 +138,7 @@ export const CCI_CANDIDATES: Record<string, CciCandidate[]> = {
 }
 CCI_CANDIDATES['HRP-301'] = []
 CCI_CANDIDATES['HRP-205'] = []
+CCI_CANDIDATES['ONK-44-302'] = []
 
 // ---------- risk on the participants ----------
 const REGION: Record<string, string> = { USA: 'Americas', CAN: 'Americas', BRA: 'Americas', DEU: 'Europe', POL: 'Europe', JPN: 'Asia', IND: 'Asia' }

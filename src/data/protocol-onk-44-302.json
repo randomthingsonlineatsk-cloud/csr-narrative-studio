@@ -1,0 +1,676 @@
+{
+ "format": "protocol-builder-project",
+ "schema": 1,
+ "exportedUtc": "2026-11-22T00:00:00.000Z",
+ "project": {
+  "format": "protocol-builder-project",
+  "schema": 1,
+  "id": "P-ONK-44-302",
+  "name": "ONK-44-302 MERIDIAN-2 (fictional)",
+  "userId": "L-6r7uha64",
+  "classId": "",
+  "type": "drug",
+  "phase": "Phase 3",
+  "regions": [
+   "US",
+   "EU",
+   "IN"
+  ],
+  "source": "example",
+  "createdUtc": "2026-01-15T09:00:00.000Z",
+  "updatedUtc": "2026-01-15T09:00:00.000Z",
+  "versions": [
+   {
+    "number": "1.0",
+    "date": "2025-09-15",
+    "status": "approved",
+    "data": {
+     "title": {
+      "Full Title": "A randomised, open-label, phase 3 study of ONK-44 versus docetaxel in adults with advanced non-small cell lung cancer after one prior platinum-based chemotherapy",
+      "Short Title": "ONK-44 versus docetaxel in previously treated advanced NSCLC",
+      "Trial Acronym": "MERIDIAN-2",
+      "Sponsor Protocol Identifier": "ONK-44-302",
+      "Trial Phase": "Phase 3",
+      "Sponsor Name and Address": "Meridale Oncology (fictional), Cambridge, United Kingdom",
+      "Investigational Product Name(s)": "ONK-44 400 mg tablets",
+      "NCT Number": "NCT99944302 (fictional)",
+      "CTRI Number": "CTRI/2025/00/000044 (fictional)"
+     },
+     "design": {
+      "Intervention Model": "Parallel Group",
+      "Population Type": "With Disease",
+      "Population Diagnosis or Condition": "Advanced non-small cell lung cancer that progressed after one platinum-based chemotherapy",
+      "Population Age (Minimum and Maximum)": "18 and over",
+      "Units of Age": "Years",
+      "Control Type": "Active",
+      "Control Description": "Docetaxel 75 mg/m² intravenously every 3 weeks",
+      "Intervention Assignment Method": "Randomisation",
+      "Randomisation Type": "1:1 through an interactive response technology system",
+      "Stratification Indicator": "No",
+      "Site Distribution": "2 sites",
+      "Site Geographic Scope": "India and the United Kingdom",
+      "Master Protocol Indicator": "No",
+      "Drug/Device Combination Product Indicator": "No",
+      "Adaptive Trial Design Indicator": "No",
+      "Number of Arms": "2",
+      "Trial Blind Schema": "Open Label",
+      "Blinded Roles": "Independent central reviewers (blinded to treatment)",
+      "Target/Maximum Number of Participants": "42",
+      "Number of Participants Randomly Assigned": "42",
+      "Total Planned Duration of Trial Intervention": "Until progression or unacceptable toxicity",
+      "Total Planned Duration of Trial Participation": "Until death, withdrawal or the end of the study",
+      "Independent Committees": "Blinded independent central review (Lumen Imaging Core, fictional)"
+     },
+     "facts": {
+      "participants": 42,
+      "perArm": 21,
+      "dropoutPct": 5,
+      "treatmentWeeks": 42,
+      "followUpWeeks": 0,
+      "participationWeeks": 52,
+      "ageMin": 18,
+      "ageMax": 99,
+      "power": 0.8,
+      "alpha": 0.05,
+      "sided": 2,
+      "assumption": {
+       "kind": "events"
+      }
+     },
+     "arms": [
+      {
+       "id": "ARM1",
+       "code": "ONK44",
+       "name": "ONK-44 400 mg",
+       "type": "Investigational",
+       "intervention": "ONK-44 400 mg orally once daily in 21-day cycles until progression or unacceptable toxicity",
+       "ratio": 1
+      },
+      {
+       "id": "ARM2",
+       "code": "DOCE",
+       "name": "Docetaxel",
+       "type": "Active Comparator",
+       "intervention": "Docetaxel 75 mg/m² intravenously on day 1 of each 21-day cycle until progression or unacceptable toxicity",
+       "ratio": 1
+      }
+     ],
+     "epochs": [
+      {
+       "id": "EP_SCR",
+       "name": "Screening",
+       "type": "Screening"
+      },
+      {
+       "id": "EP_TRT",
+       "name": "Treatment",
+       "type": "Treatment"
+      },
+      {
+       "id": "EP_FU",
+       "name": "Follow-up",
+       "type": "Follow-up"
+      }
+     ],
+     "interventions": [
+      {
+       "id": "INT1",
+       "name": "ONK-44 400 mg",
+       "role": "Investigational",
+       "dose": "400 mg tablet",
+       "doseValue": 400,
+       "doseUnit": "mg",
+       "route": "Oral",
+       "frequency": "once daily",
+       "durationWeeks": null
+      },
+      {
+       "id": "INT2",
+       "name": "Docetaxel",
+       "role": "Active Comparator",
+       "dose": "75 mg/m² infusion",
+       "doseValue": 75,
+       "doseUnit": "mg/m2",
+       "route": "Intravenous",
+       "frequency": "every 3 weeks",
+       "durationWeeks": null
+      }
+     ],
+     "objectives": [
+      {
+       "id": "OBJ1",
+       "level": "Primary",
+       "kind": "Efficacy",
+       "text": "To compare progression-free survival with ONK-44 and docetaxel",
+       "endpointIds": [
+        "END1"
+       ]
+      },
+      {
+       "id": "OBJ2",
+       "level": "Secondary",
+       "kind": "Efficacy",
+       "text": "To compare objective response and overall survival with ONK-44 and docetaxel",
+       "endpointIds": [
+        "END2",
+        "END3"
+       ]
+      }
+     ],
+     "endpoints": [
+      {
+       "id": "END1",
+       "level": "Primary",
+       "text": "Progression-free survival by blinded independent central review (RECIST 1.1)",
+       "variableType": "time to event",
+       "procedureIds": [],
+       "visitIds": [],
+       "purpose": "Efficacy"
+      },
+      {
+       "id": "END2",
+       "level": "Secondary",
+       "text": "Objective response rate (complete or partial response) by blinded independent central review (RECIST 1.1)",
+       "variableType": "binary",
+       "procedureIds": [],
+       "visitIds": [],
+       "purpose": "Efficacy"
+      },
+      {
+       "id": "END3",
+       "level": "Secondary",
+       "text": "Overall survival",
+       "variableType": "time to event",
+       "procedureIds": [],
+       "visitIds": [],
+       "purpose": "Efficacy"
+      }
+     ],
+     "estimands": [
+      {
+       "id": "EST1",
+       "objectiveId": "OBJ1",
+       "endpointId": "END1",
+       "population": "Adults with advanced non-small cell lung cancer that progressed after one platinum-based chemotherapy",
+       "analysisSetId": "ITT",
+       "treatment": "ONK-44 400 mg once daily compared with docetaxel 75 mg/m² every 3 weeks",
+       "intercurrentEvents": [
+        {
+         "id": "EST1-IE1",
+         "name": "Discontinuation of study treatment",
+         "strategy": "Treatment policy",
+         "description": "Tumour assessments continue after treatment stops; progression after stopping counts."
+        },
+        {
+         "id": "EST1-IE2",
+         "name": "Start of new anticancer therapy before progression",
+         "strategy": "Hypothetical",
+         "description": "Progression-free survival is censored at the last adequate assessment before the new therapy."
+        }
+       ],
+       "summary": "Hazard ratio for progression or death",
+       "estimator": "A Cox proportional hazards model with treatment; Kaplan-Meier medians; an unstratified log-rank test.",
+       "missing": "Participants without progression or death are censored at their last adequate tumour assessment.",
+       "sensitivity": "Progression-free survival by the investigator."
+      }
+     ],
+     "analysisSets": [
+      {
+       "id": "ITT",
+       "name": "Intent-to-treat set",
+       "text": "All randomised participants, analysed as randomised."
+      },
+      {
+       "id": "SAF",
+       "name": "Safety set",
+       "text": "All randomised participants who took at least one dose, analysed as treated."
+      }
+     ],
+     "criteria": [
+      {
+       "code": "IN01",
+       "category": "Inclusion",
+       "text": "Aged 18 or over when consent is signed",
+       "procedureIds": []
+      },
+      {
+       "code": "IN02",
+       "category": "Inclusion",
+       "text": "Histologically confirmed advanced non-small cell lung cancer that progressed during or after one platinum-based chemotherapy",
+       "procedureIds": []
+      },
+      {
+       "code": "IN03",
+       "category": "Inclusion",
+       "text": "At least one measurable lesion by RECIST 1.1",
+       "procedureIds": []
+      },
+      {
+       "code": "IN04",
+       "category": "Inclusion",
+       "text": "ECOG performance status 0 or 1",
+       "procedureIds": []
+      },
+      {
+       "code": "EX01",
+       "category": "Exclusion",
+       "text": "Untreated or symptomatic brain metastases",
+       "procedureIds": []
+      },
+      {
+       "code": "EX02",
+       "category": "Exclusion",
+       "text": "Earlier treatment with docetaxel",
+       "procedureIds": []
+      }
+     ],
+     "visits": [
+      {
+       "id": "SCR",
+       "name": "Screening",
+       "day": -14,
+       "lo": -28,
+       "hi": -1,
+       "epoch": "Screening",
+       "type": "On site"
+      },
+      {
+       "id": "D1",
+       "name": "Day 1 (randomisation)",
+       "day": 1,
+       "lo": 1,
+       "hi": 1,
+       "epoch": "Treatment",
+       "type": "On site"
+      },
+      {
+       "id": "W2",
+       "name": "Week 2",
+       "day": 15,
+       "lo": 12,
+       "hi": 18,
+       "epoch": "Treatment",
+       "type": "On site"
+      },
+      {
+       "id": "W4",
+       "name": "Week 4",
+       "day": 29,
+       "lo": 26,
+       "hi": 32,
+       "epoch": "Treatment",
+       "type": "On site"
+      },
+      {
+       "id": "W8",
+       "name": "Week 8",
+       "day": 57,
+       "lo": 53,
+       "hi": 61,
+       "epoch": "Treatment",
+       "type": "On site"
+      },
+      {
+       "id": "W12",
+       "name": "Week 12",
+       "day": 85,
+       "lo": 81,
+       "hi": 89,
+       "epoch": "Treatment",
+       "type": "On site"
+      },
+      {
+       "id": "W16",
+       "name": "Week 16 (end of treatment)",
+       "day": 113,
+       "lo": 109,
+       "hi": 117,
+       "epoch": "Treatment",
+       "type": "On site"
+      },
+      {
+       "id": "FU",
+       "name": "Week 20 follow-up",
+       "day": 141,
+       "lo": 134,
+       "hi": 148,
+       "epoch": "Follow-up",
+       "type": "On site"
+      }
+     ],
+     "procedures": [
+      {
+       "id": "P01",
+       "name": "Informed consent",
+       "section": "11.3",
+       "concept": "Informed Consent Obtained",
+       "form": "IC",
+       "visits": [
+        "SCR"
+       ],
+       "purpose": [
+        "conduct"
+       ],
+       "minutes": 30
+      },
+      {
+       "id": "P02",
+       "name": "Demographics",
+       "section": "8.2",
+       "concept": "Demographics",
+       "form": "DM",
+       "visits": [
+        "SCR"
+       ],
+       "purpose": [
+        "conduct"
+       ],
+       "minutes": 5
+      },
+      {
+       "id": "P03",
+       "name": "Eligibility criteria",
+       "section": "5.2, 5.3",
+       "concept": "Eligibility Criteria Not Met",
+       "form": "IE",
+       "visits": [
+        "SCR"
+       ],
+       "purpose": [
+        "conduct"
+       ],
+       "minutes": 10
+      },
+      {
+       "id": "P04",
+       "name": "Medical history, including hand eczema history",
+       "section": "8.2",
+       "concept": "Medical History",
+       "form": "MH",
+       "visits": [
+        "SCR"
+       ],
+       "purpose": [
+        "conduct"
+       ],
+       "minutes": 15
+      },
+      {
+       "id": "P05",
+       "name": "Vital signs (blood pressure, pulse) and weight",
+       "section": "8.4.2",
+       "concept": "Vital Signs (Blood Pressure, Pulse)",
+       "form": "VS",
+       "visits": [
+        "SCR",
+        "D1",
+        "W4",
+        "W8",
+        "W16"
+       ],
+       "purpose": [
+        "safety"
+       ],
+       "minutes": 10,
+       "bcs": [
+        "SYSTOLIC BLOOD PRESSURE",
+        "DIASTOLIC BLOOD PRESSURE",
+        "PULSE",
+        "WEIGHT"
+       ]
+      },
+      {
+       "id": "P06",
+       "name": "Hepatitis B screening (HBsAg, anti-HBc; HBV DNA if anti-HBc positive)",
+       "section": "8.2, 12.1",
+       "concept": "Hepatitis B Screening Panel",
+       "form": "LB",
+       "visits": [
+        "SCR"
+       ],
+       "purpose": [
+        "eligibility"
+       ],
+       "bloodMl": 5,
+       "minutes": 5
+      },
+      {
+       "id": "P07",
+       "name": "Central safety laboratory (haematology, chemistry including ALT and AST)",
+       "section": "8.4.4, 12.1",
+       "concept": "Central Laboratory Sample",
+       "form": "LB",
+       "visits": [
+        "SCR",
+        "W2",
+        "W4",
+        "W8",
+        "W12",
+        "W16",
+        "FU"
+       ],
+       "purpose": [
+        "safety"
+       ],
+       "bloodMl": 10,
+       "minutes": 5,
+       "bcs": [
+        "HEMOGLOBIN CONCENTRATION IN BLOOD",
+        "LEUKOCYTE COUNT IN BLOOD",
+        "ABSOLUTE NEUTROPHIL COUNT IN BLOOD",
+        "LYMPHOCYTE COUNT IN BLOOD",
+        "PLATELET COUNT IN BLOOD",
+        "ALANINE AMINOTRANSFERASE CONCENTRATION IN SERUM OR PLASMA",
+        "ASPARTATE AMINOTRANSFERASE IN SERUM OR PLASMA",
+        "BILIRUBIN CONCENTRATION IN SERUM OR PLASMA",
+        "ALKALINE PHOSPHATASE CONCENTRATION IN SERUM OR PLASMA",
+        "CREATININE CONCENTRATION IN SERUM OR PLASMA",
+        "HEPATITIS B VIRUS DNA CONCENTRATION IN SERUM OR PLASMA"
+       ],
+       "footnote": "a: participants positive for anti-HBc with undetectable HBV DNA also have HBV DNA measured at every visit from Week 4."
+      },
+      {
+       "id": "P08",
+       "name": "Pregnancy test (participants of childbearing potential)",
+       "section": "8.4.5",
+       "concept": "Pregnancy Test (Choriogonadotropin Beta)",
+       "form": "PREG",
+       "visits": [
+        "SCR",
+        "D1",
+        "W4",
+        "W8",
+        "W12",
+        "W16"
+       ],
+       "purpose": [
+        "safety"
+       ],
+       "minutes": 5,
+       "footnote": "b: serum at screening, urine at the other visits."
+      },
+      {
+       "id": "P09",
+       "name": "IGA-CHE (Investigator Global Assessment, chronic hand eczema)",
+       "section": "8.3",
+       "concept": "Investigator Global Assessment for Chronic Hand Eczema",
+       "form": "QS",
+       "visits": [
+        "SCR",
+        "D1",
+        "W2",
+        "W4",
+        "W8",
+        "W12",
+        "W16"
+       ],
+       "purpose": [
+        "endpoint"
+       ],
+       "minutes": 5
+      },
+      {
+       "id": "P10",
+       "name": "HECSI (Hand Eczema Severity Index)",
+       "section": "8.3",
+       "concept": "Hand Eczema Severity Index",
+       "form": "QS",
+       "visits": [
+        "SCR",
+        "D1",
+        "W2",
+        "W4",
+        "W8",
+        "W12",
+        "W16"
+       ],
+       "purpose": [
+        "endpoint"
+       ],
+       "minutes": 10
+      },
+      {
+       "id": "P11",
+       "name": "Worst itch over the last 24 hours (0 to 10 numeric rating scale)",
+       "section": "8.3",
+       "concept": "Itch Numeric Rating Scale",
+       "form": "QS",
+       "visits": [
+        "SCR",
+        "D1",
+        "W2",
+        "W4",
+        "W8",
+        "W12",
+        "W16"
+       ],
+       "purpose": [
+        "endpoint"
+       ],
+       "minutes": 2,
+       "footnote": "c: completed by the participant before any other procedure."
+      },
+      {
+       "id": "P12",
+       "name": "Dispense trial intervention; tablet count and adherence",
+       "section": "6.6.3, 6.8",
+       "concept": "Study Drug Dispensing and Accountability",
+       "form": "EX",
+       "visits": [
+        "D1",
+        "W4",
+        "W8",
+        "W12",
+        "W16"
+       ],
+       "purpose": [
+        "conduct"
+       ],
+       "minutes": 10,
+       "footnote": "d: dispensing on Day 1 to Week 12; tablets returned are counted at every visit after Day 1, including Week 16."
+      },
+      {
+       "id": "P13",
+       "name": "Adverse events",
+       "section": "9.2",
+       "concept": "Adverse Event",
+       "form": "AE",
+       "visits": "continuous",
+       "purpose": [
+        "safety"
+       ],
+       "from": "SCR",
+       "footnote": "e: collected from the signing of informed consent until the Week 20 follow-up visit."
+      },
+      {
+       "id": "P14",
+       "name": "Concomitant therapy and rescue therapy",
+       "section": "6.9, 6.10",
+       "concept": "Concomitant Medication",
+       "form": "CM",
+       "visits": "continuous",
+       "purpose": [
+        "safety",
+        "conduct"
+       ],
+       "from": "SCR"
+      },
+      {
+       "id": "P15",
+       "name": "End of trial status",
+       "section": "7.2",
+       "concept": "Disposition",
+       "form": "DS",
+       "visits": [
+        "FU"
+       ],
+       "purpose": [
+        "conduct"
+       ],
+       "minutes": 5
+      }
+     ],
+     "narrative": {
+      "4.1": "This is an open label, randomised, active-controlled trial with 2 arms (ONK-44 400 mg and docetaxel) in participants with advanced non-small cell lung cancer after one platinum-based chemotherapy. Participants are randomised 1:1 and treated until progression or unacceptable toxicity. Tumours are assessed by RECIST 1.1 at screening and every 6 weeks from randomisation, by the investigator and by a blinded independent central review.",
+      "4.2.3": "Docetaxel is a standard second-line treatment for advanced non-small cell lung cancer, so it is the comparator. The study is open label because the two treatments are given differently (a daily tablet and an infusion every 3 weeks); progression is read by a blinded independent central review to limit the bias this could bring.",
+      "10.1": "Tests are two-sided at a significance level of 0.05. The statistical analysis plan is finalised before the data cut-off for the primary analysis.",
+      "10.4": "Progression-free survival by blinded independent central review is analysed with a Cox proportional hazards model with treatment; the hazard ratio and its 95% confidence interval are given, with Kaplan-Meier medians and an unstratified log-rank test. Participants without progression or death are censored at their last adequate tumour assessment.",
+      "10.5": "Objective response by independent review is compared between arms with exact 95% confidence intervals for each rate. Overall survival is analysed like progression-free survival; it is not final at the primary analysis."
+     },
+     "statements": {
+      "10.11": "With 1:1 randomisation, about 34 progression-free survival events among 42 participants give 80% power to detect a hazard ratio of 0.38 with a two-sided log-rank test at the 5% level; this is a training-sized study."
+     },
+     "multiplicity": "The primary endpoint is tested first at a two-sided alpha of 0.05; objective response and then overall survival are tested in that order only if the earlier test is significant (fixed sequence).",
+     "rescue": "",
+     "aeFrom": "first dose",
+     "aeTo": "30 days after the last dose"
+    }
+   }
+  ],
+  "marks": {},
+  "ib": {
+   "productId": "lumiravostat",
+   "edition": 3,
+   "date": "2025-11-15",
+   "sections": {
+    "physchem": "Lumiravostat (HRP-4417) is a small molecule (fictional structure), a white crystalline powder, slightly soluble in water. Film-coated tablets of 5, 10 and 25 mg with microcrystalline cellulose, lactose monohydrate, croscarmellose sodium and magnesium stearate; matching placebo tablets. Store at 20 to 25 °C.",
+    "pharm": "Reversible inhibitor of STRK1 (IC50 4 nM), a kinase in the cytokine signalling of keratinocytes and T cells (fictional target), with more than 100-fold selectivity over related kinases. Reduced inflammation and scratching in two mouse models of contact dermatitis from 3 mg/kg. Safety pharmacology: no effect on the hERG current at 30 times the human Cmax at 25 mg; no respiratory or central nervous system effects.",
+    "animalpk": "Oral bioavailability 60% in rats and 75% in dogs; half-life 6 hours in rats and 14 hours in dogs. Metabolised mainly by CYP3A; excreted in faeces.",
+    "tox": "Repeated-dose studies up to 26 weeks in rats and 39 weeks in dogs: reversible decreases in lymphocytes at high doses; no target organ toxicity at exposures 12 times the human exposure at 25 mg. Not genotoxic. Embryo-fetal toxicity (skeletal variations and fetal loss) in rats at 8 times the human exposure; no effect in rabbits. Carcinogenicity studies are ongoing.",
+    "humanpk": "Tmax 1 to 2 hours; half-life about 18 hours, so steady state within 4 days; linear pharmacokinetics from 2 to 50 mg. Metabolised by CYP3A: a strong CYP3A inhibitor raised exposure 3-fold (HRP-103). No food effect of clinical relevance.",
+    "humansafety": "Four phase 1 studies (HRP-101 to HRP-104; 148 healthy participants, single doses up to 100 mg and multiple doses up to 50 mg for 14 days) and the phase 2 dose-ranging study HRP-201 (240 participants with chronic hand eczema, 5, 10 or 25 mg or placebo for 12 weeks). In HRP-201, IGA-CHE success at Week 12 was 31% and 38% on 10 and 25 mg against 14% on placebo. Adverse reactions more frequent than placebo: upper respiratory tract infection (12% vs 7%) and ALT increased above 3 × ULN (3% vs 1%), all reversible. No hepatitis B reactivation has been seen; it is a potential risk of the class.",
+    "marketing": "None: the product is not authorised in any country.",
+    "summary": "Lumiravostat (HRP-4417, Ostrevia) is an oral, reversible inhibitor of the STRK1 kinase (a fictional target) developed for moderate to severe chronic hand eczema. Nonclinical studies showed anti-inflammatory activity in models of contact dermatitis, no genotoxicity, and embryo-fetal toxicity in rats. In 148 healthy participants and 240 patients with chronic hand eczema, it was well tolerated at doses up to 50 mg a day; upper respiratory tract infections and reversible ALT increases were more frequent than with placebo. In HRP-201, 10 and 25 mg once daily improved IGA-CHE success at Week 12.",
+    "intro": "Lumiravostat is the nonproprietary name of HRP-4417; Ostrevia is the proposed trade name. It is the first STRK1 inhibitor in clinical development. Chronic hand eczema that does not respond to topical corticosteroids has few oral options; blocking STRK1 interrupts the cytokine signalling that drives the inflammation and itch. The anticipated indication is adults with moderate to severe chronic hand eczema inadequately controlled with topical corticosteroids.",
+    "guidance": "Expected adverse reactions are upper respiratory tract infection and increased ALT (section 7). Investigators should monitor liver tests and stop the drug for ALT above 5 × ULN or above 3 × ULN with bilirubin above 2 × ULN. Hepatitis B reactivation is a potential risk of the class: screen for HBsAg and anti-HBc, exclude HBsAg-positive patients and monitor HBV DNA in anti-HBc-positive ones. Because of embryo-fetal toxicity in rats, participants of childbearing potential must use highly effective contraception until 4 weeks after the last dose. Avoid strong CYP3A inhibitors. There is no antidote; manage overdose symptomatically.",
+    "rsiIntro": "The expected adverse reactions below are the reference safety information for assessing the expectedness of suspected serious adverse reactions in trials of lumiravostat. Frequencies are from HRP-201 (lumiravostat 5 to 25 mg, 160 participants)."
+   },
+   "rsi": [
+    {
+     "term": "Upper respiratory tract infection",
+     "soc": "Infections and infestations",
+     "frequency": "Very common (12%)",
+     "aka": [
+      "upper respiratory tract infections",
+      "URTI"
+     ]
+    },
+    {
+     "term": "Alanine aminotransferase increased",
+     "soc": "Investigations",
+     "frequency": "Common (3%)",
+     "aka": [
+      "raised ALT",
+      "ALT increased",
+      "ALT above"
+     ]
+    }
+   ],
+   "maxHumanDose": {
+    "value": 50,
+    "unit": "mg",
+    "text": "50 mg once daily for 14 days (single doses up to 100 mg)"
+   }
+  }
+ }
+}

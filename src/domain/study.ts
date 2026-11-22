@@ -6,6 +6,8 @@ import h205 from '../data/hrp-205.json'
 import pH205 from '../data/protocol-hrp-205.json'
 import pGlv from '../data/protocol-glv-12-301.json'
 import pHrp from '../data/protocol-hrp-301.json'
+import onk from '../data/onk-44-302.json'
+import pOnk from '../data/protocol-onk-44-302.json'
 import type { Output, StudyOutputs } from './types'
 
 export interface Protocol {
@@ -16,9 +18,9 @@ export interface Protocol {
   multiplicity: string
   analysisSets: { id: string; name: string; text: string }[]
 }
-export const STUDY_IDS = ['HRP-301', 'GLV-12-301', 'HRP-205'] as const
-export const BUNDLED: Record<string, StudyOutputs> = { 'GLV-12-301': glv as unknown as StudyOutputs, 'HRP-301': hrp as unknown as StudyOutputs, 'HRP-205': h205 as unknown as StudyOutputs }
-const PROTO: Record<string, unknown> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp, 'HRP-205': pH205 }
+export const STUDY_IDS = ['HRP-301', 'GLV-12-301', 'HRP-205', 'ONK-44-302'] as const
+export const BUNDLED: Record<string, StudyOutputs> = { 'GLV-12-301': glv as unknown as StudyOutputs, 'HRP-301': hrp as unknown as StudyOutputs, 'HRP-205': h205 as unknown as StudyOutputs, 'ONK-44-302': onk as unknown as StudyOutputs }
+const PROTO: Record<string, unknown> = { 'GLV-12-301': pGlv, 'HRP-301': pHrp, 'HRP-205': pH205, 'ONK-44-302': pOnk }
 
 /** The protocol model of the latest version, with the title facts in one place. */
 export function protocolOf(study: string): Protocol {
