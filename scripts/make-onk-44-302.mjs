@@ -1,17 +1,19 @@
 // ONK-44-302, the oncology study, for the oncology CSR mission. Its SDTM comes from the SDTM
 // Mapping Trainer's reference mapping (src/data/sdtm-onk-44-302.json, written by that app's
-// tests/csronk.test.ts). This script derives ADSL and the time-to-event and response analyses the
-// way a TLF programmer would, and writes the outputs (tables with their ARD rows and ARS keys)
-// and the protocol. RECIST 1.1; times from randomisation; data cut-off 2026-10-31.
+// tests/csronk.test.mjs). The Studio's outputs (src/data/onk-44-302.json) come from the TLF
+// Programming Lab's R reference programs (its tests/csrstudio.test.mjs). This script is the
+// independent derivation those programs are checked against: it derives ADSL and the analyses in
+// JavaScript and writes them to the TLF Lab's tests/fixtures/onk-independent.json (the TLF Lab's
+// tests/onk.test.mjs compares every cell). It also writes the protocol. RECIST 1.1; times from randomisation; data cut-off 2026-10-31.
 //   PFS: first progression (overall response PD) or death, whichever first; otherwise censored at
-//        the last adequate assessment (overall response other than NE), or at randomisation.
+//        the last adequate assessment (CR, PR, SD or NON-CR/NON-PD), or at randomisation.
 //   OS:  death; otherwise censored at the last contact date (no later than the cut-off).
 //   Best overall response: CR > PR > SD (at least 5 weeks after randomisation) > PD > NE;
 //        responses need no confirmation in this randomised study (RECIST 1.1).
 //   Kaplan-Meier medians with Brookmeyer-Crowley 95% CIs (log-log); Cox model (Breslow ties)
 //   for the hazard ratio with a Wald CI; log-rank test; Clopper-Pearson CIs for response rates.
 // Run: node scripts/make-onk-44-302.mjs
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 
 const S = JSON.parse(readFileSync(new URL('../src/data/sdtm-onk-44-302.json', import.meta.url)))
 const rows = (d) => { const t = S.domains[d]; return t.rows.map((r) => Object.fromEntries(t.columns.map((c, i) => [c, r[i]]))) }
@@ -35,7 +37,7 @@ function pfs(s, ev) {
   const o = ovr(s.USUBJID, ev).filter((r) => r.RSDTC <= CUT), pd = o.find((r) => r.RSSTRESC === 'PD'), dth = s.DTHDT && s.DTHDT <= CUT ? s.DTHDT : null
   const evd = [pd?.RSDTC, dth].filter(Boolean).sort()[0]
   if (evd) return { t: day(evd) - day(s.RANDDT) + 1, e: 1, cause: pd && pd.RSDTC === evd ? 'PD' : 'DEATH' }
-  const ad = o.filter((r) => r.RSSTRESC !== 'NE').at(-1)
+  const ad = o.filter((r) => ['CR', 'PR', 'SD', 'NON-CR/NON-PD'].includes(r.RSSTRESC)).at(-1)
   return { t: ad ? day(ad.RSDTC) - day(s.RANDDT) + 1 : 1, e: 0 }
 }
 const os = (s) => (s.DTHDT && s.DTHDT <= CUT ? { t: day(s.DTHDT) - day(s.RANDDT) + 1, e: 1 } : { t: day(s.LSTALVDT) - day(s.RANDDT) + 1, e: 0 })
@@ -183,7 +185,8 @@ const reportingEvent = {
   outputs: outs.map((o) => ({ id: `OUT_${o.id}`, name: o.title, analysisIds: [`AN_${o.id}`] })),
 }
 const doc = { format: 'csr-studio/study-outputs', schema: 1, study: 'ONK-44-302', title: 'A randomised, open-label, phase 3 study of ONK-44 versus docetaxel in adults with advanced non-small cell lung cancer after one prior platinum-based chemotherapy', short: 'ONK-44 versus docetaxel, NSCLC, second line', sap: 'SAP v1.0', groups: G, source: 'Derived from the SDTM Mapping Trainer’s ONK-44-302 SDTM by scripts/make-onk-44-302.mjs (fictional)', outputs: [ADSL, ...outs], reportingEvent }
-writeFileSync(new URL('../src/data/onk-44-302.json', import.meta.url), JSON.stringify(doc, null, 1))
+const IND = new URL('../../tlf-programming-lab/tests/fixtures/onk-independent.json', import.meta.url)
+writeFileSync(existsSync(new URL('.', IND)) ? IND : new URL('../onk-independent.json', import.meta.url), JSON.stringify(doc, null, 1))
 if (process.env.DUMP) writeFileSync(process.env.DUMP, JSON.stringify(adsl.map((s) => ({ arm: s.TRT01P, ...pfsI.get(s.USUBJID), os: os(s) }))))
 
 // ---------- the protocol ----------

@@ -5,7 +5,7 @@ import { unzipSync, strFromU8 } from 'fflate'
 
 export type Row = Record<string, string | number | null>
 export interface Table { columns: string[]; rows: (string | number | null)[][] }
-export interface Sdtm { format: 'csr-studio/sdtm'; schema: 1; study: string; source: string; domains: Record<string, Table> }
+export interface Sdtm { format: 'csr-studio/sdtm'; schema: 1; study: string; source: string; domains: Record<string, Table>; /** Source records as collected (ONK-44-302: eCRF forms and the vendor file). */ raw?: Record<string, { columns: string[]; rows: (string | null)[][] }> }
 export interface SafetyCase { caseId: string; subj: string; usubjid: string; term: string; onset: string; end: string; criteria: string[]; outcome: string; causality: string; sponsorCausality: string; action: string; aware: string; received: string }
 export interface Recon { usubjid: string; term: string; caseId: string | null; status: string; notes: string[] }
 export interface Safety { source: string; cases: SafetyCase[]; reconciliation: Recon[]; deviations?: { category: string; important: boolean; count: number; subjects: string[] }[]; lock?: { status: string; hardLockUtc: string | null } }

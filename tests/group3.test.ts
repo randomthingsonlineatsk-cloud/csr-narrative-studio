@@ -50,3 +50,14 @@ test('CS20: the oncology model text scores 100 and ties every number', () => {
   p.sections['11.4.1'].text += ' ONK-44 improved overall survival (hazard ratio 0.51) [T14.2.4].'
   expect(scoreMission(p).filter((i) => !i.ok).map((i) => i.label)).toEqual(['Overall survival reported as immature, no benefit claimed'])
 })
+
+test('trace: an oncology number down to the collected records', async () => {
+  const p = newProject('t', 'ONK-44-302'), { sdtm } = await loadPatientData('ONK-44-302')
+  const f = find(p, '11.4.1', 'Progression or death was reported in 8 (44.4%) participants on ONK-44 and 17 (70.8%) on docetaxel [T14.2.1].', '17')
+  const st = trace(p, f, sdtm)
+  expect(st.map((s) => s.level)).toEqual(['Report', 'Table', 'Analysis result (ARS)', 'Collected data (SDTM)', 'eCRF and source files'])
+  expect(st[3].ok).toBe(true); expect(st[3].subjects!.length).toBe(17)
+  expect(st[4].lines.some((l) => /independent review file|Death form/.test(l))).toBe(true)
+  const r = find(p, '11.4.1', 'By independent review, 10 (55.6%) participants on ONK-44 had an objective response [T14.2.3].', '10')
+  expect(trace(p, r, sdtm).find((s) => s.level === 'Collected data (SDTM)')!.ok).toBe(true)
+})

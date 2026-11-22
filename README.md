@@ -171,15 +171,20 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     on the conclusions and on other documents, signed, and downloadable for eCTD 5.3.5.1. Mission
     CS19: correct the approved GLV-12-301 report by addendum.
 38. **An oncology study, ONK-44-302 (MERIDIAN-2)**: ONK-44 against docetaxel in previously treated
-    advanced non-small cell lung cancer, from the SDTM Mapping Trainer's RECIST 1.1 data (TU, TR,
-    RS, DD). `scripts/make-onk-44-302.mjs` derives ADSL and the outputs: disposition at the data
-    cut-off, demographics, progression-free survival by independent review (primary) and by the
-    investigator (Kaplan-Meier medians with Brookmeyer-Crowley CIs, Cox hazard ratio, log-rank
-    test; cross-checked against an independent survival library), best overall response with
-    Clopper-Pearson CIs, immature overall survival and exposure. The training data hold no adverse
-    events, so safety sections other than exposure have no outputs. Mission CS20: report the
-    oncology efficacy results (primary first, medians in months, the testing order, overall
-    survival as immature).
+    advanced non-small cell lung cancer. The chain is the same as for the other studies: the SDTM
+    Mapping Trainer maps the RECIST 1.1 source data (DM, DS, TU, TR, RS, PR, DD), and the TLF
+    Programming Lab's R programs derive ADSL, ADTTE and ADRS and the outputs: disposition at the
+    data cut-off, demographics, progression-free survival by independent review (primary) and by
+    the investigator (Kaplan-Meier medians with Brookmeyer-Crowley CIs, Cox hazard ratio, log-rank
+    test), best overall response with Clopper-Pearson CIs, immature overall survival and exposure.
+    `scripts/make-onk-44-302.mjs` is an independent JavaScript derivation of the same analyses
+    (its survival statistics cross-checked against a survival library); the TLF Lab's tests
+    compare every cell with it. Tracing an oncology number reaches the source: participants are
+    recounted from RS, DM and DS, and the investigator's response form, the independent review's
+    vendor file or the death form is shown as collected. The training data hold no adverse events,
+    so safety sections other than exposure have no outputs. Mission CS20: report the oncology
+    efficacy results (primary first, medians in months, the testing order, overall survival as
+    immature).
 39. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
     (clobetasol), both lumiravostat 25 mg. Choose the pools, keep the comparators apart, harmonise a
     liver term coded differently in each study, and work out the pooled counts (from each study's

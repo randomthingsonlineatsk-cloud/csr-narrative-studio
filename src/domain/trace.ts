@@ -7,6 +7,7 @@ import { tableNumber } from './e3'
 import { rows as sdtmRows, str, type Sdtm } from './sdtm'
 import type { Finding } from './checker'
 import type { Output, Project } from './types'
+import { onkTrace } from './onktrace'
 
 export interface TraceStep { level: string; title: string; lines: string[]; ok?: boolean; subjects?: string[] }
 
@@ -85,6 +86,14 @@ export function trace(p: Project, f: Finding, s: Sdtm | null): TraceStep[] {
       const expected = t.kind === 'pct' ? Math.round((1000 * n) / N) / 10 : n
       steps.push({ level: 'Analysis data (ADaM)', title: `ADSL: ${set.condition.variable} = ${set.condition.value.join(', ')}${key.g === 'Total' ? '' : `, ${gvar} = ${key.g}`}`, ok: Math.abs(expected - shown) < 0.051, lines: [`Recounted here: ${n} of ${N} participants${t.kind === 'pct' ? ` = ${expected}%` : ''}${['POP', 'N'].includes(key.an) ? '' : ` with ${key.an === 'TREATED' ? 'SAFFL = Y' : key.an === 'COMPLETED' || key.an === 'DISC' ? `EOSSTT = ${key.an === 'COMPLETED' ? 'COMPLETED' : 'DISCONTINUED'}` : `${key.an} = ${key.cat}`}`}.`], subjects: hit.map((r) => String(col(r, 'USUBJID'))) })
     }
+  }
+  // Oncology: recount from RS, DM and DS, and show the records as collected.
+  const ot = p.study === 'ONK-44-302' && s && ['n', 'pct'].includes(t.kind) ? onkTrace(s, key.an, key.g, key.cat ?? null) : null
+  if (ot) {
+    const N = ot.subjects.length
+    steps.push({ level: 'Collected data (SDTM)', title: ot.title, ok: t.kind === 'n' ? N === shown : undefined, lines: [`${N} participant${N === 1 ? '' : 's'} recounted from SDTM${key.g === 'Total' ? '' : ` on ${key.g}`}, with the same rules as the TLF Lab’s programs.`], subjects: ot.subjects })
+    steps.push({ level: 'eCRF and source files', title: ot.records.length ? 'The records as collected' : 'No single source record', lines: ot.records.length ? [...ot.records.slice(0, 12), ...(ot.records.length > 12 ? [`… and ${ot.records.length - 12} more.`] : []), 'From the SDTM Mapping Trainer’s ONK-44-302 source data (the EDC forms and the independent review’s vendor file).'] : ['Counted from the absence of an event (no death recorded by the cut-off).'] })
+    return steps
   }
   // SDTM: adverse events are recounted from the AE domain.
   if (key.an === 'PT' && s && key.cat) {
