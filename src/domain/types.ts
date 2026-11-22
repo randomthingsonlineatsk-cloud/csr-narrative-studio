@@ -48,6 +48,14 @@ export interface Project {
   outputsFrom?: import('./imports').Provenance
   /** Hand-off files exported (for the capstone and the hub journey). */
   handoffs?: { ectd?: HandoffMark; lay?: HandoffMark; journey?: HandoffMark }
+  /** Structured content: reusable, versioned, approved text blocks. */
+  blocks?: import('./reuse').Block[]
+  /** Results posting (ClinicalTrials.gov and CTIS) settings. */
+  posting?: Partial<import('./posting').PostingState>
+  /** The CSR timeline: milestone id → date. */
+  timeline?: Record<string, string>
+  /** Sentences checked against their source (section|sentence → UTC), for drafts to verify. */
+  verified?: Record<string, string>
   createdUtc: string; updatedUtc: string; schema: 1
 }
 export interface Progress { id: 'me'; userId: string; classId: string; name?: string; quizzes: Record<string, { score: number; of: number; utc: string }>; drills: Record<string, { score: number; utc: string }>; missions: Record<string, { score: number; utc: string }> }

@@ -19,11 +19,14 @@ import Review from './views/Review'
 import India from './views/India'
 import Disclosure from './views/Disclosure'
 import MissionBar from './views/MissionBar'
+import Library from './views/Library'
+import Posting from './views/Posting'
+import ReportTimeline from './views/ReportTimeline'
 
 type Page = 'home' | 'learn' | 'classroom'
 const PAGES: { id: Page; label: string; key: string }[] = [{ id: 'home', label: 'Reports and missions', key: 'h' }, { id: 'learn', label: 'Learn', key: 'l' }, { id: 'classroom', label: 'Classroom', key: 'c' }]
-const VIEWS: { id: View; label: string; key: string }[] = [{ id: 'overview', label: 'Overview', key: 'o' }, { id: 'shell', label: 'Shell and outputs', key: 's' }, { id: 'write', label: 'Write', key: 'w' }, { id: 'outputs', label: 'Tables and listings', key: 't' }, { id: 'narratives', label: 'Narratives', key: 'n' }, { id: 'recon', label: 'SAE reconciliation', key: 'r' }, { id: 'discussion', label: 'Discussion', key: 'd' }, { id: 'review', label: 'Review', key: 'v' }, { id: 'qc', label: 'QC and sign-off', key: 'q' }, { id: 'india', label: 'India (Table 6)', key: 'i' }, { id: 'disclosure', label: 'Disclosure', key: 'p' }, { id: 'export', label: 'Export', key: 'x' }]
-const SHORTCUTS: [string, string][] = [['?', 'Show these shortcuts'], ['g then h / l / c', 'Reports and missions, Learn, Classroom'], ['g then o / s / w / t / n / r / d / v / q / i / p / x', 'In a report: Overview, Shell and outputs, Write, Tables and listings, Narratives, SAE reconciliation, Discussion, Review, QC and sign-off, India (Table 6), Disclosure, Export'], ['Ctrl or ⌘ + S', 'Work is saved as you type; this confirms it'], ['Esc', 'Close a dialog']]
+const VIEWS: { id: View; label: string; key: string }[] = [{ id: 'overview', label: 'Overview', key: 'o' }, { id: 'shell', label: 'Shell and outputs', key: 's' }, { id: 'write', label: 'Write', key: 'w' }, { id: 'outputs', label: 'Tables and listings', key: 't' }, { id: 'narratives', label: 'Narratives', key: 'n' }, { id: 'recon', label: 'SAE reconciliation', key: 'r' }, { id: 'discussion', label: 'Discussion', key: 'd' }, { id: 'review', label: 'Review', key: 'v' }, { id: 'qc', label: 'QC and sign-off', key: 'q' }, { id: 'india', label: 'India (Table 6)', key: 'i' }, { id: 'disclosure', label: 'Disclosure', key: 'p' }, { id: 'library', label: 'Content library', key: 'b' }, { id: 'posting', label: 'Results posting', key: 'y' }, { id: 'timeline', label: 'Timeline', key: 'm' }, { id: 'export', label: 'Export', key: 'x' }]
+const SHORTCUTS: [string, string][] = [['?', 'Show these shortcuts'], ['g then h / l / c', 'Reports and missions, Learn, Classroom'], ['g then o / s / w / t / n / r / d / v / q / i / p / b / y / m / x', 'In a report: Overview, Shell and outputs, Write, Tables and listings, Narratives, SAE reconciliation, Discussion, Review, QC and sign-off, India (Table 6), Disclosure, Content library, Results posting, Timeline, Export'], ['Ctrl or ⌘ + S', 'Work is saved as you type; this confirms it'], ['Esc', 'Close a dialog']]
 const typing = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
 
 function Shell_() {
@@ -66,7 +69,7 @@ function Shell_() {
         </header>
         {error && <div role="alert" className="max-w-7xl mx-auto w-full px-4 pt-3"><div className="rounded border border-lab-red/60 bg-lab-red-soft px-3 py-2 text-sm text-lab-red flex justify-between gap-2"><span>{error}</span><button onClick={() => setError('')} aria-label="Dismiss">✕</button></div></div>}
         <main className="max-w-7xl mx-auto w-full px-4 py-4 flex-1">
-          {p ? <><MissionBar />{nav.view === 'overview' ? <Overview /> : nav.view === 'shell' ? <Shell /> : nav.view === 'write' ? <Write key={`${p.id}-${nav.arg ?? ''}`} /> : nav.view === 'outputs' ? <Outputs /> : nav.view === 'narratives' ? <Narratives key={p.id} /> : nav.view === 'recon' ? <Recon /> : nav.view === 'discussion' ? <Discussion /> : nav.view === 'review' ? <Review /> : nav.view === 'india' ? <India /> : nav.view === 'disclosure' ? <Disclosure /> : nav.view === 'qc' ? <Qc /> : <Export />}</>
+          {p ? <><MissionBar />{nav.view === 'overview' ? <Overview /> : nav.view === 'shell' ? <Shell /> : nav.view === 'write' ? <Write key={`${p.id}-${nav.arg ?? ''}`} /> : nav.view === 'outputs' ? <Outputs /> : nav.view === 'narratives' ? <Narratives key={p.id} /> : nav.view === 'recon' ? <Recon /> : nav.view === 'discussion' ? <Discussion /> : nav.view === 'review' ? <Review /> : nav.view === 'india' ? <India /> : nav.view === 'disclosure' ? <Disclosure /> : nav.view === 'qc' ? <Qc /> : nav.view === 'library' ? <Library /> : nav.view === 'posting' ? <Posting /> : nav.view === 'timeline' ? <ReportTimeline /> : <Export />}</>
             : page === 'learn' ? <Learn /> : page === 'classroom' ? <Classroom /> : <Home onOpen={() => go('overview')} />}
         </main>
         {toast && <div role="status" className="fixed bottom-4 right-4 z-50 rounded border border-lab-line bg-lab-panel px-3 py-2 text-sm shadow">{toast}</div>}

@@ -142,7 +142,24 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     confirm it against the new version. A QC item stops the report going final while any is.
 31. **Synopsis length**: E3's usual limit of three pages (about 1,500 words), shown in the synopsis
     and checked at QC.
-32. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
+32. **Content library** (structured content reuse): text written once, approved and reused word for
+    word (the design, the population, the primary result). Blocks keep every version; only an
+    approved version is inserted in Write; when a block is approved again, sections holding the
+    older version are flagged (QC item) and can be updated in one step. The results posting's
+    brief summary comes from a block too.
+33. **Results posting** from the same outputs: the ClinicalTrials.gov results modules (participant
+    flow, baseline, outcome measures, adverse events with all-cause mortality, serious events and
+    other non-serious events above a threshold of no more than 5% in any arm, 42 CFR 11.48) and
+    the EU summary of results in CTIS (Regulation 536/2014, Article 37(4), Annex IV), with the
+    primary completion date and the end of the trial found in the data and both deadlines (one
+    year). Downloads as JSON in the shape of the registry modules.
+34. **Timeline**: plan the report around database lock, from the SAP and shells through the dry
+    run, unblinding, topline, drafts, review and QC to the approved report, then the registry
+    deadlines; windows from common industry practice, deadlines from regulation.
+35. **Missions CS16 to CS18**: review an AI-drafted results text (simulated, no AI runs: eight
+    planted errors of the kinds drafting tools make, and every sentence ticked as checked against
+    its source); post the VERDANT-1 results; plan the VERDANT-1 report around lock.
+36. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
     (clobetasol), both lumiravostat 25 mg. Choose the pools, keep the comparators apart, harmonise a
     liver term coded differently in each study, and work out the pooled counts (from each study's
     14.3.1); then the pooled table, downloadable as CSV.

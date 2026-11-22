@@ -17,6 +17,8 @@ import { isLocked } from './Stage'
 import OutputView from './OutputView'
 import { ConsortPanel, LiverPanel, StaleNotice, SynopsisLength } from './SectionAids'
 import { noteBasis, staleSections } from '../domain/stale'
+import { approvedText } from '../domain/reuse'
+import { sentenceKey, sentencesOf } from '../domain/missions/aidraft'
 import { Btn, Modal, Panel, Pill, Select, TextArea } from './ui'
 
 const blankOut = (t: string) => t.replace(new RegExp(PLACEHOLDER.source, 'g'), (m) => ' '.repeat(m.length))
@@ -69,10 +71,12 @@ export default function Write() {
               <label className="text-lab-text-muted">row<Select aria-label="Row for the results helper" className="w-56" value={String(helpRow)} onChange={(e) => setHelpRow(Number(e.target.value))} options={helperRows.map((r, i) => ({ value: String(i), label: `${r.context ? `${r.context}: ` : ''}${r.row}`.slice(0, 70) }))} /></label>
               <Btn tone="grey" disabled={!helperOut || !helperRows[helpRow]} onClick={() => insert(skeleton(helperOut!, helperRows[helpRow]))}>Insert sentence skeleton</Btn>
               <Btn tone="grey" disabled={!helperOut} title="Places the whole table in the text at the cursor, on its own line" onClick={() => insert(`\n{{${helperOut!.id}}}\n`)}>Insert the table in the text</Btn>
+              {(p!.blocks ?? []).some((b) => approvedText(b)) && <label className="text-lab-text-muted">Approved block<Select aria-label="Insert an approved block" className="w-48" value="" onChange={(e) => { const b = p!.blocks!.find((x) => x.id === e.target.value); const t = b && approvedText(b); if (t) insert(t) }} options={[{ value: '', label: 'Insert a block…' }, ...p!.blocks!.filter((b) => approvedText(b)).map((b) => ({ value: b.id, label: b.title }))]} /></label>}
             </div>}
             <p className="text-[11px] text-lab-text-muted">Name the table after each sentence: [T14.1.1] or “(Table 14.1.1)”. A line holding only {'{{T4}}'} places that table in the exported report. The skeleton gives every value as the table shows it; rewrite it as prose and the checker still ties each number to its cell.</p>
           </>}
         </Panel>
+        {!st.na && p!.mission?.id === 'CS16' && <Verify sid={s.id} lock={lock} />}
         {!st.na && s.id === '10.1' && <ConsortPanel />}
         {!st.na && s.id === '12.4' && <LiverPanel text={st.text} />}
         {!st.na && <Guides sid={s.id} text={st.text} lock={lock} onDraft={(t, replace) => replace ? act((x) => { x.sections[s.id].text = t; noteBasis(x, s.id) }) : insert(t)} />}
@@ -132,6 +136,17 @@ function Checker({ f, onFix }: { f: Finding[]; onFix?: (x: Finding) => void }) {
         {onFix && x.suggestion !== undefined && <button className="underline" onClick={() => onFix(x)}>Use {x.suggestion}</button>}</li>)}</ul>
       {ok.length > 0 && <details className="text-xs"><summary className="cursor-pointer text-lab-text-muted">{ok.length} numbers tied to their cells</summary><ul className="mt-1 space-y-0.5">{ok.map((x, i) => <li key={i}><span className="font-mono text-lab-cdsco">{x.text}</span> {x.message}</li>)}</ul></details>}
       <p className="text-[11px] text-lab-text-muted">The checker reads numbers, groups and nearby words; it cannot judge meaning. A human QC review still reads every sentence.</p>
+    </Panel>
+  )
+}
+
+/** Sentence-by-sentence verification of a draft the writer did not write (mission CS16). */
+function Verify({ sid, lock }: { sid: string; lock: boolean }) {
+  const { p, act } = useStore()
+  const list = sentencesOf(p!, sid), v = p!.verified ?? {}, done = list.filter((x) => v[sentenceKey(sid, x)]).length
+  return (
+    <Panel title="Verify each sentence" sub="Tick a sentence only after checking every number, group, analysis name and citation in it against its source. Changing a sentence clears its tick." right={<Pill tone={done === list.length ? 'green' : 'amber'}>{`${done}/${list.length}`}</Pill>}>
+      <ol className="space-y-1 text-sm list-decimal pl-5">{list.map((x) => { const k = sentenceKey(sid, x); return <li key={k}><label className="flex gap-2 items-start"><input type="checkbox" disabled={lock} checked={!!v[k]} onChange={(e) => act((y) => { const m = { ...(y.verified ?? {}) }; if (e.target.checked) m[k] = new Date().toISOString(); else delete m[k]; y.verified = m })} /><span>{x}</span></label></li> })}</ol>
     </Panel>
   )
 }

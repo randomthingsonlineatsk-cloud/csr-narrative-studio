@@ -10,6 +10,8 @@ import type { MissionRun, Project } from './types'
 import { scoreNarrativeMission, cs8Texts, CS7_MINUTES, type PatientData } from './missions/narr'
 import { CS9_SECTIONS, CS11_SECTIONS, startPhase3, scorePhase3 } from './missions/phase3'
 import { startPhase4, scorePhase4 } from './missions/phase4'
+import { startPhase5, scorePhase5 } from './missions/phase5'
+import { CS16_SECTIONS } from './missions/aidraft'
 
 export interface MissionDef { id: string; title: string; study: string; brief: string; steps: string[]; sections: string[]; core?: boolean; narratives?: boolean; /** Needs the patient data at the start (not a narrative mission). */ patients?: boolean }
 export const MISSIONS: MissionDef[] = [
@@ -58,11 +60,20 @@ export const MISSIONS: MissionDef[] = [
   { id: 'CS15', title: 'Capstone: the whole report from your own data', study: 'HRP-301', sections: [],
     brief: 'Write the complete VERDANT-1 (HRP-301) report from your own analysis package (TLF Programming Lab) and your own SDTM (SDTM Mapping Trainer): every section written and tied to your tables, methods from the protocol, narratives that pass QC, a discussion that matches the results, through review to approved, then handed to the eCTD Dossier Builder and the Plain Language Lab.',
     steps: ['Export: open your analysis package (.zip) from the TLF Programming Lab.', 'SAE reconciliation: open your SDTM hand-off from the SDTM Mapping Trainer.', 'Write every section; draft the methods from the protocol; write 9.8 and the discussion; write and QC the narratives.', 'Review: resolve comments; QC; sign; the approver and the coordinating investigator sign; approve.', 'Export: download the report for the eCTD (5.3.5.1) and the lay results for the Plain Language Lab; submit.'] },
+  { id: 'CS16', title: 'Review an AI-drafted results text', study: 'GLV-12-301', sections: CS16_SECTIONS,
+    brief: 'A drafting tool has written the GLV-12-301 efficacy and safety results, the conclusions and the discussion from the protocol, the SAP and the tables (simulated: no AI runs in this app). The draft reads well, and eight statements are wrong in the ways such drafts go wrong. You are accountable for every sentence: check each one against its source, correct what is wrong, and record each sentence as checked.',
+    steps: ['Open each section in Write: the verification panel lists its sentences.', 'For each sentence, open the table it cites and check every number, group and claim; check every citation against section 15.', 'Correct what is wrong: delete what has no source.', 'Mark each sentence as checked; a sentence you change must be checked again.', 'Submit when the checker is clean and every sentence is checked.'] },
+  { id: 'CS17', title: 'Post the VERDANT-1 results', study: 'HRP-301', sections: [], patients: true,
+    brief: 'HRP-301 is complete. Prepare its results for ClinicalTrials.gov and the EU summary of results in CTIS from the same outputs as the report: set the primary completion date and the end of the trial from the data, choose the adverse event threshold and what the other-events table counts, describe how events were collected, and use an approved content block for the brief summary.',
+    steps: ['Open Results posting: read the participant flow, baseline, outcomes and adverse event modules built from the outputs.', 'Find the last assessment of the primary endpoint and the last visit in the data; set the dates; read the deadlines.', 'Set the threshold (no more than 5%) and count non-serious events only in the other-events table.', 'Describe the time frame and the collection approach.', 'In the Content library, write and approve a brief summary block; choose it; download the posting; submit.'] },
+  { id: 'CS18', title: 'Plan the VERDANT-1 report around database lock', study: 'HRP-301', sections: [], patients: true,
+    brief: `The HRP-301 database locks on ${'2027-03-10'}. Plan the report: from the SAP and table shells, through the dry run, lock, unblinding and topline, to the approved report, and on to the registry deadlines that the data set.`,
+    steps: ['Open Timeline: database lock is given.', 'Date every milestone in a workable order.', 'Keep each within its usual window (shown beside it).', 'Check the registry deadlines against the primary completion date and the end of the trial.', 'Submit.'] },
 ]
 export const missionById = (id: string) => MISSIONS.find((m) => m.id === id)
 
 export function startMission(id: string, d?: PatientData): Project {
-  const p3 = startPhase3(id, d) ?? startPhase4(id, d)
+  const p3 = startPhase3(id, d) ?? startPhase4(id, d) ?? startPhase5(id)
   if (p3) { p3.mission = { id, startedUtc: new Date().toISOString(), answers: {} }; return p3 }
   const m = missionById(id)!, p = newProject(`Mission ${m.id}: ${m.title}`, m.study, 'full', 'mission')
   p.mission = { id, startedUtc: new Date().toISOString(), answers: {} }
@@ -113,7 +124,7 @@ export const REQUESTABLE: { id: string; title: string }[] = [
 
 export function scoreMission(p: Project, d?: PatientData | null): Item[] {
   if (missionById(p.mission!.id)?.narratives) return d ? scoreNarrativeMission(p, d) : []
-  const p3 = scorePhase3(p) ?? scorePhase4(p, d); if (p3) return p3
+  const p3 = scorePhase3(p) ?? scorePhase4(p, d) ?? scorePhase5(p, d); if (p3) return p3
   const id = p.mission!.id, S = (s: string) => p.sections[s]?.text ?? ''
   if (id === 'CS1') return Object.entries(CS1_KEY).map(([sec, k]) => {
     const st = p.sections[sec]; if (!st) return { label: sec, ok: false, why: 'Missing section.' }
