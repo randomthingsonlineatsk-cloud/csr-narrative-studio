@@ -7,6 +7,7 @@ import { dataOf, PLACEHOLDER } from './project'
 import { outputsOf } from './study'
 import type { Project, Stage } from './types'
 import { CI, openComments } from './review'
+import { staleSections, synopsisLength, SYNOPSIS_WORDS } from './stale'
 
 export const sectionsOf = (p: Project) => sectionsFor(p.reportType).filter((s) => p.sections[s.id])
 export const needsText = (s: E3Section) => s.written && !isGroup(s)
@@ -56,6 +57,8 @@ export const QC_ITEMS: QcItem[] = [
   { id: 'synopsis', text: 'Every number in the synopsis also appears in the body of the report.', auto: (p) => {
     const syn = p.sections['2']?.text ?? '', body = sectionsOf(p).filter((s) => !['1', '2'].includes(s.id)).map((s) => p.sections[s.id].text).join(' ')
     const missing = [...numbersIn(syn)].filter((n) => !numbersIn(body).has(n)); return { ok: !missing.length, why: missing.length ? `Not in the body: ${missing.slice(0, 6).join(', ')}.` : 'The synopsis numbers are all in the body.' } } },
+  { id: 'current', text: 'No section is out of date: every text was checked against the latest outputs.', auto: (p) => { const s = staleSections(p); return { ok: !s.length, why: s.length ? `Out of date: ${s.map((x) => x.section).join(', ')}.` : 'Every section matches the latest outputs.' } } },
+  { id: 'synopsis-length', text: 'The synopsis is no longer than about three pages (ICH E3).', auto: (p) => { const l = synopsisLength(p); return { ok: l.ok, why: `${l.words} words${l.ok ? '' : `, over about ${SYNOPSIS_WORDS}`}.` } } },
   { id: 'abbrev', text: 'Abbreviations are spelled out at first use and listed in section 4.', auto: (p) => {
     const seen = new Set<string>(), bad: string[] = []
     for (const s of sectionsOf(p)) for (const m of (p.sections[s.id].text ?? '').matchAll(/(?<!\[)\b([A-Z][A-Z0-9]{1,6})\b(?![).]\d|\)|-\d)/g)) {

@@ -13,7 +13,7 @@ export interface StudyOutputs { format: 'csr-studio/study-outputs'; schema: 1; s
 
 export type Stage = 'shell' | 'draft' | 'review' | 'final' | 'approved'
 export const STAGES: Stage[] = ['shell', 'draft', 'review', 'final', 'approved']
-export interface SectionState { text: string; na?: string; slots: string[]; /** Outputs the writer has asked programming for (not yet available). */ requests?: string[] }
+export interface SectionState { text: string; na?: string; slots: string[]; /** Fingerprints of the outputs the text was written against (out-of-date marking). */ basis?: Record<string, string>; /** Outputs the writer has asked programming for (not yet available). */ requests?: string[] }
 export interface Rounding { pct: number; mean: number; p: number }
 export interface Signature { name: string; role: string; meaning: string; utc: string; version: number }
 export interface MissionRun { id: string; startedUtc: string; submittedUtc?: string; score?: number; detail?: { label: string; got: number; of: number }[]; answers: Record<string, string> }

@@ -128,7 +128,21 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
 26. **Classroom** on the shared classroom server (routes `/cs/v1`, `cs_` tables): classes, assignments,
     submissions re-scored in the instructor's browser, comments and a leaderboard. Two more lessons:
     disclosure and anonymisation; the CSR in the CTD (Module 5, ISS and ISE).
-27. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
+27. **Timed drills** on the Learn page, from the three studies' own tables: write one sentence from
+    one table row (the checker marks every group's n and percentage), and spot the error (a wrong
+    value, a percentage that does not follow from its n, or two groups' values swapped).
+28. **Flow of participants (CONSORT style)** beside 10.1, drawn from Table 14.1.1, with checks that
+    every box adds up, downloadable as SVG.
+29. **Liver test screen** beside 12.4, from the LB domain: peak ALT, AST and bilirubin as multiples
+    of the upper limit of normal by group (above 3, 5 and 10 × ULN), potential Hy's law cases
+    (FDA's 2009 drug-induced liver injury criteria), and checks on what 12.4 must say. The bundled
+    studies collected no bilirubin, so the screen says Hy's law can be assessed only in part.
+30. **Out-of-date marking**: each section remembers the outputs it was written against; when an
+    output changes (a re-run, your own package), the section is marked out of date until you
+    confirm it against the new version. A QC item stops the report going final while any is.
+31. **Synopsis length**: E3's usual limit of three pages (about 1,500 words), shown in the synopsis
+    and checked at QC.
+32. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
     (clobetasol), both lumiravostat 25 mg. Choose the pools, keep the comparators apart, harmonise a
     liver term coded differently in each study, and work out the pooled counts (from each study's
     14.3.1); then the pooled table, downloadable as CSV.

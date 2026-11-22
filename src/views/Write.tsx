@@ -15,6 +15,8 @@ import { rowsOf, skeleton } from '../domain/helper'
 import { tableNumber } from '../domain/e3'
 import { isLocked } from './Stage'
 import OutputView from './OutputView'
+import { ConsortPanel, LiverPanel, StaleNotice, SynopsisLength } from './SectionAids'
+import { noteBasis, staleSections } from '../domain/stale'
 import { Btn, Modal, Panel, Pill, Select, TextArea } from './ui'
 
 const blankOut = (t: string) => t.replace(new RegExp(PLACEHOLDER.source, 'g'), (m) => ' '.repeat(m.length))
@@ -29,8 +31,10 @@ export default function Write() {
   const ta = useRef<HTMLTextAreaElement>(null)
   const s = secs.find((x) => x.id === id) ?? secs[0], st = p!.sections[s.id], lock = isLocked(p!.stage)
   const f = useMemo(() => st.na || !reportsResults(s) ? [] : checkText(s.id, blankOut(st.text), outs, st.slots, d.groups, p!.rounding), [st.text, st.slots, st.na, s.id, outs, d.groups, p!.rounding])
+  const stale = useMemo(() => new Set(staleSections(p!).map((x) => x.section)), [p, p!.outputs, p!.updatedUtc])
   const status = (sid: string) => {
     const x = p!.sections[sid]; if (x.na) return { label: 'n/a', tone: 'grey' as const }
+    if (stale.has(sid)) return { label: 'out of date', tone: 'amber' as const }
     if (!x.text.trim() || PLACEHOLDER.test(x.text)) return { label: 'to write', tone: 'amber' as const }
     if (!reportsResults(sectionById(sid)!)) return tenseFindings(x.text).length && (DRAFTABLE.includes(sid) || PROTOCOL_KEYS[sid]) ? { label: 'tense', tone: 'amber' as const } : { label: 'written', tone: 'green' as const }
     const e = errors(checkText(sid, blankOut(x.text), outs, x.slots, d.groups, p!.rounding)); return e.length ? { label: `${e.length} err`, tone: 'red' as const } : { label: 'ok', tone: 'green' as const }
@@ -39,8 +43,9 @@ export default function Write() {
     const el = ta.current, cur = x.sections[s.id].text.replace(PLACEHOLDER, '').trimEnd()
     const at = el && el.selectionStart <= cur.length ? el.selectionStart : cur.length
     x.sections[s.id].text = `${cur.slice(0, at)}${at && !/\s$/.test(cur.slice(0, at)) ? ' ' : ''}${text}${cur.slice(at)}`
+    noteBasis(x, s.id)
   })
-  const fix = (x: Finding) => x.suggestion !== undefined && act((y) => { const t = y.sections[s.id].text; if (t.slice(x.at, x.at + x.text.length) === x.text) y.sections[s.id].text = t.slice(0, x.at) + x.suggestion + t.slice(x.at + x.text.length) })
+  const fix = (x: Finding) => x.suggestion !== undefined && act((y) => { const t = y.sections[s.id].text; if (t.slice(x.at, x.at + x.text.length) === x.text) { y.sections[s.id].text = t.slice(0, x.at) + x.suggestion + t.slice(x.at + x.text.length); noteBasis(y, s.id) } })
   const attached = st.slots.map((o) => d.outputs.find((x) => x.id === o)).filter((o): o is NonNullable<typeof o> => !!o)
   const helperOut = d.outputs.find((o) => o.id === (helpOut || attached.find((a) => a.display)?.id))
   const helperRows = helperOut?.display ? rowsOf(helperOut) : []
@@ -54,8 +59,10 @@ export default function Write() {
       <div className="space-y-4 min-w-0">
         <Panel title={`${s.id} ${s.heading}`} sub={<span className="flex flex-wrap gap-1 mt-1">{s.feeds.map((x) => <Pill key={x}>{x}</Pill>)}{attached.map((o) => <button key={o.id} onClick={() => setShow(o.id)} className="underline font-mono text-[11px]">{tableNumber(o.title) || o.id}</button>)}</span>}>
           <details className="text-sm" open={!st.text.trim() || PLACEHOLDER.test(st.text)}><summary className="cursor-pointer text-lab-text-muted text-xs">What goes here (ICH E3)</summary><p className="mt-1">{s.guidance}</p></details>
+          <StaleNotice sid={s.id} lock={lock} />
           {st.na ? <p className="text-sm italic">Marked not applicable: {st.na} <button className="underline not-italic text-xs" onClick={() => nav.go('shell')}>change in the shell</button></p> : <>
-            <TextArea ref={ta} aria-label={`Text of section ${s.id}`} readOnly={lock} className="min-h-64 text-sm leading-relaxed" value={st.text} onChange={(e) => act((x) => { x.sections[s.id].text = e.target.value })} />
+            <TextArea ref={ta} aria-label={`Text of section ${s.id}`} readOnly={lock} className="min-h-64 text-sm leading-relaxed" value={st.text} onChange={(e) => act((x) => { x.sections[s.id].text = e.target.value; noteBasis(x, s.id) })} />
+            {s.id === '2' && <SynopsisLength />}
             {lock && <p className="text-xs text-lab-amber">The report is {p!.stage}: reopen it as a new version to edit.</p>}
             {!lock && <div className="flex flex-wrap items-end gap-2 text-xs">
               <label className="text-lab-text-muted">Results helper: output<Select aria-label="Output for the results helper" className="w-56" value={helperOut?.id ?? ''} onChange={(e) => { setHelpOut(e.target.value); setHelpRow(0) }} options={outs.filter((o) => o.display).map((o) => ({ value: o.id, label: o.title.slice(0, 60) }))} /></label>
@@ -66,7 +73,9 @@ export default function Write() {
             <p className="text-[11px] text-lab-text-muted">Name the table after each sentence: [T14.1.1] or “(Table 14.1.1)”. A line holding only {'{{T4}}'} places that table in the exported report. The skeleton gives every value as the table shows it; rewrite it as prose and the checker still ties each number to its cell.</p>
           </>}
         </Panel>
-        {!st.na && <Guides sid={s.id} text={st.text} lock={lock} onDraft={(t, replace) => replace ? act((x) => { x.sections[s.id].text = t }) : insert(t)} />}
+        {!st.na && s.id === '10.1' && <ConsortPanel />}
+        {!st.na && s.id === '12.4' && <LiverPanel text={st.text} />}
+        {!st.na && <Guides sid={s.id} text={st.text} lock={lock} onDraft={(t, replace) => replace ? act((x) => { x.sections[s.id].text = t; noteBasis(x, s.id) }) : insert(t)} />}
         {!st.na && st.text.trim() && reportsResults(s) && <Panel title="Your text, as checked" sub="Each number is coloured by what the checker found. Hover for the detail.">
           <Marked text={st.text} f={f} />
         </Panel>}
