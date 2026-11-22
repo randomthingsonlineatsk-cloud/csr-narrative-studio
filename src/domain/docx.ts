@@ -14,6 +14,8 @@ const TOKEN = /^\{\{(\w+)\}\}$/
 export type Block = { kind: 'heading'; id: string; text: string; level: number } | { kind: 'para'; text: string; gap?: boolean; bold?: boolean } | { kind: 'table'; d: Display; title: string } | { kind: 'na'; text: string }
 
 export function reportBlocks(p: Project): Block[] { return sectionsOf(p).flatMap((s) => sectionBlocks(p, s)) }
+/** The blocks of the given E3 sections only, in report order. */
+export function blocksOf(p: Project, keep: (id: string) => boolean): Block[] { return sectionsOf(p).filter((s) => keep(s.id)).flatMap((s) => sectionBlocks(p, s)) }
 function sectionBlocks(p: Project, s: E3Section, level: number = s.level, label = `${s.id} ${s.heading}`): Block[] {
   const data = dataOf(p), out: Block[] = []
   {

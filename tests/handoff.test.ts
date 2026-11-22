@@ -5,17 +5,24 @@ import { existsSync, writeFileSync } from 'node:fs'
 import { unzipSync, strFromU8 } from 'fflate'
 import { completeProject, newProject, defaultSlots } from '../src/domain/project'
 import { BUNDLED } from '../src/domain/study'
-import { ectdPackage, layResults, journeyHandoff, disclosureZip } from '../src/domain/handoff'
+import { ectdPackage, ectdFileSetZip, layResults, journeyHandoff, disclosureZip } from '../src/domain/handoff'
 import { loadPatientData } from '../src/domain/sdtm'
 import { DEFAULT_DISCLOSURE } from '../src/domain/disclosure'
 
 const write = (path: string, data: unknown) => { const dir = path.split('/').slice(0, -1).join('/'); if (existsSync(dir)) writeFileSync(path, JSON.stringify(data, null, 1)) }
 
-test('eCTD package: four tagged documents for 5.3.5.1', () => {
+test('eCTD package and file set: the report split as eCTD granularity expects, each file tagged', () => {
   const p = completeProject(), k = ectdPackage(p, '2026-11-22T00:00:00Z')
   expect(k.kind).toBe('csr-studio/ectd-5-3-5')
-  expect(k.documents.map((d) => [d.section, d.study.tag])).toEqual([['5.3.5.1', 'study-report'], ['5.3.5.1', 'synopsis'], ['5.3.5.1', 'protocol-or-amendment'], ['5.3.5.1', 'statistical-methods-interim-analysis-plan']])
+  expect(k.documents.map((d) => [d.e3, d.study.tag])).toEqual([['2', 'synopsis'], ['1, 3 to 13, 15', 'study-report-body'], ['14', 'study-report-body'], ['16.1.1', 'protocol-or-amendment'], ['16.1.5', 'signatures-investigators'], ['16.1.9', 'statistical-methods-interim-analysis-plan'], ['16.2.7', 'adverse-event-listings']])
+  expect(k.documents.every((d) => d.section === '5.3.5.1')).toBe(true)
   expect(k.documents[0].content).toContain('Of 90 participants screened')
+  expect(k.documents[1].content).not.toContain('Of 90 participants screened were') // the synopsis is its own file
+  expect(k.documents[2].content).toContain('Table 14.2.1')
+  expect(k.documents[3].content).toContain('Amendment 1')
+  expect(k.documents[6].content).toMatch(/heart muscle infarction/i)
+  const z = unzipSync(ectdFileSetZip(p))
+  expect(Object.keys(z).sort()).toEqual(['glv-12-301-16-1-1-protocol.html', 'glv-12-301-16-1-5-signatures.html', 'glv-12-301-16-1-9-sap.html', 'glv-12-301-16-2-7-ae-listings.html', 'glv-12-301-report-body.html', 'glv-12-301-section-14.html', 'glv-12-301-synopsis.html', 'index.json'])
   write('../ectd-dossier-builder/tests/fixtures/csr-ectd-glv-12-301.json', k)
 })
 

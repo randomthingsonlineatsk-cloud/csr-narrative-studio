@@ -113,7 +113,10 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     Canada's two categories; results, design and safety never). Outputs: the redacted report, a
     redaction log (CSV) and an anonymisation report, as one `csr-studio/disclosure` zip.
 23. **Hand-offs**: the report for Module 5.3.5.1 of the eCTD Dossier Builder (`csr-studio/ectd-5-3-5`:
-    body, synopsis, protocol, SAP, with study tags), lay results for the Plain Language Lab
+    seven documents split as eCTD granularity expects, each with its study tagging file tag: synopsis
+    (E3 2), the report body (E3 1, 3 to 13, 15), section 14's tables, 16.1.1 protocol and amendments,
+    16.1.5 signatures, 16.1.9 statistical methods and 16.2.7 adverse event listings; the same files
+    as HTML in an eCTD file set zip), lay results for the Plain Language Lab
     (`csr-studio/lay-results`: the report's own results in the ARS shape the Lab reads), and a hand-off
     for the Ostrevia journey on the pharmolecule hub (`csr-studio-handoff`).
 24. **Missions** CS12 (redact the approved GLV-12-301 report for public release, core) and CS15 (the
@@ -125,6 +128,10 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
 26. **Classroom** on the shared classroom server (routes `/cs/v1`, `cs_` tables): classes, assignments,
     submissions re-scored in the instructor's browser, comments and a leaderboard. Two more lessons:
     disclosure and anonymisation; the CSR in the CTD (Module 5, ISS and ISE).
+27. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205
+    (clobetasol), both lumiravostat 25 mg. Choose the pools, keep the comparators apart, harmonise a
+    liver term coded differently in each study, and work out the pooled counts (from each study's
+    14.3.1); then the pooled table, downloadable as CSV.
 
 ## Run it
 
