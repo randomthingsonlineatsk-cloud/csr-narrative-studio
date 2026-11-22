@@ -21,15 +21,19 @@ test('a broken disposition table fails its flow checks', () => {
   t.rows.find((r) => r.label === 'Completed the study')!.cells[0].text = '12 (80.0)'
   expect(flowChecks(flowOf(d)!).filter((c) => !c.ok).map((c) => c.label)).toEqual(['Placebo: completed plus discontinued equals randomised'])
 })
-test('the liver screen finds HRP-301’s one placebo rise and flags the missing bilirubin', async () => {
+test('the liver screen finds HRP-301’s one placebo rise, with bilirubin below 2 × ULN: no Hy’s law', async () => {
   const { sdtm } = await loadPatientData('HRP-301'), sc = liverScreen(sdtm, BUNDLED['HRP-301'].groups)
-  expect(sc.bilirubin).toBe(false)
+  expect(sc.bilirubin).toBe(true)
+  expect(sc.groups.map((g) => g.bili2)).toEqual([0, 0, 0])
+  expect(sc.peaks[0].bili).toBeGreaterThan(1); expect(sc.peaks[0].bili).toBeLessThan(2)
   expect(sc.groups.map((g) => g.gt3)).toEqual([1, 0, 0])
   expect(sc.groups.map((g) => g.gt5)).toEqual([1, 0, 0])
   expect(sc.potentialHy).toEqual([])
-  const good = 'Alanine aminotransferase (ALT) rose above 3 × ULN in 1 participant on placebo and in none on lumiravostat. No participant met the potential Hy’s law criteria; total bilirubin was not collected in this study.'
+  const good = 'Alanine aminotransferase (ALT) rose above 3 × ULN in 1 participant on placebo and in none on lumiravostat. No participant met the potential Hy’s law criteria: total bilirubin stayed below 2 × ULN in every participant.'
   expect(liverItems(good, sc).every((i) => i.ok)).toBe(true)
   expect(liverItems('Liver tests were unremarkable.', sc).filter((i) => !i.ok).length).toBe(3)
+  const g = await loadPatientData('GLV-12-301'), sg = liverScreen(g.sdtm, BUNDLED['GLV-12-301'].groups)
+  expect(sg.bilirubin).toBe(true); expect(sg.potentialHy).toEqual([])
 })
 test('drills: rows, the model sentence passes, a wrong sentence fails, planted errors', () => {
   expect(drillRows().length).toBeGreaterThan(20)

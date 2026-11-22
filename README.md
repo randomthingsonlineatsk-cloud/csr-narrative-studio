@@ -135,8 +135,11 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     every box adds up, downloadable as SVG.
 29. **Liver test screen** beside 12.4, from the LB domain: peak ALT, AST and bilirubin as multiples
     of the upper limit of normal by group (above 3, 5 and 10 × ULN), potential Hy's law cases
-    (FDA's 2009 drug-induced liver injury criteria), and checks on what 12.4 must say. The bundled
-    studies collected no bilirubin, so the screen says Hy's law can be assessed only in part.
+    (FDA's 2009 drug-induced liver injury criteria), and checks on what 12.4 must say. Total
+    bilirubin comes from the source: the CDM Console's central laboratory transfer for HRP-301 and
+    the SDTM Mapping Trainer's laboratory file for GLV-12-301 (LBTESTCD BILI), carried through
+    the TLF Programming Lab. In HRP-301 the one participant with ALT above 3 × ULN (on placebo)
+    had bilirubin below 2 × ULN: not a potential Hy's law case.
 30. **Out-of-date marking**: each section remembers the outputs it was written against; when an
     output changes (a re-run, your own package), the section is marked out of date until you
     confirm it against the new version. A QC item stops the report going final while any is.
