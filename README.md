@@ -171,8 +171,11 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     on the conclusions and on other documents, signed, and downloadable for eCTD 5.3.5.1. Mission
     CS19: correct the approved GLV-12-301 report by addendum.
 38. **An oncology study, ONK-44-302 (MERIDIAN-2)**: ONK-44 against docetaxel in previously treated
-    advanced non-small cell lung cancer. The chain is the same as for the other studies: the SDTM
-    Mapping Trainer maps the RECIST 1.1 source data (DM, DS, TU, TR, RS, PR, DD), and the TLF
+    advanced non-small cell lung cancer. The chain is the same as for the other studies: the CDM
+    Query & Edit-Check Console's sites enter the source records in its RECIST eCRF, where they are
+    cleaned and locked at the data cut-off (missions M22 to M24); the SDTM Mapping Trainer maps the
+    locked records (DM, DS, TU, TR, RS, PR, DD; its tests check the console's locked database gives
+    back the same raw datasets and SDTM), and the TLF
     Programming Lab's R programs derive ADSL, ADTTE and ADRS and the outputs: disposition at the
     data cut-off, demographics, progression-free survival by independent review (primary) and by
     the investigator (Kaplan-Meier medians with Brookmeyer-Crowley CIs, Cox hazard ratio, log-rank
