@@ -167,7 +167,7 @@ function TraceModal({ f, onClose }: { f: Finding; onClose: () => void }) {
         {st.lines.map((l, k) => <p key={k} className="text-xs">{l}</p>)}
         {st.subjects && st.subjects.length > 0 && <details className="text-xs"><summary className="cursor-pointer text-lab-text-muted">{st.subjects.length} participant{st.subjects.length === 1 ? '' : 's'}</summary><p className="font-mono mt-1">{st.subjects.join(', ')}</p></details>}
       </li>)}</ol>
-      <p className="text-[11px] text-lab-text-muted">The chain the apps share: {p!.study === 'HRP-301' ? 'CDM Console eCRF' : 'the EDC source forms'} → SDTM Mapping Trainer → TLF Programming Lab (ADaM, ARS) → this report.</p>
+      <p className="text-[11px] text-lab-text-muted">The chain the apps share: {p!.study === 'HRP-301' || p!.study === 'ONK-44-302' ? 'CDM Console eCRF' : 'the EDC source forms'} → SDTM Mapping Trainer → TLF Programming Lab (ADaM, ARS) → this report.</p>
     </Modal>
   )
 }

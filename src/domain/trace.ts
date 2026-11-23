@@ -92,7 +92,7 @@ export function trace(p: Project, f: Finding, s: Sdtm | null): TraceStep[] {
   if (ot) {
     const N = ot.subjects.length
     steps.push({ level: 'Collected data (SDTM)', title: ot.title, ok: t.kind === 'n' ? N === shown : undefined, lines: [`${N} participant${N === 1 ? '' : 's'} recounted from SDTM${key.g === 'Total' ? '' : ` on ${key.g}`}, with the same rules as the TLF Lab’s programs.`], subjects: ot.subjects })
-    steps.push({ level: 'eCRF and source files', title: ot.records.length ? 'The records as collected' : 'No single source record', lines: ot.records.length ? [...ot.records.slice(0, 12), ...(ot.records.length > 12 ? [`… and ${ot.records.length - 12} more.`] : []), 'From the SDTM Mapping Trainer’s ONK-44-302 source data (the EDC forms and the independent review’s vendor file).'] : ['Counted from the absence of an event (no death recorded by the cut-off).'] })
+    steps.push({ level: 'eCRF and source files', title: ot.records.length ? 'The records as collected' : 'No single source record', lines: ot.records.length ? [...ot.records.slice(0, 12), ...(ot.records.length > 12 ? [`… and ${ot.records.length - 12} more.`] : []), 'From ONK-44-302’s source records: the eCRF pages the CDM Console’s sites enter and lock (mission M24), mapped in the SDTM Mapping Trainer, and the independent review’s vendor file.'] : ['Counted from the absence of an event (no death recorded by the cut-off).'] })
     return steps
   }
   // SDTM: adverse events are recounted from the AE domain.
