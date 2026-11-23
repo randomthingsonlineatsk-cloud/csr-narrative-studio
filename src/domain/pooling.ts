@@ -3,7 +3,7 @@
 // decides which studies belong in which pool, harmonises a term coded differently in the two
 // studies, and works out pooled counts; the answers are computed from the studies' own tables.
 import { BUNDLED, outputsOf } from './study'
-import { tableNumber } from './e3'
+import { tableNumber, isAeSocTable } from './e3'
 
 export const POOL_STUDIES = ['HRP-301', 'HRP-205'] as const
 export const ARM = 'Lumiravostat 25 mg'
@@ -11,7 +11,7 @@ export const ARM = 'Lumiravostat 25 mg'
 export const LIVER = { 'HRP-301': 'Liver enzymes raised', 'HRP-205': 'ALT increased' } as const
 
 function aeTable(study: string) {
-  const o = outputsOf(BUNDLED[study]).find((x) => tableNumber(x.title) === '14.3.1')!
+  const o = outputsOf(BUNDLED[study]).find(isAeSocTable)!
   return o.display!
 }
 /** Participants with the event (n) and the participants in the group (N) for one study and group. */

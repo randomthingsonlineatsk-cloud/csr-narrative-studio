@@ -69,7 +69,7 @@ test('trace: an oncology adverse event count down to the adverse event form', as
   const col = st.find((s) => s.level === 'Collected data (SDTM)')!
   expect(col.ok).toBe(true); expect(col.subjects!.length).toBe(11)
   expect(st.find((s) => s.level === 'eCRF and source files')!.lines.some((l) => /Adverse event form, .*grade [34]/.test(l))).toBe(true)
-  const g = find(p, '12.2.2', 'Diarrhoea was reported in 10 (55.6%) participants on ONK-44 [T14.3.1].', '10')
+  const g = find(p, '12.2.2', 'Diarrhoea was reported in 10 (55.6%) participants on ONK-44 [T14.3.2].', '10')
   expect(trace(p, g, sdtm).find((s) => s.level === 'Collected data (SDTM)')!.ok).toBe(true)
   expect(safety.cases.length).toBeGreaterThanOrEqual(9)
 })

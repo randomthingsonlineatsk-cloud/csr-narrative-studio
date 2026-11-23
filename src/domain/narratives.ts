@@ -57,7 +57,15 @@ export function studyDay(date: string, first: string) {
 export function dosing(p: Profile) {
   const iv = p.ex.map((e) => ({ from: num(e.EXSTDY), to: num(e.EXENDY), dose: num(e.EXDOSE) })).filter((x) => x.from !== null) as { from: number; to: number | null; dose: number | null }[]
   const gaps: { from: number; to: number }[] = []
-  for (let i = 1; i < iv.length; i++) { const prev = iv[i - 1].to; if (prev !== null && iv[i].from > prev + 1) gaps.push({ from: prev + 1, to: iv[i].from - 1 }) }
+  // Infusions given on one day each cycle (docetaxel): the days between infusions are the schedule,
+  // not a break. A break is an infusion given later than the usual cycle length.
+  const pulsed = iv.length >= 2 && iv.every((x) => x.to === x.from)
+  if (pulsed) {
+    const diffs = iv.slice(1).map((x, i) => x.from - iv[i].from), count = new Map<number, number>()
+    for (const d of diffs) count.set(d, (count.get(d) ?? 0) + 1)
+    const cycle = [...count.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0]
+    for (let i = 1; i < iv.length; i++) if (iv[i].from - iv[i - 1].from > cycle) gaps.push({ from: iv[i - 1].from + cycle, to: iv[i].from - 1 })
+  } else for (let i = 1; i < iv.length; i++) { const prev = iv[i - 1].to; if (prev !== null && iv[i].from > prev + 1) gaps.push({ from: prev + 1, to: iv[i].from - 1 }) }
   return { intervals: iv, gaps, last: Math.max(...iv.map((x) => x.to ?? x.from)) }
 }
 

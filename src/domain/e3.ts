@@ -98,3 +98,7 @@ export const sectionsFor = (t: ReportType) => (t === 'full' ? E3 : t === 'abbrev
 /** Headings that only group subsections (no text of their own is expected). */
 export const isGroup = (s: E3Section) => E3.some((x) => x.id.startsWith(`${s.id}.`))
 export const tableNumber = (title: string) => /(?:Table|Listing|Figure)\s+(\d+(?:\.\d+)+)/.exec(title)?.[1] ?? ''
+/** The table of treatment-emergent adverse events by system class and preferred term: found by its
+ *  title, since its number differs between studies (14.3.1 where it is the first safety table, 14.3.2
+ *  where an overview comes first). */
+export const isAeSocTable = (o: { title: string }) => /^14\.3\./.test(tableNumber(o.title)) && /adverse events by system (?:organ )?class/i.test(o.title)

@@ -5,7 +5,7 @@
 // comparison failed, a "trend" offered as a result, and superiority read from a
 // non-inferiority comparison.
 import { outputsOf } from './study'
-import { tableNumber } from './e3'
+import { tableNumber, isAeSocTable } from './e3'
 import { sentences } from './checker'
 import type { Output, StudyOutputs } from './types'
 
@@ -45,7 +45,7 @@ export function benefitRisk(data: StudyOutputs, opts: { design?: BenefitRisk['de
   const prim = effects.filter((e) => e.primary)
   const primaryShown = prim.length > 0 && prim.some((e) => e.shown)
   const harms: Harm[] = []
-  const ae = outs.find((o) => tableNumber(o.title) === '14.3.1')?.display
+  const ae = outs.find(isAeSocTable)?.display
   if (ae) {
     const any = ae.rows.find((r) => /at least one/i.test(r.label))
     if (any) harms.push({ label: 'Any treatment-emergent adverse event', detail: any.cells.map((c, i) => `${ae.groups[i]} ${c.text}`).join('; ') })

@@ -185,9 +185,11 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     compare every cell with it. Tracing an oncology number reaches the source: participants are
     recounted from RS, DM and DS, and the investigator's response form, the independent review's
     vendor file, the death form or the adverse event form is shown as collected. Safety: TEAEs by
-    system class and preferred term (14.3.1), an overview (14.3.2), grade 3 or higher TEAEs
+    an overview (14.3.1), TEAEs by system class and preferred term (14.3.2), grade 3 or higher TEAEs
     (14.3.3) and the SAE listing (16.2.7); narratives for the ten serious adverse events (four
-    fatal), written with CTCAE-style grades; and SAE reconciliation from the CDM Console's export for
+    fatal), written with CTCAE-style grades, with each interruption dated from the dosing record
+    (a docetaxel delay is read against the 21-day infusion cycle); the four fatal events started
+    more than 30 days after the last dose, so none is treatment-emergent; and SAE reconciliation from the CDM Console's export for
     the CSR of the locked database. Mission CS20: report the oncology
     efficacy results (primary first, medians in months, the testing order, overall survival as
     immature).

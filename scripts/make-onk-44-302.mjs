@@ -186,8 +186,8 @@ const NS = Object.fromEntries(GT.map((g) => [g, saf(g).length]))
 const pcell = (an, g, ids, cat = null) => { const n = new Set(ids).size; return cell(an, g, npct(n, NS[g]), cat, { n, pct: (100 * n) / NS[g] }) }
 const prow = (label, an, pick, indent, cat = null) => row(label, GT.map((g) => pcell(an, g, tg(g).filter(pick).map((r) => r.USUBJID), cat)), indent)
 for (const g of GT) frame.push(['POP', g, null, 'N', String(NS[g])])
-const T8 = output('T8', 'Table 14.3.2: overview of treatment-emergent adverse events (safety population)', 'SAP 9.5; ICH E3 section 12.2', 'Any TEAE; related; grade 3 or higher; serious; serious and related; leading to discontinuation; leading to interruption or dose reduction; fatal (grade 5); deaths (any cause). n (%). Columns: ONK-44 400 mg, Docetaxel, Total.', {
-  title: 'Table 14.3.2 Overview of treatment-emergent adverse events', population: 'Safety population, as treated', head: GT, groups: GT, rows: [
+const T8 = output('T8', 'Table 14.3.1: overview of treatment-emergent adverse events (safety population)', 'SAP 9.5; ICH E3 section 12.2', 'Any TEAE; related; grade 3 or higher; serious; serious and related; leading to discontinuation; leading to interruption or dose reduction; fatal (grade 5); deaths (any cause). n (%). Columns: ONK-44 400 mg, Docetaxel, Total.', {
+  title: 'Table 14.3.1 Overview of treatment-emergent adverse events', population: 'Safety population, as treated', head: GT, groups: GT, rows: [
     prow('Any TEAE', 'ANY', () => true, 0), prow('TEAE related to study treatment', 'REL', (r) => r.AEREL === 'RELATED', 0), prow('TEAE of grade 3 or higher', 'GR3', (r) => r.ATOXGRN >= 3, 0),
     prow('Serious TEAE', 'SER', (r) => r.AESER === 'Y', 0), prow('Serious TEAE related to study treatment', 'SERREL', (r) => r.AESER === 'Y' && r.AEREL === 'RELATED', 0),
     prow('TEAE leading to discontinuation of study treatment', 'DISC', (r) => r.AEACN === 'DRUG WITHDRAWN', 0), prow('TEAE leading to interruption or dose reduction', 'MOD', (r) => ['DRUG INTERRUPTED', 'DOSE REDUCED'].includes(r.AEACN), 0),
@@ -197,8 +197,8 @@ const T8 = output('T8', 'Table 14.3.2: overview of treatment-emergent adverse ev
 const byTot = (key) => (a, b) => new Set(tg('Total').filter((r) => key(r) === b).map((r) => r.USUBJID)).size - new Set(tg('Total').filter((r) => key(r) === a).map((r) => r.USUBJID)).size || a.localeCompare(b)
 for (const g of GT) frame.push(['POP', g, null, 'N', String(NS[g])])
 const socs = [...new Set(teae.map((r) => r.AEBODSYS))].sort(byTot((r) => r.AEBODSYS))
-const T9 = output('T9', 'Table 14.3.1: treatment-emergent adverse events by system class and preferred term', 'SAP 9.5; ICH E3 section 12.2', 'Participants with at least one TEAE; each system class with its preferred terms indented, by descending frequency in the Total column. n (%).', {
-  title: 'Table 14.3.1 Treatment-emergent adverse events by system class and preferred term', population: 'Safety population', head: GT, groups: GT, rows: [
+const T9 = output('T9', 'Table 14.3.2: treatment-emergent adverse events by system class and preferred term', 'SAP 9.5; ICH E3 section 12.2', 'Participants with at least one TEAE; each system class with its preferred terms indented, by descending frequency in the Total column. n (%).', {
+  title: 'Table 14.3.2 Treatment-emergent adverse events by system class and preferred term', population: 'Safety population', head: GT, groups: GT, rows: [
     prow('Participants with at least one TEAE', 'ANY', () => true, 0),
     ...socs.flatMap((soc) => [prow(soc, 'SOC', (r) => r.AEBODSYS === soc, 0, soc),
       ...[...new Set(teae.filter((r) => r.AEBODSYS === soc).map((r) => `${soc} | ${r.AEDECOD}`))].sort(byTot((r) => `${r.AEBODSYS} | ${r.AEDECOD}`)).map((k) => prow(k.split(' | ')[1], 'PT', (r) => `${r.AEBODSYS} | ${r.AEDECOD}` === k, 1, k))]),

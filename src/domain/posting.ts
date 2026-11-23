@@ -6,7 +6,7 @@
 // 11.44); CTIS, one year after the end of the trial in all Member States concerned.
 import { dataOf } from './project'
 import { outputsOf, protocolOf } from './study'
-import { tableNumber } from './e3'
+import { tableNumber, isAeSocTable } from './e3'
 import { flowOf } from './consort'
 import { approvedText } from './reuse'
 import { rows, str, type Sdtm } from './sdtm'
@@ -40,7 +40,7 @@ export function buildPosting(p: Project): Posting {
   const terms = [...new Map(sae.map((s) => [s.term, s.soc])).entries()]
   const serious: AeRow[] = terms.map(([term, soc]) => ({ soc, term, byArm: arms.map((g, i) => ({ n: new Set(sae.filter((s) => s.term === term && s.arm === g).map((s) => s.subj)).size, atRisk: atRisk[i] })) }))
   // Other events from the TEAE table: preferred terms (indented rows), above the threshold in any arm.
-  const t = byNum('14.3.1')?.display, other: AeRow[] = []
+  const t = outs.find(isAeSocTable)?.display, other: AeRow[] = []
   if (t) { let soc = ''
     for (const r of t.rows) {
       if (!r.indent) { soc = r.label; continue }

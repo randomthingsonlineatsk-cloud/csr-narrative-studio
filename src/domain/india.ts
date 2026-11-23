@@ -6,7 +6,7 @@
 // start and end of accrual on the title page, a synopsis of one to two pages, the complete list
 // of serious adverse events (13.1) and of unexpected adverse events, serious or not (13.2), and
 // the investigator's certificate (appendix l).
-import { sectionById, tableNumber } from './e3'
+import { sectionById, tableNumber, isAeSocTable } from './e3'
 import { outputsOf } from './study'
 import { dataOf, PLACEHOLDER } from './project'
 import { CI } from './review'
@@ -58,7 +58,7 @@ export const INDIAN_SITES: Record<string, { site: string; n: number; committee: 
 
 /** Preferred terms in the adverse event table, split by the RSI. */
 export function aeByExpectedness(p: Project): { term: string; counts: string; expected: boolean }[] {
-  const d = outputsOf(dataOf(p)).find((o) => tableNumber(o.title) === '14.3.1')?.display, rsi = RSI[p.study]?.terms.map((t) => t.toLowerCase()) ?? []
+  const d = outputsOf(dataOf(p)).find(isAeSocTable)?.display, rsi = RSI[p.study]?.terms.map((t) => t.toLowerCase()) ?? []
   if (!d) return []
   return d.rows.filter((r) => r.indent).map((r) => ({ term: r.label, counts: r.cells.map((c, i) => `${d.groups[i]} ${c.text}`).join('; '), expected: rsi.includes(r.label.toLowerCase()) }))
 }
