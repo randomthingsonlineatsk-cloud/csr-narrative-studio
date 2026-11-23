@@ -4,6 +4,8 @@
 // the data and the safety case, missing facts, contradictions, coverage and privacy.
 import { rows, str, num, type Row, type Sdtm, type Safety, type SafetyCase } from './sdtm'
 
+// Severity as the study collects it: mild/moderate/severe, or a CTCAE-style grade in oncology.
+export const sevText = (ae: Record<string, unknown>) => (String(ae.AESEV ?? '') ? String(ae.AESEV).toLowerCase() : String(ae.AETOXGR ?? '') ? `grade ${ae.AETOXGR}` : 'of unrecorded severity')
 export type Kind = 'death' | 'sae' | 'discontinuation' | 'aesi'
 export const KIND_LABEL: Record<Kind, string> = { death: 'Death', sae: 'Serious adverse event', discontinuation: 'Discontinued because of an adverse event', aesi: 'Adverse event of special interest' }
 export interface Candidate { key: string; usubjid: string; aeseq: number; pt: string; verbatim: string; kinds: Kind[]; arm: string; day: number | null }
@@ -141,7 +143,7 @@ export function draft(s: Sdtm, c: Candidate, sc?: SafetyCase, complete = true): 
   return [
     `Participant ${c.usubjid} (${p.arm}): ${lc(c.pt)} (${c.kinds.map((k) => KIND_LABEL[k].toLowerCase()).join('; ')}).`,
     `A ${num(p.dm.AGE)}-year-old ${race(str(p.dm.RACE))} ${sexWord(str(p.dm.SEX))} with ${mh.length ? `a history of ${listAnd(mh)}` : 'no relevant medical history'} was randomised to ${p.arm} and took the first dose of ${doseWords}${freq ? ` ${freq}` : ''} on Day 1. Concomitant medications at the onset of the event: ${onset.length ? onset.map(med).join('; ') : 'none'}.`,
-    `On Day ${num(ae.AESTDY)}, the participant reported ${verbatim(str(ae.AETERM))} (coded as ${lc(c.pt)}). The event was ${lc(str(ae.AESEV))}${ae.AESER === 'Y' ? ` and serious (${crit.join('; ') || 'medically important'})` : ''}. ${tx.length ? `It was treated with ${listAnd(tx.map((t) => `${med(t)} from Day ${num(t.CMSTDY)}${num(t.CMENDY) !== null ? ` to Day ${num(t.CMENDY)}` : ''}`))}.` : 'No treatment for the event was recorded.'}${labs.length ? ` Laboratory values: ${labs.map(labText).join('; ')}.` : ''}`,
+    `On Day ${num(ae.AESTDY)}, the participant reported ${verbatim(str(ae.AETERM))} (coded as ${lc(c.pt)}). The event was ${sevText(ae)}${ae.AESER === 'Y' ? ` and serious (${crit.join('; ') || 'medically important'})` : ''}. ${tx.length ? `It was treated with ${listAnd(tx.map((t) => `${med(t)} from Day ${num(t.CMSTDY)}${num(t.CMENDY) !== null ? ` to Day ${num(t.CMENDY)}` : ''}`))}.` : 'No treatment for the event was recorded.'}${labs.length ? ` Laboratory values: ${labs.map(labText).join('; ')}.` : ''}`,
     `Action taken: ${action} ${complete ? `${ch.dechallenge.text} ${ch.rechallenge.text}` : '[Dechallenge statement.] [Rechallenge statement.]'}`,
     `${outcome}${disc} The investigator assessed the event as ${CAUS[str(ae.AEREL)] ?? lc(str(ae.AEREL))} to study drug${sponsor ? `;${sponsor}` : '.'}`,
   ].join('\n\n')
@@ -190,9 +192,16 @@ export function narrativeQc(s: Sdtm, c: Candidate, text: string, safety?: Safety
   // The event: term, onset, severity, seriousness.
   if (!new RegExp(`\\b${c.pt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(body)) add('missing', 'error', 'event term', `Name the event by its coded term (${c.pt}).`)
   const evS = S.filter((x) => new RegExp(c.pt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(x) || /\bthe event\b/i.test(x))
+  if (str(ae.AETOXGR) && !str(ae.AESEV)) {
+    // Oncology: a CTCAE-style grade instead of a severity.
+    const gr = evS.map((x) => /\bgrade\s*([1-5])\b/i.exec(x)).find(Boolean)
+    if (!gr) add('missing', 'error', 'grade', `Give the grade (${sevText(ae)}).`)
+    else if (gr[1] !== str(ae.AETOXGR)) add('fact', 'error', gr[0], `The event was ${sevText(ae)}, not grade ${gr[1]}.`)
+  } else {
   const sev = evS.map((x) => /\b(mild|moderate|severe)\b/i.exec(x)).find(Boolean)
   if (!sev) add('missing', 'error', 'severity', `Give the severity (${lc(str(ae.AESEV))}).`)
   else if (sev[1].toUpperCase() !== str(ae.AESEV)) add('fact', 'error', sev[0], `The event was ${lc(str(ae.AESEV))}, not ${lc(sev[1])}.`)
+  }
   const saysHosp = /hospital/i.test(body), saysDeath = /\b(died|death|fatal)\b/i.test(body)
   if (ae.AESER === 'Y') {
     if (!/\bserious\b/i.test(body)) add('missing', 'error', 'seriousness', 'Say the event was serious and why.')

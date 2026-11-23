@@ -88,7 +88,7 @@ export function trace(p: Project, f: Finding, s: Sdtm | null): TraceStep[] {
     }
   }
   // Oncology: recount from RS, DM and DS, and show the records as collected.
-  const ot = p.study === 'ONK-44-302' && s && ['n', 'pct'].includes(t.kind) ? onkTrace(s, key.an, key.g, key.cat ?? null) : null
+  const ot = p.study === 'ONK-44-302' && s && ['n', 'pct'].includes(t.kind) ? onkTrace(s, key.an, key.g, key.cat ?? null, tableNumber(o.title)) : null
   if (ot) {
     const N = ot.subjects.length
     steps.push({ level: 'Collected data (SDTM)', title: ot.title, ok: t.kind === 'n' ? N === shown : undefined, lines: [`${N} participant${N === 1 ? '' : 's'} recounted from SDTM${key.g === 'Total' ? '' : ` on ${key.g}`}, with the same rules as the TLF Lab’s programs.`], subjects: ot.subjects })

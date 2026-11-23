@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '../state'
 import { candidates, primaryKind, profile, challenge, template, draft, narrativeQc, findingKey, medsAtOnset, relevantLabs, studyDay, KIND_LABEL, QC_LABEL, CAUS, type Candidate } from '../domain/narratives'
-import { AESI } from '../domain/narratives'
+import { AESI, sevText } from '../domain/narratives'
 import { missionById } from '../domain/missions'
 import { missionCandidates, ARMS, CS7_MINUTES } from '../domain/missions/narr'
 import { num, str } from '../domain/sdtm'
@@ -57,11 +57,11 @@ export default function Narratives() {
           {tab === 'profile' && <div className="space-y-2 text-xs">
             <p>{num(pr.dm.AGE)} years · {str(pr.dm.SEX) === 'F' ? 'female' : 'male'} · {str(pr.dm.RACE).toLowerCase()} · {str(pr.dm.COUNTRY)} · site {str(pr.dm.SITEID)} · first dose Day 1 · last dose Day {Math.max(...pr.ex.map((x) => num(x.EXENDY) ?? 0))}</p>
             <p><b>Medical history:</b> {pr.mh.map((x) => `${str(x.MHDECOD || x.MHTERM)}${x.MHENRTPT ? ` (${str(x.MHENRTPT).toLowerCase()})` : ''}`).join('; ') || 'none recorded'}</p>
-            <Table head={['Event (verbatim)', 'Days', 'Severity', 'Serious', 'Related', 'Action', 'Outcome']} rows={pr.ae.map((a) => [<span className={a === ae ? 'font-semibold' : ''}>{str(a.AEDECOD)} <span className="text-lab-text-muted">({str(a.AETERM)})</span></span>, `${num(a.AESTDY)} to ${num(a.AEENDY) ?? '…'}`, str(a.AESEV).toLowerCase(), a.AESER === 'Y' ? `yes${a.AESHOSP === 'Y' ? ', hospital' : ''}${a.AESDTH === 'Y' ? ', death' : ''}` : 'no', str(a.AEREL).toLowerCase(), str(a.AEACN).toLowerCase(), str(a.AEOUT).toLowerCase()])} />
+            <Table head={['Event (verbatim)', 'Days', 'Severity or grade', 'Serious', 'Related', 'Action', 'Outcome']} rows={pr.ae.map((a) => [<span className={a === ae ? 'font-semibold' : ''}>{str(a.AEDECOD)} <span className="text-lab-text-muted">({str(a.AETERM)})</span></span>, `${num(a.AESTDY)} to ${num(a.AEENDY) ?? '…'}`, sevText(a), a.AESER === 'Y' ? `yes${a.AESHOSP === 'Y' ? ', hospital' : ''}${a.AESDTH === 'Y' ? ', death' : ''}` : 'no', str(a.AEREL).toLowerCase(), str(a.AEACN).toLowerCase(), str(a.AEOUT).toLowerCase()])} />
             <Table head={['Study drug', 'Dose', 'Days']} rows={pr.ex.map((x) => [str(x.EXTRT), `${num(x.EXDOSE)} ${str(x.EXDOSU)} ${str(x.EXDOSFRQ)}`, `${num(x.EXSTDY)} to ${num(x.EXENDY) ?? '…'}`])} />
             <Table head={['Medication', 'Dose', 'For', 'Days']} rows={pr.cm.map((x) => [str(x.CMDECOD || x.CMTRT), `${num(x.CMDOSE) ?? ''} ${str(x.CMDOSU)} ${str(x.CMDOSFRQ)}`, str(x.CMINDC), `${num(x.CMSTDY) ?? 'before'} to ${num(x.CMENDY) ?? (str(x.CMENRTPT).toLowerCase() || '…')}`])} empty="No medications." />
             <p><b>At the onset:</b> {medsAtOnset(pr, ae).map((x) => str(x.CMDECOD || x.CMTRT)).join(', ') || 'no other medications'}. <b>Relevant laboratory values:</b> {relevantLabs(pr, ae).map((l) => `${str(l.LBTESTCD)} ${num(l.LBSTRESN)} ${str(l.LBSTRESU)} Day ${num(l.LBDY)} (${num(l.LBSTNRLO) ?? 0}–${num(l.LBSTNRHI)})`).join('; ') || 'none out of range'}</p>
-            {pr.ds.length > 0 && <p><b>Disposition:</b> {pr.ds.filter((x) => x.DSCAT === 'DISPOSITION EVENT').map((x) => `${str(x.DSDECOD).toLowerCase()} on Day ${num(x.DSSTDY)}`).join('; ')}</p>}
+            {pr.ds.length > 0 && <p><b>Disposition:</b> {pr.ds.filter((x) => x.DSCAT === 'DISPOSITION EVENT').map((x) => `${str(x.DSDECOD).toLowerCase()} on Day ${num(x.DSSTDY)}`).join('; ') || (str(pr.dm.DTHDTC) ? `died (${str(pr.dm.DTHDTC)}); no end-of-study record at the data cut-off` : 'on study at the data cut-off (no end-of-study record)')}</p>}
           </div>}
           {tab === 'timeline' && <Timeline p={pr} selected={ae} />}
           {tab === 'case' && (sc ? <div className="space-y-2 text-xs">

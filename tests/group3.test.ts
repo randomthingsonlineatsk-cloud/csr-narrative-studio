@@ -61,3 +61,15 @@ test('trace: an oncology number down to the collected records', async () => {
   const r = find(p, '11.4.1', 'By independent review, 10 (55.6%) participants on ONK-44 had an objective response [T14.2.3].', '10')
   expect(trace(p, r, sdtm).find((s) => s.level === 'Collected data (SDTM)')!.ok).toBe(true)
 })
+
+test('trace: an oncology adverse event count down to the adverse event form', async () => {
+  const p = newProject('t', 'ONK-44-302'), { sdtm, safety } = await loadPatientData('ONK-44-302')
+  const f = find(p, '12.2.2', 'Neutropenia of grade 3 or higher was reported in 11 (45.8%) participants on docetaxel [T14.3.3].', '11')
+  const st = trace(p, f, sdtm)
+  const col = st.find((s) => s.level === 'Collected data (SDTM)')!
+  expect(col.ok).toBe(true); expect(col.subjects!.length).toBe(11)
+  expect(st.find((s) => s.level === 'eCRF and source files')!.lines.some((l) => /Adverse event form, .*grade [34]/.test(l))).toBe(true)
+  const g = find(p, '12.2.2', 'Diarrhoea was reported in 10 (55.6%) participants on ONK-44 [T14.3.1].', '10')
+  expect(trace(p, g, sdtm).find((s) => s.level === 'Collected data (SDTM)')!.ok).toBe(true)
+  expect(safety.cases.length).toBeGreaterThanOrEqual(9)
+})

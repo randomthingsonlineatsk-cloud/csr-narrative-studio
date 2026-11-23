@@ -184,8 +184,11 @@ Training only. Every study, product, sponsor and participant is fictional. Not a
     (its survival statistics cross-checked against a survival library); the TLF Lab's tests
     compare every cell with it. Tracing an oncology number reaches the source: participants are
     recounted from RS, DM and DS, and the investigator's response form, the independent review's
-    vendor file or the death form is shown as collected. The training data hold no adverse events,
-    so safety sections other than exposure have no outputs. Mission CS20: report the oncology
+    vendor file, the death form or the adverse event form is shown as collected. Safety: TEAEs by
+    system class and preferred term (14.3.1), an overview (14.3.2), grade 3 or higher TEAEs
+    (14.3.3) and the SAE listing (16.2.7); narratives for the ten serious adverse events (four
+    fatal), written with CTCAE-style grades; and SAE reconciliation from the CDM Console's export for
+    the CSR of the locked database. Mission CS20: report the oncology
     efficacy results (primary first, medians in months, the testing order, overall survival as
     immature).
 39. **Practice: pool two studies (ISS)** on the Learn page: HRP-301 (placebo) and HRP-205

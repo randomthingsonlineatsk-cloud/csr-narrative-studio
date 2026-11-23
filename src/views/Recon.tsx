@@ -40,7 +40,7 @@ export default function Recon() {
         <Btn tone="grey" disabled={!!p!.mission} onClick={() => cdm.current?.click()}>Use my CDM export or safety cases (.json)</Btn>
         {(p!.sdtm || p!.safety) && <Btn tone="grey" onClick={() => act((x) => { x.sdtm = undefined; x.safety = undefined })}>Back to the bundled data</Btn>}
         {p!.mission && <p className="text-[11px] text-lab-text-muted">Missions use the bundled data.</p>}
-        <p className="text-[11px] text-lab-text-muted">The CDM Console’s export (Lock, after hard lock: “Export for the CSR”) exists for HRP-301, the study the Console runs. A safety cases file (format csr-studio/safety-cases, one E2B-shaped case per SAE) is also accepted.</p>
+        <p className="text-[11px] text-lab-text-muted">The CDM Console’s export (Lock, after hard lock: “Export for the CSR”) exists for HRP-301 and ONK-44-302, the studies the Console runs. A safety cases file (format csr-studio/safety-cases, one E2B-shaped case per SAE) is also accepted.</p>
       </Panel>
     </div>
   )

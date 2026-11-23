@@ -175,13 +175,49 @@ const kmRows = G.flatMap((g) => km(itt(g).map((s) => pfsI.get(s.USUBJID))).map((
 const F1 = { id: 'F1', title: 'Figure 14.2.1: Kaplan-Meier plot of progression-free survival by independent review', kind: 'figure', area: 'Efficacy', ref: 'SAP 9.3', shell: '', frame: { columns: ['TRT01P', 'TIME', 'NRISK', 'NEVENT', 'NCENS', 'SURV'], rows: kmRows }, display: null }
 const ADSL = { id: 'ADSL', title: 'ADSL: subject-level analysis dataset', kind: 'dataset', area: 'Data', ref: 'ADaMIG v1.3 section 3', shell: '', frame: { columns: ['USUBJID', 'SITEID', 'AGE', 'AGEGR1', 'SEX', 'RACE', 'COUNTRY', 'TRT01P', 'TRT01A', 'RANDDT', 'TRTSDT', 'TRTEDT', 'TRTDURD', 'ITTFL', 'SAFFL', 'DTHFL', 'DTHDT', 'LSTALVDT'], rows: adsl.map((s) => [s.USUBJID, s.SITEID, String(s.AGE), s.AGEGR1, s.SEX, s.RACE, s.COUNTRY, s.TRT01P, s.TRT01A, s.RANDDT, s.TRTSDT, s.TRTEDT, s.TRTDURD === null ? null : String(s.TRTDURD), s.ITTFL, s.SAFFL, s.DTHFL, s.DTHDT, s.LSTALVDT]) }, display: null }
 
-const outs = [T1, T2, T3, T4, T5, T6, T7, F1]
+// ---------- adverse events (ADAE, Tables 14.3.1 to 14.3.3) ----------
+const sub = new Map(adsl.map((s) => [s.USUBJID, s]))
+const adae = rows('AE').map((r) => { const s = sub.get(r.USUBJID); const st = String(r.AESTDTC).slice(0, 10)
+  const te = !!s && s.TRTSDT && day(st) >= day(s.TRTSDT) && day(st) <= day(s.TRTEDT) + 30
+  return { ...r, TRT01A: s?.TRT01A ?? '', SAFFL: s?.SAFFL ?? 'N', ATOXGRN: Number(r.AETOXGR), TRTEMFL: te ? 'Y' : 'N' } })
+const teae = adae.filter((r) => r.TRTEMFL === 'Y' && r.SAFFL === 'Y')
+const tg = (g) => (g === 'Total' ? teae : teae.filter((r) => r.TRT01A === g))
+const NS = Object.fromEntries(GT.map((g) => [g, saf(g).length]))
+const pcell = (an, g, ids, cat = null) => { const n = new Set(ids).size; return cell(an, g, npct(n, NS[g]), cat, { n, pct: (100 * n) / NS[g] }) }
+const prow = (label, an, pick, indent, cat = null) => row(label, GT.map((g) => pcell(an, g, tg(g).filter(pick).map((r) => r.USUBJID), cat)), indent)
+for (const g of GT) frame.push(['POP', g, null, 'N', String(NS[g])])
+const T8 = output('T8', 'Table 14.3.2: overview of treatment-emergent adverse events (safety population)', 'SAP 9.5; ICH E3 section 12.2', 'Any TEAE; related; grade 3 or higher; serious; serious and related; leading to discontinuation; leading to interruption or dose reduction; fatal (grade 5); deaths (any cause). n (%). Columns: ONK-44 400 mg, Docetaxel, Total.', {
+  title: 'Table 14.3.2 Overview of treatment-emergent adverse events', population: 'Safety population, as treated', head: GT, groups: GT, rows: [
+    prow('Any TEAE', 'ANY', () => true, 0), prow('TEAE related to study treatment', 'REL', (r) => r.AEREL === 'RELATED', 0), prow('TEAE of grade 3 or higher', 'GR3', (r) => r.ATOXGRN >= 3, 0),
+    prow('Serious TEAE', 'SER', (r) => r.AESER === 'Y', 0), prow('Serious TEAE related to study treatment', 'SERREL', (r) => r.AESER === 'Y' && r.AEREL === 'RELATED', 0),
+    prow('TEAE leading to discontinuation of study treatment', 'DISC', (r) => r.AEACN === 'DRUG WITHDRAWN', 0), prow('TEAE leading to interruption or dose reduction', 'MOD', (r) => ['DRUG INTERRUPTED', 'DOSE REDUCED'].includes(r.AEACN), 0),
+    prow('TEAE with a fatal outcome (grade 5)', 'FATAL', (r) => r.ATOXGRN === 5, 0),
+    row('Deaths (any cause) by the data cut-off', GT.map((g) => { const n = saf(g).filter((s) => s.DTHFL === 'Y').length; return cell('DEATH', g, npct(n, NS[g]), null, { n, pct: (100 * n) / NS[g] }) }), 0),
+  ], footnotes: [] })
+const byTot = (key) => (a, b) => new Set(tg('Total').filter((r) => key(r) === b).map((r) => r.USUBJID)).size - new Set(tg('Total').filter((r) => key(r) === a).map((r) => r.USUBJID)).size || a.localeCompare(b)
+for (const g of GT) frame.push(['POP', g, null, 'N', String(NS[g])])
+const socs = [...new Set(teae.map((r) => r.AEBODSYS))].sort(byTot((r) => r.AEBODSYS))
+const T9 = output('T9', 'Table 14.3.1: treatment-emergent adverse events by system class and preferred term', 'SAP 9.5; ICH E3 section 12.2', 'Participants with at least one TEAE; each system class with its preferred terms indented, by descending frequency in the Total column. n (%).', {
+  title: 'Table 14.3.1 Treatment-emergent adverse events by system class and preferred term', population: 'Safety population', head: GT, groups: GT, rows: [
+    prow('Participants with at least one TEAE', 'ANY', () => true, 0),
+    ...socs.flatMap((soc) => [prow(soc, 'SOC', (r) => r.AEBODSYS === soc, 0, soc),
+      ...[...new Set(teae.filter((r) => r.AEBODSYS === soc).map((r) => `${soc} | ${r.AEDECOD}`))].sort(byTot((r) => `${r.AEBODSYS} | ${r.AEDECOD}`)).map((k) => prow(k.split(' | ')[1], 'PT', (r) => `${r.AEBODSYS} | ${r.AEDECOD}` === k, 1, k))]),
+  ], footnotes: [] })
+for (const g of GT) frame.push(['POP', g, null, 'N', String(NS[g])])
+const g3 = teae.filter((r) => r.ATOXGRN >= 3)
+const T10 = output('T10', 'Table 14.3.3: treatment-emergent adverse events of grade 3 or higher by preferred term', 'SAP 9.5; ICH E3 section 12.2', 'Participants with at least one grade 3 or higher TEAE; each preferred term by descending frequency in the Total column. n (%).', {
+  title: 'Table 14.3.3 Treatment-emergent adverse events of grade 3 or higher by preferred term', population: 'Safety population, as treated', head: GT, groups: GT, rows: [
+    prow('Participants with at least one TEAE of grade 3 or higher', 'ANY', (r) => r.ATOXGRN >= 3, 0),
+    ...[...new Set(g3.map((r) => r.AEDECOD))].sort((a, b) => new Set(g3.filter((r) => r.AEDECOD === b).map((r) => r.USUBJID)).size - new Set(g3.filter((r) => r.AEDECOD === a).map((r) => r.USUBJID)).size || a.localeCompare(b)).map((pt) => prow(pt, 'PT', (r) => r.ATOXGRN >= 3 && r.AEDECOD === pt, 1, pt)),
+  ], footnotes: [] })
+
+const outs = [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, F1]
 const reportingEvent = {
   id: 'RE_ONK-44-302', name: 'ONK-44-302 primary analysis', version: 1, study: 'ONK-44-302',
   analysisSets: [{ id: 'AS_ITT', name: 'Intent-to-treat population', condition: { dataset: 'ADSL', variable: 'ITTFL', comparator: 'EQ', value: ['Y'] } }, { id: 'AS_SAF', name: 'Safety population', condition: { dataset: 'ADSL', variable: 'SAFFL', comparator: 'EQ', value: ['Y'] } }],
   analysisGroupings: [{ id: 'GRP_TRTP', name: 'Planned treatment', groupingVariable: 'TRT01P', dataDriven: false, groups: G.map((g, i) => ({ id: `GRP_TRTP_${i + 1}`, name: g, condition: { dataset: 'ADSL', variable: 'TRT01P', comparator: 'EQ', value: [g] } })) }, { id: 'GRP_TRTA', name: 'Actual treatment', groupingVariable: 'TRT01A', dataDriven: false, groups: G.map((g, i) => ({ id: `GRP_TRTA_${i + 1}`, name: g, condition: { dataset: 'ADSL', variable: 'TRT01A', comparator: 'EQ', value: [g] } })) }],
   methods: outs.filter((o) => o.display).map((o) => ({ id: `MTH_${o.id}`, name: o.title, description: o.shell })),
-  analyses: outs.filter((o) => o.display).map((o) => ({ id: `AN_${o.id}`, name: o.title, analysisSetId: o.id === 'T7' ? 'AS_SAF' : 'AS_ITT', methodId: `MTH_${o.id}`, orderedGroupings: [{ order: 1, groupingId: o.id === 'T7' ? 'GRP_TRTA' : 'GRP_TRTP', resultsByGroup: true }] })),
+  analyses: outs.filter((o) => o.display).map((o) => ({ id: `AN_${o.id}`, name: o.title, analysisSetId: ['T7', 'T8', 'T9', 'T10'].includes(o.id) ? 'AS_SAF' : 'AS_ITT', methodId: `MTH_${o.id}`, orderedGroupings: [{ order: 1, groupingId: ['T7', 'T8', 'T9', 'T10'].includes(o.id) ? 'GRP_TRTA' : 'GRP_TRTP', resultsByGroup: true }] })),
   outputs: outs.map((o) => ({ id: `OUT_${o.id}`, name: o.title, analysisIds: [`AN_${o.id}`] })),
 }
 const doc = { format: 'csr-studio/study-outputs', schema: 1, study: 'ONK-44-302', title: 'A randomised, open-label, phase 3 study of ONK-44 versus docetaxel in adults with advanced non-small cell lung cancer after one prior platinum-based chemotherapy', short: 'ONK-44 versus docetaxel, NSCLC, second line', sap: 'SAP v1.0', groups: G, source: 'Derived from the SDTM Mapping Trainer’s ONK-44-302 SDTM by scripts/make-onk-44-302.mjs (fictional)', outputs: [ADSL, ...outs], reportingEvent }

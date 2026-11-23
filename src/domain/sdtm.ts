@@ -26,7 +26,10 @@ const LOADERS: Record<string, () => Promise<{ sdtm: Sdtm; safety: Safety }>> = {
   },
 }
 LOADERS['HRP-205'] = async () => ({ sdtm: { format: 'csr-studio/sdtm', schema: 1, study: 'HRP-205', source: 'Not bundled: HRP-205 has summary outputs only', domains: {} }, safety: { source: 'Not bundled', cases: [], reconciliation: [] } })
-LOADERS['ONK-44-302'] = async () => ({ sdtm: (await import('../data/sdtm-onk-44-302.json')).default as unknown as Sdtm, safety: { source: 'No safety cases: the ONK-44-302 training data hold efficacy and deaths only', cases: [], reconciliation: [] } })
+LOADERS['ONK-44-302'] = async () => {
+  const cdm = (await import('../data/cdm-onk-44-302.json')).default as unknown as { sae: { cases: SafetyCase[]; reconciliation: Recon[] }; deviations: Safety['deviations']; lock: Safety['lock'] }
+  return { sdtm: (await import('../data/sdtm-onk-44-302.json')).default as unknown as Sdtm, safety: { source: 'CDM Query & Edit-Check Console: export for the CSR from the ONK-44-302 database locked at the data cut-off', cases: cdm.sae.cases, reconciliation: cdm.sae.reconciliation, deviations: cdm.deviations, lock: cdm.lock } }
+}
 const cache: Record<string, { sdtm: Sdtm; safety: Safety }> = {}
 export async function loadPatientData(study: string) { return (cache[study] ??= await LOADERS[study]()) }
 
@@ -46,7 +49,7 @@ export function readCdmExport(text: string, study: string): Safety {
 
 const KEEP: Record<string, string[]> = {
   DM: ['USUBJID', 'SUBJID', 'SITEID', 'AGE', 'AGEU', 'SEX', 'RACE', 'ETHNIC', 'COUNTRY', 'ARM', 'ACTARM', 'RFICDTC', 'RFXSTDTC', 'RFXENDTC', 'DTHDTC', 'DTHFL', 'BRTHDTC'],
-  AE: ['USUBJID', 'AESEQ', 'AETERM', 'AEDECOD', 'AEBODSYS', 'AESEV', 'AESER', 'AEREL', 'AEACN', 'AEOUT', 'AESDTH', 'AESHOSP', 'AESTDTC', 'AEENDTC', 'AESTDY', 'AEENDY'],
+  AE: ['USUBJID', 'AESEQ', 'AETERM', 'AEDECOD', 'AEBODSYS', 'AESEV', 'AETOXGR', 'AESER', 'AEREL', 'AEACN', 'AEOUT', 'AESDTH', 'AESHOSP', 'AESTDTC', 'AEENDTC', 'AESTDY', 'AEENDY'],
   CM: ['USUBJID', 'CMSEQ', 'CMTRT', 'CMDECOD', 'CMINDC', 'CMCLAS', 'CMDOSE', 'CMDOSU', 'CMDOSFRQ', 'CMROUTE', 'CMSTDTC', 'CMENDTC', 'CMSTDY', 'CMENDY', 'CMENRTPT'],
   EX: ['USUBJID', 'EXSEQ', 'EXTRT', 'EXDOSE', 'EXDOSU', 'EXDOSFRQ', 'EXROUTE', 'EXSTDTC', 'EXENDTC', 'EXSTDY', 'EXENDY'],
   LB: ['USUBJID', 'LBTESTCD', 'LBTEST', 'LBSTRESN', 'LBSTRESC', 'LBSTRESU', 'LBSTNRLO', 'LBSTNRHI', 'LBNRIND', 'VISIT', 'LBDTC', 'LBDY'],
